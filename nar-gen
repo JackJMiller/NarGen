@@ -7,9 +7,17 @@ ShowHelpPage() {
 	echo "  --help                  show this page"
 }
 
+ConfigureNewWorld() {
+	cp res/default_world.json configs/worlds/$1.json
+	cp res/default_world_lower.json configs/biomes/$1_lower.json
+	cp res/default_world_upper.json configs/biomes/$1_upper.json
+	cp res/default_world_middle.json configs/biomes/$1_middle.json
+}
+
 if [[ $# -gt 0 && "$1" == "--help" ]]; then
 	echo "NarGen - Terrain generation for Nargon"
 	ShowHelpPage
+
 elif [[ $# -ge 1 && "$1" == "generate" ]]; then
 	if [ $# -lt 2 ]; then
 		echo "Invalid arguments: No config file specified"
@@ -20,6 +28,17 @@ elif [[ $# -ge 1 && "$1" == "generate" ]]; then
 	else
 		echo "Error: No such file exists: $2"
 	fi
+
+elif [[ $# -ge 1 && "$1" == "new-world" ]]; then
+	if [ $# -lt 2 ]; then
+		echo "Invalid arguments: No world name specified"
+		ShowHelpPage
+	elif [ -f "configs/worlds/$2.json" ]; then
+		echo "Error: A world name $2 already exists"
+	else
+		ConfigureNewWorld $2
+	fi
+
 else
 	echo "Invalid arguments"
 	ShowHelpPage

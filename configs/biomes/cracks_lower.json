@@ -1,9 +1,0 @@
-{
-    "colour": [100, 100, 100],
-    "altitude_surfaces": [
-        [5, "stone"]
-    ],
-    "persistence": 1.2,
-    "height_displacement": -9,
-    "height_multiplier": 60
-}
