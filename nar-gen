@@ -1,0 +1,26 @@
+#!/bin/bash
+
+ShowHelpPage() {
+	echo
+	echo "Options:"
+	echo "  generate CONFIG_FILE    generate terrain world according to config file"
+	echo "  --help                  show this page"
+}
+
+if [[ $# -gt 0 && "$1" == "--help" ]]; then
+	echo "NarGen - Terrain generation for Nargon"
+	ShowHelpPage
+elif [[ $# -ge 1 && "$1" == "generate" ]]; then
+	if [ $# -lt 2 ]; then
+		echo "Invalid arguments: No config file specified"
+		ShowHelpPage
+	elif [ -f "$2" ]; then
+		echo "Creating terrain from $2"
+		python3 main.py $2
+	else
+		echo "Error: No such file exists: $2"
+	fi
+else
+	echo "Invalid arguments"
+	ShowHelpPage
+fi

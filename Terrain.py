@@ -72,6 +72,8 @@ class Terrain:
         self.abc_gen(random.randint(1, 100))
         self.create_surface_map()
 
+        print("Terrain generation complete – Images can be found in images/")
+
     def create_ground_map(self, octaves):
 
         self.ground_map = Grid(self.width_in_tiles, self.height_in_tiles, 0)
