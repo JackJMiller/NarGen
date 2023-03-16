@@ -1,0 +1,10 @@
+{
+    "colour": [0, 200, 0],
+    "altitude_surfaces": [
+        [5, "sand"],
+        [80, "grass"]
+    ],
+    "persistence": 0.9,
+    "height_displacement": -9,
+    "height_multiplier": 60
+}

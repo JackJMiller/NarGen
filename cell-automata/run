@@ -1,0 +1,5 @@
+#!/bin/bash
+
+rm images/*
+python3 main.py
+viewnior images/

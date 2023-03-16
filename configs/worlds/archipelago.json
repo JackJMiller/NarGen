@@ -1,0 +1,8 @@
+{
+    "seed": 123,
+    "width": 4,
+    "height": 4,
+    "biomes": [
+        [1, "archipelago"]
+    ]
+}

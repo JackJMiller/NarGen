@@ -1,0 +1,7 @@
+{
+    "colour": [255, 0, 255],
+    "lifespan": 20,
+    "reach": 10,
+    "reproduce": [0, 6],
+    "survive": [0, 100]
+}

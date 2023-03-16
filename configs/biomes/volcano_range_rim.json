@@ -1,0 +1,9 @@
+{
+    "colour": [200, 200, 200],
+    "altitude_surfaces": [
+        [-1, "snow"]
+    ],
+    "persistence": 0.7,
+    "height_displacement": 0,
+    "height_multiplier": 100
+}

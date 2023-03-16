@@ -1,0 +1,13 @@
+SURFACES = {
+    "water": { "colour": (0, 0, 120) },
+    "grass": { "colour": (30, 160, 30) },
+    "grass-1": { "colour": (50, 230, 115) },
+    "sand": { "colour": (220, 210, 70) },
+    "stone": { "colour": (80, 80, 80) },
+    "dirt": { "colour": (90, 60, 30) },
+    "snow": { "colour": (255, 255, 255) },
+    "lava": { "colour": (240, 30, 0) },
+    "coal": { "colour": (0, 0, 0) }
+}
+
+CHUNK_SIZE = 64
