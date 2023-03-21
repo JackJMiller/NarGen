@@ -1,12 +1,11 @@
-import json
-import sys
+import json, os, sys
 
 class Biome:
 
-    def __init__(self, name):
+    def __init__(self, WORLD_NAME, name):
         self.name = name
 
-        config_file_path = "configs/biomes/" + self.name + ".json"
+        config_file_path = os.path.join("configs", "worlds", WORLD_NAME, "biomes", self.name + ".json")
 
         file = open(config_file_path, "r")
         config = json.load(file)

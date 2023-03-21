@@ -1,10 +1,13 @@
-import json
-import sys
+import json, os, sys
 from Terrain import Terrain
 
-config_file_path = sys.argv[1]
+# locate world configuration
+WORLD_NAME = sys.argv[1]
+config_file_path = os.path.join("configs", "worlds", WORLD_NAME, "config.json")
+
 file = open(config_file_path, "r")
 config = json.load(file)
 
-terrain = Terrain(config)
+# generate terrain according to configuration
+terrain = Terrain(WORLD_NAME, config)
 

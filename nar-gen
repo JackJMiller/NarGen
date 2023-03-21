@@ -3,41 +3,56 @@
 ShowHelpPage() {
 	echo
 	echo "Options:"
-	echo "  generate CONFIG_FILE    generate terrain world according to config file"
-	echo "  --help                  show this page"
+	echo "  new-world WORLD_NAME       configure a new world"
+	echo "  generate CONFIG_FILE       generate terrain world according to config file"
+	echo "  delete-world WORLD_NAME    delete configuration files for world"
+	echo "  list                       list all world configurations"
+	echo "  -h, --help                 show this page"
 }
 
 ConfigureNewWorld() {
-	cp res/default_world.json configs/worlds/$1.json
-	cp res/default_world_lower.json configs/biomes/$1_lower.json
-	cp res/default_world_upper.json configs/biomes/$1_upper.json
-	cp res/default_world_middle.json configs/biomes/$1_middle.json
+	cp -r res/sample_worlds/Rainworld/ configs/worlds/$1/
 }
 
-if [[ $# -gt 0 && "$1" == "--help" ]]; then
-	echo "NarGen - Terrain generation for Nargon"
+if [ $# -eq 1 ] && [[ "$1" == "--help" || "$1" == "-h" ]] || [ $# -eq 0 ]; then
+	cat res/ascii_art.txt
 	ShowHelpPage
-
-elif [[ $# -ge 1 && "$1" == "generate" ]]; then
-	if [ $# -lt 2 ]; then
-		echo "Invalid arguments: No config file specified"
-		ShowHelpPage
-	elif [ -f "$2" ]; then
-		echo "Creating terrain from $2"
-		python3 main.py $2
-	else
-		echo "Error: No such file exists: $2"
-	fi
 
 elif [[ $# -ge 1 && "$1" == "new-world" ]]; then
 	if [ $# -lt 2 ]; then
 		echo "Invalid arguments: No world name specified"
 		ShowHelpPage
-	elif [ -f "configs/worlds/$2.json" ]; then
-		echo "Error: A world name $2 already exists"
+	elif [ -d "configs/worlds/$2" ]; then
+		echo "Error: A world named $2 already exists"
 	else
 		ConfigureNewWorld $2
 	fi
+
+elif [[ $# -ge 1 && "$1" == "generate" ]]; then
+	if [ $# -lt 2 ]; then
+		echo "Invalid arguments: No config file specified"
+		ShowHelpPage
+	elif [ -d "configs/worlds/$2/" ]; then
+		echo "Creating terrain from $2"
+		python3 main.py $2
+	else
+		echo "Error: Cannot find world named $2"
+	fi
+
+elif [[ $# -ge 1 && "$1" == "delete-world" ]]; then
+	if [ $# -lt 2 ]; then
+		echo "Invalid arguments: No world name specified"
+		ShowHelpPage
+	elif [ -d "configs/worlds/$2" ]; then
+		rm -r configs/worlds/$2
+		echo "Deleted world $2"
+	else
+		echo "Error: Cannot find world named $2"
+	fi
+
+elif [[ $# -eq 1 && "$1" == "list" ]]; then
+
+	ls configs/worlds/
 
 else
 	echo "Invalid arguments"

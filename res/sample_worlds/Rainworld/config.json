@@ -1,0 +1,11 @@
+{
+    "seed": 20,
+    "width": 4,
+    "height": 4,
+    "biomes": [
+        [-0.5, "upper"],
+        [-0.1, "lower"],
+        [-0.05, "middle"],
+        [0.4, "upper"]
+    ]
+}

@@ -10,7 +10,7 @@ from Grid import Grid
 
 class Terrain:
 
-    def __init__(self, config):
+    def __init__(self, WORLD_NAME, config):
 
         self.MAX_HEIGHT = 100
         self.TOTAL_HEIGHT = 2 * self.MAX_HEIGHT
@@ -19,7 +19,7 @@ class Terrain:
         self.biomes_rangerray = self.config["biomes"]
         self.biomes = { }
         for biome in config["biomes"]:
-            self.biomes[biome[1]] = Biome(biome[1])
+            self.biomes[biome[1]] = Biome(WORLD_NAME, biome[1])
         self.seed = config["seed"]
         self.MIN_WORLD_HEIGHT = -100
         self.MAX_WORLD_HEIGHT = 200
