@@ -1,3 +1,4 @@
+import os
 from PIL import Image
 
 class Grid:
@@ -22,7 +23,7 @@ class Grid:
         v = int((1 - height) * 255)
         return (v, v, v)
 
-    def save_image(self, filename):
+    def save_image(self, filename, WORLD_NAME):
         img = Image.new("RGB", (self.width, self.height), "black")
 
         pixels = img.load()
@@ -33,9 +34,9 @@ class Grid:
                 rgb = Grid.get_height_colour(v)
                 pixels[x, y] = rgb
 
-        img.save("images/" + filename + ".png")
+        img.save(os.path.join("worlds", WORLD_NAME, "images", filename + ".png"))
 
-    def save_RGBs(self, filename):
+    def save_RGBs(self, filename, WORLD_NAME):
         img = Image.new("RGB", (self.width, self.height), "black")
 
         pixels = img.load()
@@ -44,7 +45,7 @@ class Grid:
             for y in range(self.height):
                 pixels[x, y] = self.grid[x][y]
 
-        img.save("images/" + filename + ".png")
+        img.save(os.path.join("worlds", WORLD_NAME, "images", filename + ".png"))
 
     def copy(self):
         grid = Grid(self.width, self.height, 0)

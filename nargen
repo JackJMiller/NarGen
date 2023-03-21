@@ -7,32 +7,32 @@ ShowHelpPage() {
 	echo "  generate CONFIG_FILE       generate terrain world according to config file"
 	echo "  delete-world WORLD_NAME    delete configuration files for world"
 	echo "  list                       list all world configurations"
+	echo "  list-sample-worlds         list all sample world configurations"
 	echo "  -h, --help                 show this page"
 }
 
 ConfigureNewWorld() {
-	cp -r res/sample_worlds/Rainworld/ configs/worlds/$1/
+	cp -r res/sample_worlds/$2/ configs/$1/
 }
 
 if [ $# -eq 1 ] && [[ "$1" == "--help" || "$1" == "-h" ]] || [ $# -eq 0 ]; then
 	cat res/ascii_art.txt
 	ShowHelpPage
 
-elif [[ $# -ge 1 && "$1" == "new-world" ]]; then
-	if [ $# -lt 2 ]; then
-		echo "Invalid arguments: No world name specified"
-		ShowHelpPage
-	elif [ -d "configs/worlds/$2" ]; then
+elif [[ $# -eq 3 && "$1" == "new-world" ]]; then
+	if [ -d "configs/$2/" ]; then
 		echo "Error: A world named $2 already exists"
+	elif [ ! -d "res/sample_worlds/$3/" ]; then
+		echo "Error: Could not find sample world named $3"
 	else
-		ConfigureNewWorld $2
+		ConfigureNewWorld $2 $3
 	fi
 
 elif [[ $# -ge 1 && "$1" == "generate" ]]; then
 	if [ $# -lt 2 ]; then
 		echo "Invalid arguments: No config file specified"
 		ShowHelpPage
-	elif [ -d "configs/worlds/$2/" ]; then
+	elif [ -d "configs/$2/" ]; then
 		echo "Creating terrain from $2"
 		python3 main.py $2
 	else
@@ -43,8 +43,8 @@ elif [[ $# -ge 1 && "$1" == "delete-world" ]]; then
 	if [ $# -lt 2 ]; then
 		echo "Invalid arguments: No world name specified"
 		ShowHelpPage
-	elif [ -d "configs/worlds/$2" ]; then
-		rm -r configs/worlds/$2
+	elif [ -d "configs/$2" ]; then
+		rm -r configs/$2
 		echo "Deleted world $2"
 	else
 		echo "Error: Cannot find world named $2"
@@ -52,7 +52,11 @@ elif [[ $# -ge 1 && "$1" == "delete-world" ]]; then
 
 elif [[ $# -eq 1 && "$1" == "list" ]]; then
 
-	ls configs/worlds/
+	ls configs/
+
+elif [[ $# -eq 1 && "$1" == "list-sample-worlds" ]]; then
+
+	ls res/sample_worlds/
 
 else
 	echo "Invalid arguments"

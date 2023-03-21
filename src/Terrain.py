@@ -1,7 +1,5 @@
 import src.constants as constants
-import math
-import random
-import sys
+import math, os, random, sys
 from src.functions import clamp
 from PIL import Image
 from src.Biome import Biome 
@@ -12,6 +10,8 @@ class Terrain:
 
     def __init__(self, WORLD_NAME, config):
 
+        self.WORLD_NAME = WORLD_NAME
+        self.create_save_files()
         self.MAX_HEIGHT = 100
         self.TOTAL_HEIGHT = 2 * self.MAX_HEIGHT
         self.config = config
@@ -19,7 +19,7 @@ class Terrain:
         self.biomes_rangerray = self.config["biomes"]
         self.biomes = { }
         for biome in config["biomes"]:
-            self.biomes[biome[1]] = Biome(WORLD_NAME, biome[1])
+            self.biomes[biome[1]] = Biome(self.WORLD_NAME, biome[1])
         self.seed = config["seed"]
         self.MIN_WORLD_HEIGHT = -100
         self.MAX_WORLD_HEIGHT = 200
@@ -54,15 +54,15 @@ class Terrain:
             height_in_chunks *= 2
             chunk_size = int(chunk_size / 2)
 
-            Perlin.save_as_image(octave, "octave_" + str(octave_no))
+            Perlin.save_as_image(octave, self.WORLD_NAME + "_octave_" + str(octave_no), self.WORLD_NAME)
             octaves.append(octave)
 
         overlayed = self.overlay_octaves(octaves, 0.5)
 
-        #create the biome map
+        # create the biome map
         self.create_biome_map(overlayed)
 
-        Perlin.save_as_image(overlayed, "overlayed")
+        Perlin.save_as_image(overlayed, WORLD_NAME + "_overlayed", self.WORLD_NAME)
 
         # create the ground map
         self.abc_gen(self.seed)
@@ -72,7 +72,14 @@ class Terrain:
         self.abc_gen(random.randint(1, 100))
         self.create_surface_map()
 
-        print("Terrain generation complete – Images can be found in images/")
+        print("Terrain generation complete")
+        print("World can be found in worlds/" + self.WORLD_NAME + "/")
+
+    def create_save_files(self):
+        filepath = os.path.join("worlds", self.WORLD_NAME)
+        if not os.path.exists(filepath):
+            os.makedirs(filepath)
+            os.makedirs(os.path.join(filepath, "images"))
 
     def create_ground_map(self, octaves):
 
@@ -109,7 +116,7 @@ class Terrain:
                 colour = self.get_surface_colour(v, height, biome.height_displacement, self.MAX_HEIGHT)
                 surface_map_image.set_value_at(x, y, colour)
 
-        surface_map_image.save_RGBs("surface_map")
+        surface_map_image.save_RGBs(self.WORLD_NAME + "_surface_map", self.WORLD_NAME)
 
     def create_biome_map(self, perlin_grid):
         self.biome_map = perlin_grid.copy()
@@ -123,7 +130,7 @@ class Terrain:
                 colour = biome.colour
                 biome_map_image.set_value_at(x, y, colour)
 
-        biome_map_image.save_RGBs("biome_map")
+        biome_map_image.save_RGBs(self.WORLD_NAME + "_biome_map", self.WORLD_NAME)
 
     def get_biome_at(self, x, y):
         return self.biome_map.value_at(x, y)

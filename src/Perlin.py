@@ -1,6 +1,5 @@
 import src.constants as constants 
-import math
-import random
+import math, os, random
 from PIL import Image
 from src.Biome import Biome 
 from src.Grid import Grid 
@@ -101,11 +100,11 @@ class Perlin:
         v = int((1 - height) * 255)
         return (v, v, v)
 
-    def save_image(self, filename):
-        Perlin.save_as_image(self.grid, filename)
+    def save_image(self, filename, WORLD_NAME):
+        Perlin.save_as_image(self.grid, filename, WORLD_NAME)
 
     @staticmethod
-    def save_as_image(grid, filename):
+    def save_as_image(grid, filename, WORLD_NAME):
         img = Image.new("RGB", (grid.width, grid.height), "black")
 
         pixels = img.load()
@@ -117,7 +116,7 @@ class Perlin:
                 rgb = Perlin.get_height_colour(v)
                 pixels[x, y] = rgb
 
-        img.save("images/" + filename + ".png")
+        img.save(os.path.join("worlds", WORLD_NAME, "images", filename + ".png"))
 
     def get_grid(self):
         return self.grid
