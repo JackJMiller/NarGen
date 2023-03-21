@@ -1,12 +1,12 @@
-import constants
+import src.constants as constants
 import math
 import random
 import sys
-from functions import clamp
+from src.functions import clamp
 from PIL import Image
-from Biome import Biome
-from Perlin import Perlin
-from Grid import Grid
+from src.Biome import Biome 
+from src.Perlin import Perlin 
+from src.Grid import Grid 
 
 class Terrain:
 

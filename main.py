@@ -1,5 +1,5 @@
 import json, os, sys
-from Terrain import Terrain
+from src.Terrain import Terrain
 
 # locate world configuration
 WORLD_NAME = sys.argv[1]

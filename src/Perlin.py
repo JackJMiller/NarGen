@@ -1,9 +1,9 @@
-import constants
+import src.constants as constants 
 import math
 import random
 from PIL import Image
-from Biome import Biome
-from Grid import Grid
+from src.Biome import Biome 
+from src.Grid import Grid 
 
 class Perlin:
 
