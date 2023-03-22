@@ -9,10 +9,8 @@ class Perlin:
     def __init__(self, width, height, chunk_size, AAA, BBB, CCC):
 
         self.chunk_size = chunk_size
-        self.width_in_chunks = width
-        self.height_in_chunks = height
-        self.width_in_tiles = self.width_in_chunks * self.chunk_size
-        self.height_in_tiles = self.height_in_chunks * self.chunk_size
+        self.width_in_tiles = width
+        self.height_in_tiles = height
 
         self.AAA = AAA
         self.BBB = BBB
@@ -20,17 +18,14 @@ class Perlin:
 
         self.grid = Grid(self.width_in_tiles, self.height_in_tiles, 0)
 
-        for chunk_x in range(self.width_in_chunks):
-            for chunk_y in range(self.height_in_chunks):
-                for _x in range(self.chunk_size):
-                    for _y in range(self.chunk_size):
-                        x = chunk_x + _x / self.chunk_size
-                        y = chunk_y + _y / self.chunk_size
-                        NOISE = self.noise(x, y)
-                        v = NOISE
-                        map_x = chunk_x * self.chunk_size + _x
-                        map_y = chunk_y * self.chunk_size + _y
-                        self.grid.set_value_at(map_x, map_y, v)
+        for map_x in range(self.width_in_tiles):
+            for map_y in range(self.height_in_tiles):
+                _x = map_x % chunk_size
+                _y = map_y % chunk_size
+                chunk_x = int(map_x / chunk_size) + _x / self.chunk_size
+                chunk_y = int(map_y / chunk_size) + _y / self.chunk_size
+                NOISE = self.noise(chunk_x, chunk_y)
+                self.grid.set_value_at(map_x, map_y, NOISE)
 
     def value_at(self, x, y):
         return self.grid.value_at(x, y)

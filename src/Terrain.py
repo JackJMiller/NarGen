@@ -16,6 +16,7 @@ class Terrain:
         self.TOTAL_HEIGHT = 2 * self.MAX_HEIGHT
         self.config = config
         self.seed = self.config["seed"]
+        self.lacunarity = 0.5
         self.configure_biomes()
         self.seed = config["seed"]
         self.MIN_WORLD_HEIGHT = -100
@@ -24,43 +25,23 @@ class Terrain:
 
         self.abc_gen(self.seed)
 
-        chunk_size = 128
+        # TODO: size this according to number of biomes
+        initial_noise_tile_size = 128
         self.octave_count = 5
-        self.width_in_chunks = self.config["width"]
-        self.height_in_chunks = self.config["height"]
-        self.width_in_tiles = self.width_in_chunks * chunk_size
-        self.height_in_tiles = self.height_in_chunks * chunk_size
+
+        self.width_in_tiles = self.config["width"]
+        self.height_in_tiles = self.config["height"]
 
         self.abc_gen(self.seed)
 
-        width_in_chunks = self.width_in_chunks
-        height_in_chunks = self.height_in_chunks
-
-        octaves = []
-
-        # create the octaves
-        for octave_no in range(self.octave_count):
-            self.abc_gen(self.AAA)
-            octave = Perlin(
-                width_in_chunks,
-                height_in_chunks,
-                chunk_size,
-                self.AAA, self.BBB, self.CCC
-            ).get_grid()
-
-            width_in_chunks *= 2
-            height_in_chunks *= 2
-            chunk_size = int(chunk_size / 2)
-
-            Perlin.save_as_image(octave, self.WORLD_NAME + "_octave_" + str(octave_no), self.WORLD_NAME)
-            octaves.append(octave)
-
-        overlayed = self.overlay_octaves(octaves, 0.5)
+        octaves, overlayed = self.produce_octaves(initial_noise_tile_size)
 
         # create the biome map
         self.create_biome_map(overlayed)
 
         Perlin.save_as_image(overlayed, WORLD_NAME + "_overlayed", self.WORLD_NAME)
+
+        # TODO: have separate noise maps for biome map and and ground_map
 
         # create the ground map
         self.abc_gen(self.seed)
@@ -72,6 +53,30 @@ class Terrain:
 
         print("Terrain generation complete")
         print("World can be found in worlds/" + self.WORLD_NAME + "/")
+
+    def produce_octaves(self, noise_tile_size):
+
+        octaves = []
+
+        # create the octaves
+        for octave_no in range(self.octave_count):
+            self.abc_gen(self.AAA)
+            octave = Perlin(
+                self.width_in_tiles,
+                self.height_in_tiles,
+                noise_tile_size,
+                self.AAA, self.BBB, self.CCC
+            ).get_grid()
+
+            noise_tile_size = math.ceil(noise_tile_size * self.lacunarity)
+
+            Perlin.save_as_image(octave, self.WORLD_NAME + "_octave_" + str(octave_no), self.WORLD_NAME)
+            octaves.append(octave)
+
+        overlayed = self.overlay_octaves(octaves, 0.5)
+
+        return octaves, overlayed
+
 
     def configure_biomes(self):
         self.biomes = { }
@@ -164,30 +169,6 @@ class Terrain:
         self.AAA = random.randint(1111111111, 9999999999)
         self.BBB = random.randint(1111111111, 9999999999)
         self.CCC = random.randint(1111111111, 9999999999)
-
-    def new(self, chunk_size, octave_no):
-
-        self.chunk_size = chunk_size
-        self.width_in_tiles = self.config["world_width"] * self.chunk_size
-        self.height_in_tiles = self.config["world_height"] * self.chunk_size
-
-        height_map = [[0] * self.height_in_tiles for _ in range(self.width_in_tiles)]
-
-        for chunk_x in range(self.config["world_width"]):
-            for chunk_y in range(self.config["world_height"]):
-                for _x in range(self.chunk_size):
-                    for _y in range(self.chunk_size):
-                        x = chunk_x + _x / self.chunk_size
-                        y = chunk_y + _y / self.chunk_size
-                        NOISE = self.noise(x, y)
-                        biome = self.determine_biome(x, y)
-                        amplitude = biome.config["persistence"] ** octave_no
-                        v = int((NOISE * self.TOTAL_WORLD_HEIGHT + self.MIN_WORLD_HEIGHT) * amplitude)
-                        map_x = chunk_x * self.chunk_size + _x
-                        map_y = chunk_y * self.chunk_size + _y
-                        height_map[map_x][map_y] = v
-
-        return height_map
 
     def interpolate(self, a0, a1, w):
         # if (0.0 > w) return a0
