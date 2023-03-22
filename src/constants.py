@@ -10,7 +10,7 @@ SURFACES = {
     "coal": { "colour": (0, 0, 0) }
 }
 
-CHUNK_SIZE = 16
+CHUNK_SIZE = 20
 
 SAVE_IMAGE_BIOME_MAP = False
 SAVE_IMAGE_SURFACE_MAP = True

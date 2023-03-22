@@ -8,11 +8,13 @@ from src.Grid import Grid
 
 class TerrainChunk:
 
-    def __init__(self, WORLD_NAME, q, r, config):
+    def __init__(self, WORLD_NAME, q, r, config, biomes, biomes_rangerray):
 
         self.WORLD_NAME = WORLD_NAME
         self.q = q
         self.r = r
+        self.biomes = biomes
+        self.biomes_rangerray = biomes_rangerray
         self.corner_x = self.q * constants.CHUNK_SIZE
         self.corner_y = self.r * constants.CHUNK_SIZE
         self.create_save_files()
@@ -21,7 +23,6 @@ class TerrainChunk:
         self.config = config
         self.seed = self.config["seed"]
         self.lacunarity = 0.5
-        self.configure_biomes()
         self.seed = config["seed"]
         self.MIN_WORLD_HEIGHT = -100
         self.MAX_WORLD_HEIGHT = 200
@@ -82,25 +83,6 @@ class TerrainChunk:
 
         return octaves, overlayed
 
-
-    def configure_biomes(self):
-        self.biomes = { }
-        self.biomes_rangerray = []
-        range_min = -1
-
-        for biome in self.config["biomes"]:
-            range_max, biome_name = biome[0], biome[1]
-            biome_config_path = os.path.join("configs", self.WORLD_NAME, "biomes", biome_name, "CONFIG.json")
-            file = open(biome_config_path, "r")
-            biome_config = json.load(file)
-            for sub_biome in biome_config["ranges"]:
-                sub_biome_portion_point = sub_biome[0]
-                sub_biome_name = sub_biome[1]
-                portion = noise_to_decimal_portion(sub_biome_portion_point)
-                portion_point = portion_point_between(range_min, range_max, portion)
-                self.biomes[biome_name+"."+sub_biome_name] = Biome(self.WORLD_NAME, biome_name, sub_biome_name)
-                self.biomes_rangerray.append([portion_point, biome_name+"."+sub_biome_name])
-            range_min = range_max
 
     def create_save_files(self):
         filepath = os.path.join("worlds", self.WORLD_NAME)
