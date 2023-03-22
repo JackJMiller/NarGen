@@ -6,7 +6,7 @@ from src.Biome import Biome
 from src.Perlin import Perlin 
 from src.Grid import Grid 
 
-class Terrain:
+class TerrainChunk:
 
     def __init__(self, WORLD_NAME, config):
 
