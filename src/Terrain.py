@@ -1,6 +1,6 @@
 import src.constants as constants
 import json, math, os, random, sys
-from src.functions import clamp
+from src.functions import clamp, noise_to_decimal_portion, portion_point_between
 from PIL import Image
 from src.Biome import Biome 
 from src.Perlin import Perlin 
@@ -38,6 +38,7 @@ class Terrain:
 
         octaves = []
 
+        # create the octaves
         for octave_no in range(self.octave_count):
             self.abc_gen(self.AAA)
             octave = Perlin(
@@ -75,15 +76,24 @@ class Terrain:
     def configure_biomes(self):
         self.biomes = { }
         self.biomes_rangerray = []
+        range_min = -1
+
         for biome in self.config["biomes"]:
-            biome_name = biome[1]
+            range_max, biome_name = biome[0], biome[1]
             biome_config_path = os.path.join("configs", self.WORLD_NAME, "biomes", biome_name, "CONFIG.json")
             file = open(biome_config_path, "r")
             biome_config = json.load(file)
             for sub_biome in biome_config["ranges"]:
+                sub_biome_portion_point = sub_biome[0]
                 sub_biome_name = sub_biome[1]
-                self.biomes[sub_biome_name] = Biome(self.WORLD_NAME, biome_name, sub_biome_name)
-                self.biomes_rangerray.append([sub_biome[0], sub_biome[1]])
+                portion = noise_to_decimal_portion(sub_biome_portion_point)
+                portion_point = portion_point_between(range_min, range_max, portion)
+                self.biomes[biome_name+"."+sub_biome_name] = Biome(self.WORLD_NAME, biome_name, sub_biome_name)
+                self.biomes_rangerray.append([portion_point, biome_name+"."+sub_biome_name])
+            range_min = range_max
+
+        print("Final biomes")
+        print(self.biomes_rangerray)
 
     def create_save_files(self):
         filepath = os.path.join("worlds", self.WORLD_NAME)

@@ -1,0 +1,9 @@
+{
+	"seed": 70,
+	"width": 3,
+	"height": 3,
+	"biomes": [
+		[0.2, "islands"],
+		[1, "volcano_mountains"]
+	]
+}
