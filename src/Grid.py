@@ -18,6 +18,14 @@ class Grid:
     def is_in_bounds(self, x, y):
         return (0 <= x < self.width and 0 <= y < self.height)
 
+    def overlay(self, overlay_grid, corner_x = 0, corner_y = 0):
+        for _x in range(overlay_grid.width):
+            for _y in range(overlay_grid.height):
+                x, y = corner_x + _x, corner_y + _y
+                value = overlay_grid.value_at(_x, _y)
+                if 0 <= x < self.width and 0 <= y < self.height:
+                    self.set_value_at(x, y, value)
+
     @staticmethod
     def get_height_colour(height):
         v = int((1 - height) * 255)
