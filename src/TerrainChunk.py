@@ -8,9 +8,13 @@ from src.Grid import Grid
 
 class TerrainChunk:
 
-    def __init__(self, WORLD_NAME, config):
+    def __init__(self, WORLD_NAME, q, r, config):
 
         self.WORLD_NAME = WORLD_NAME
+        self.q = q
+        self.r = r
+        self.corner_x = self.q * constants.CHUNK_SIZE
+        self.corner_y = self.r * constants.CHUNK_SIZE
         self.create_save_files()
         self.MAX_HEIGHT = 100
         self.TOTAL_HEIGHT = 2 * self.MAX_HEIGHT
@@ -29,8 +33,8 @@ class TerrainChunk:
         initial_noise_tile_size = 128
         self.octave_count = 5
 
-        self.width_in_tiles = self.config["width"]
-        self.height_in_tiles = self.config["height"]
+        self.width_in_tiles = constants.CHUNK_SIZE
+        self.height_in_tiles = constants.CHUNK_SIZE
 
         self.abc_gen(self.seed)
 
@@ -39,7 +43,8 @@ class TerrainChunk:
         # create the biome map
         self.create_biome_map(overlayed)
 
-        Perlin.save_as_image(overlayed, WORLD_NAME + "_overlayed", self.WORLD_NAME)
+        if constants.SAVE_IMAGE_OVERLAYED:
+            Perlin.save_as_image(overlayed, WORLD_NAME + "_overlayed", self.WORLD_NAME)
 
         # TODO: have separate noise maps for biome map and and ground_map
 
@@ -51,9 +56,6 @@ class TerrainChunk:
         self.abc_gen(random.randint(1, 100))
         self.create_surface_map()
 
-        print("Terrain generation complete")
-        print("World can be found in worlds/" + self.WORLD_NAME + "/")
-
     def produce_octaves(self, noise_tile_size):
 
         octaves = []
@@ -62,6 +64,8 @@ class TerrainChunk:
         for octave_no in range(self.octave_count):
             self.abc_gen(self.AAA)
             octave = Perlin(
+                self.corner_x,
+                self.corner_y,
                 self.width_in_tiles,
                 self.height_in_tiles,
                 noise_tile_size,
@@ -70,7 +74,8 @@ class TerrainChunk:
 
             noise_tile_size = math.ceil(noise_tile_size * self.lacunarity)
 
-            Perlin.save_as_image(octave, self.WORLD_NAME + "_octave_" + str(octave_no), self.WORLD_NAME)
+            if constants.SAVE_IMAGE_OCTAVE:
+                Perlin.save_as_image(octave, self.WORLD_NAME + "_octave_" + str(octave_no), self.WORLD_NAME)
             octaves.append(octave)
 
         overlayed = self.overlay_octaves(octaves, 0.5)
@@ -96,9 +101,6 @@ class TerrainChunk:
                 self.biomes[biome_name+"."+sub_biome_name] = Biome(self.WORLD_NAME, biome_name, sub_biome_name)
                 self.biomes_rangerray.append([portion_point, biome_name+"."+sub_biome_name])
             range_min = range_max
-
-        print("Final biomes")
-        print(self.biomes_rangerray)
 
     def create_save_files(self):
         filepath = os.path.join("worlds", self.WORLD_NAME)
@@ -141,7 +143,8 @@ class TerrainChunk:
                 colour = self.get_surface_colour(v, height, biome.height_displacement, self.MAX_HEIGHT)
                 surface_map_image.set_value_at(x, y, colour)
 
-        surface_map_image.save_RGBs(self.WORLD_NAME + "_surface_map", self.WORLD_NAME)
+        if constants.SAVE_IMAGE_SURFACE_MAP:
+            surface_map_image.save_RGBs(self.WORLD_NAME + "_" + str(self.q) + "x" + str(self.r) + "_surface_map", self.WORLD_NAME)
 
     def create_biome_map(self, perlin_grid):
         self.biome_map = perlin_grid.copy()
@@ -155,7 +158,8 @@ class TerrainChunk:
                 colour = biome.colour
                 biome_map_image.set_value_at(x, y, colour)
 
-        biome_map_image.save_RGBs(self.WORLD_NAME + "_biome_map", self.WORLD_NAME)
+        if constants.SAVE_IMAGE_BIOME_MAP:
+            biome_map_image.save_RGBs(self.WORLD_NAME + "_biome_map", self.WORLD_NAME)
 
     def get_biome_at(self, x, y):
         return self.biome_map.value_at(x, y)

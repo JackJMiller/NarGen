@@ -6,11 +6,15 @@ from src.Grid import Grid
 
 class Perlin:
 
-    def __init__(self, width, height, chunk_size, AAA, BBB, CCC):
+    def __init__(self, start_x, start_y, width, height, chunk_size, AAA, BBB, CCC):
 
+        self.start_x = start_x
+        self.start_y = start_y
         self.chunk_size = chunk_size
         self.width_in_tiles = width
         self.height_in_tiles = height
+        self.end_x = self.start_x + self.width_in_tiles
+        self.end_y = self.start_y + self.height_in_tiles
 
         self.AAA = AAA
         self.BBB = BBB
@@ -18,14 +22,16 @@ class Perlin:
 
         self.grid = Grid(self.width_in_tiles, self.height_in_tiles, 0)
 
-        for map_x in range(self.width_in_tiles):
-            for map_y in range(self.height_in_tiles):
+        for x in range(self.width_in_tiles):
+            for y in range(self.height_in_tiles):
+                map_x = self.start_x + x
+                map_y = self.start_y + y
                 _x = map_x % chunk_size
                 _y = map_y % chunk_size
                 chunk_x = int(map_x / chunk_size) + _x / self.chunk_size
                 chunk_y = int(map_y / chunk_size) + _y / self.chunk_size
                 NOISE = self.noise(chunk_x, chunk_y)
-                self.grid.set_value_at(map_x, map_y, NOISE)
+                self.grid.set_value_at(x, y, NOISE)
 
     def value_at(self, x, y):
         return self.grid.value_at(x, y)

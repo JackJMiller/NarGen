@@ -1,5 +1,5 @@
 import json, os, sys
-from src.TerrainChunk import TerrainChunk
+from src.Terrain import Terrain
 
 # locate world configuration
 WORLD_NAME = sys.argv[1]
@@ -9,5 +9,5 @@ file = open(config_file_path, "r")
 config = json.load(file)
 
 # generate terrain according to configuration
-terrain = TerrainChunk(WORLD_NAME, config)
+terrain = Terrain(WORLD_NAME, config)
 
