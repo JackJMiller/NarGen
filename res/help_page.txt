@@ -1,0 +1,9 @@
+
+Options:
+  new-world WORLD_NAME       configure a new world
+  generate CONFIG_FILE       generate and save terrain world according to config file
+  render WORLD_NAME          render a saved world
+  delete-world WORLD_NAME    delete configuration files for world
+  list                       list all world configurations
+  list-sample-worlds         list all sample world configurations
+  -h, --help                 show this page

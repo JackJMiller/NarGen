@@ -1,5 +1,5 @@
 import src.constants as constants
-import math, os, random, sys
+import json, math, os, random, sys
 from src.functions import clamp
 from PIL import Image
 from src.Biome import Biome 
@@ -16,10 +16,7 @@ class Terrain:
         self.TOTAL_HEIGHT = 2 * self.MAX_HEIGHT
         self.config = config
         self.seed = self.config["seed"]
-        self.biomes_rangerray = self.config["biomes"]
-        self.biomes = { }
-        for biome in config["biomes"]:
-            self.biomes[biome[1]] = Biome(self.WORLD_NAME, biome[1])
+        self.configure_biomes()
         self.seed = config["seed"]
         self.MIN_WORLD_HEIGHT = -100
         self.MAX_WORLD_HEIGHT = 200
@@ -74,6 +71,19 @@ class Terrain:
 
         print("Terrain generation complete")
         print("World can be found in worlds/" + self.WORLD_NAME + "/")
+
+    def configure_biomes(self):
+        self.biomes = { }
+        self.biomes_rangerray = []
+        for biome in self.config["biomes"]:
+            biome_name = biome[1]
+            biome_config_path = os.path.join("configs", self.WORLD_NAME, "biomes", biome_name, "CONFIG.json")
+            file = open(biome_config_path, "r")
+            biome_config = json.load(file)
+            for sub_biome in biome_config["ranges"]:
+                sub_biome_name = sub_biome[1]
+                self.biomes[sub_biome_name] = Biome(self.WORLD_NAME, biome_name, sub_biome_name)
+                self.biomes_rangerray.append([sub_biome[0], sub_biome[1]])
 
     def create_save_files(self):
         filepath = os.path.join("worlds", self.WORLD_NAME)

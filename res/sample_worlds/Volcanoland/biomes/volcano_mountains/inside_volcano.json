@@ -1,0 +1,9 @@
+{
+	"colour": [40, 0, 0],
+	"altitude_surfaces": [
+		[-1, "lava"]
+	],
+	"persistence": 0.9,
+	"height_displacement": -10,
+	"height_multiplier": 100
+}
