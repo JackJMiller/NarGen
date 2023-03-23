@@ -130,7 +130,7 @@ class TerrainChunk:
 
     def create_biome_map(self, perlin_grid):
         self.biome_map = perlin_grid.copy()
-        biome_map_image = Grid(perlin_grid.width, perlin_grid.height, 0)
+        self.biome_map_image = Grid(perlin_grid.width, perlin_grid.height, 0)
 
         for x in range(perlin_grid.width):
             for y in range(perlin_grid.height):
@@ -138,10 +138,10 @@ class TerrainChunk:
                 biome = self.determine_biome_by_height(height)
                 self.biome_map.set_value_at(x, y, biome)
                 colour = biome.colour
-                biome_map_image.set_value_at(x, y, colour)
+                self.biome_map_image.set_value_at(x, y, colour)
 
         if constants.SAVE_IMAGE_BIOME_MAP:
-            biome_map_image.save_RGBs(self.WORLD_NAME + "_biome_map", self.WORLD_NAME)
+            self.biome_map_image.save_RGBs(self.WORLD_NAME + "_biome_map", self.WORLD_NAME)
 
     def get_biome_at(self, x, y):
         return self.biome_map.value_at(x, y)

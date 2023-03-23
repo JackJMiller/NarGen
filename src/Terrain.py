@@ -19,19 +19,8 @@ class Terrain:
         self.height_in_chunks = math.ceil(self.width_in_tiles / constants.CHUNK_SIZE)
         self.configure_biomes()
 
-        self.surface_map_image = Grid(self.width_in_tiles, self.height_in_tiles, 0)
-
-        for q in range(self.width_in_chunks):
-            for r in range(self.height_in_chunks):
-                chunk = TerrainChunk(self.WORLD_NAME, q, r, config, self.biomes, self.biomes_rangerray)
-                corner_x, corner_y = q * constants.CHUNK_SIZE, r * constants.CHUNK_SIZE
-                self.surface_map_image.overlay(
-                    chunk.surface_map_image,
-                    corner_x,
-                    corner_y
-                )
-
-        self.surface_map_image.save_RGBs(self.WORLD_NAME + "_surface_map", self.WORLD_NAME)
+        self.join_chunks("surface_map_image")
+        self.join_chunks("biome_map_image")
 
         print("Terrain generation complete")
         print("World can be found in worlds/" + self.WORLD_NAME + "/")
@@ -54,4 +43,28 @@ class Terrain:
                 self.biomes[biome_name+"."+sub_biome_name] = Biome(self.WORLD_NAME, biome_name, sub_biome_name)
                 self.biomes_rangerray.append([portion_point, biome_name+"."+sub_biome_name])
             range_min = range_max
+
+        print("Final biomes rangerray")
+        print(self.biomes_rangerray)
+
+    def join_chunks(self, map_image_name):
+
+        map_image = Grid(self.width_in_tiles, self.height_in_tiles, 0)
+
+        for q in range(self.width_in_chunks):
+            for r in range(self.height_in_chunks):
+                chunk = TerrainChunk(
+                    self.WORLD_NAME,
+                    q,
+                    r,
+                    self.config,
+                    self.biomes,
+                    self.biomes_rangerray
+                )
+
+                corner_x, corner_y = q * constants.CHUNK_SIZE, r * constants.CHUNK_SIZE
+                map_image.overlay(getattr(chunk, map_image_name), corner_x, corner_y)
+
+        map_image.save_RGBs(self.WORLD_NAME + "_" + map_image_name, self.WORLD_NAME)
+
 

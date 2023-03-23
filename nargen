@@ -23,6 +23,7 @@ elif [[ $# -ge 1 && "$1" == "generate" ]]; then
 		cat res/help_page.txt
 	elif [ -d "configs/$2/" ]; then
 		echo "Creating terrain from $2"
+		rm -r worlds/$2/
 		python3 main.py $2
 	else
 		echo "Error: Cannot find world named $2"
