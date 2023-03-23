@@ -17,7 +17,7 @@ class Renderer3D(ShowBase):
 
         # position of camera and light
         self.camera_x = 0
-        self.camera_y = -30
+        self.camera_y = 0
         self.camera_z = 30
 
         self.chunk = []
@@ -62,7 +62,7 @@ class Renderer3D(ShowBase):
     def move_camera_task(self, task):
         elapsed = task.time
 
-        self.camera_x = elapsed
+        self.camera_x = 20 + 2 * elapsed
         self.camera_y = -30 + 2 * elapsed
         # self.camera_z = 10 + elapsed
 

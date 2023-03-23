@@ -10,7 +10,7 @@ SURFACES = {
     "coal": { "colour": (0, 0, 0) }
 }
 
-AVAILABLE_BLOCKS = ["grass", "lava", "snow", "stone", "water"]
+AVAILABLE_BLOCKS = ["grass", "lava", "sand", "snow", "stone", "water"]
 
 CHUNK_SIZE = 20
 

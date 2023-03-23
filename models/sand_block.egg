@@ -1,20 +1,20 @@
 <CoordinateSystem> { Z-up } 
 <Material> Material.001 {
   <Scalar> baser { 1.0 }
-  <Scalar> baseg { 1.0 }
-  <Scalar> baseb { 1.0 }
+  <Scalar> baseg { 0.8999999761581421 }
+  <Scalar> baseb { 0.20000000298023224 }
   <Scalar> basea { 1.0 }
   <Scalar> ambr { 1.0 }
-  <Scalar> ambg { 1.0 }
-  <Scalar> ambb { 1.0 }
+  <Scalar> ambg { 0.8999999761581421 }
+  <Scalar> ambb { 0.20000000298023224 }
   <Scalar> amba { 1.0 }
   <Scalar> emitr { 0.0 }
   <Scalar> emitg { 0.0 }
   <Scalar> emitb { 0.0 }
   <Scalar> emita { 1.0 }
   <Scalar> specr { 1.0 }
-  <Scalar> specg { 1.0 }
-  <Scalar> specb { 1.0 }
+  <Scalar> specg { 0.8999999761581421 }
+  <Scalar> specb { 0.20000000298023224 }
   <Scalar> speca { 1.0 }
   <Scalar> shininess { 0.5 }
   <Scalar> roughness { 0.5 }
