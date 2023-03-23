@@ -1,5 +1,11 @@
 import json, os, sys
 from src.Terrain import Terrain
+from src.Renderer3D import Renderer3D
+
+renderer = Renderer3D()
+renderer.run()
+
+sys.exit(0)
 
 # locate world configuration
 WORLD_NAME = sys.argv[1]
