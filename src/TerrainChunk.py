@@ -57,6 +57,8 @@ class TerrainChunk:
         self.abc_gen(random.randint(1, 100))
         self.create_surface_map()
 
+        self.export_save_file()
+
     def produce_octaves(self, noise_tile_size):
 
         octaves = []
@@ -89,6 +91,7 @@ class TerrainChunk:
         if not os.path.exists(filepath):
             os.makedirs(filepath)
             os.makedirs(os.path.join(filepath, "images"))
+            os.makedirs(os.path.join(filepath, "chunks"))
 
     def create_ground_map(self, octaves):
 
@@ -110,7 +113,7 @@ class TerrainChunk:
                 biome = self.get_biome_at(x, y)
                 original = self.ground_map.value_at(x, y)
                 v = biome.height_displacement
-                self.ground_map.set_value_at(x, y, original + v)
+                self.ground_map.set_value_at(x, y, int(original + v))
 
     def create_surface_map(self):
 
@@ -142,6 +145,21 @@ class TerrainChunk:
 
         if constants.SAVE_IMAGE_BIOME_MAP:
             self.biome_map_image.save_RGBs(self.WORLD_NAME + "_biome_map", self.WORLD_NAME)
+
+    def export_save_file(self):
+        save_file_object = { "q": self.q, "r": self.r, "map": [] }
+        for x in range(self.width_in_tiles):
+            row = []
+            for y in range(self.height_in_tiles):
+                row.append([
+                    str(self.biome_map.value_at(x, y)),
+                    self.ground_map.value_at(x, y),
+                    self.surface_map.value_at(x, y)
+                ])
+            save_file_object["map"].append(row)
+        filepath = os.path.join("worlds", self.WORLD_NAME, "chunks", str(self.q) + "x" + str(self.r) + ".json")
+        with open(filepath, "w") as file:
+            json.dump(save_file_object, file, indent = 4)
 
     def get_biome_at(self, x, y):
         return self.biome_map.value_at(x, y)
