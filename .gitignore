@@ -3,3 +3,4 @@ cell-automata/__pycache__/
 cell-automata/images/
 worlds/*
 notes
+models/*.blend*
