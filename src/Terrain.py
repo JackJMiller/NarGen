@@ -14,9 +14,9 @@ class Terrain:
 
         self.WORLD_NAME = WORLD_NAME
         self.config = config
-        self.width_in_tiles, self.height_in_tiles = config["width"], config["height"]
-        self.width_in_chunks = math.ceil(self.width_in_tiles / constants.CHUNK_SIZE)
-        self.height_in_chunks = math.ceil(self.width_in_tiles / constants.CHUNK_SIZE)
+        self.width_in_chunks, self.height_in_chunks = config["width"], config["height"]
+        self.width_in_tiles = self.width_in_chunks * constants.CHUNK_SIZE
+        self.height_in_tiles = self.height_in_chunks * constants.CHUNK_SIZE
         self.configure_biomes()
 
         self.join_chunks("surface_map_image")

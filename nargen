@@ -49,6 +49,14 @@ elif [[ $# -eq 2 && "$1" == "render" ]]; then
 		echo "Error: Cannot find world named $2"
 	fi
 
+elif [[ $# -eq 2 && "$1" == "view-maps" ]]; then
+
+	if [ -d "worlds/$2/" ]; then
+		viewnior worlds/$2/images/
+	else
+		echo "Error: Cannot find world named $2"
+	fi
+
 elif [[ $# -eq 1 && "$1" == "list" ]]; then
 
 	ls configs/

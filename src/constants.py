@@ -10,6 +10,8 @@ SURFACES = {
     "coal": { "colour": (0, 0, 0) }
 }
 
+AVAILABLE_BLOCKS = ["grass", "lava", "snow", "stone", "water"]
+
 CHUNK_SIZE = 20
 
 SAVE_IMAGE_BIOME_MAP = False

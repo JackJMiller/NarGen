@@ -1,0 +1,8 @@
+{
+	"ranges": [
+		[0, "lower"],
+		[0.75, "upper"],
+		[1, "inside_volcano"]
+	]
+}
+
