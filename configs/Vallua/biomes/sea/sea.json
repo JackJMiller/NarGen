@@ -1,9 +1,9 @@
 {
-	"colour": [40, 0, 0],
+	"colour": [0, 0, 200],
 	"altitude_surfaces": [
-		[-1, "lava"]
+		[-1, "grass"]
 	],
 	"persistence": 0.9,
 	"height_displacement": -10,
-	"height_multiplier": 100
+	"height_multiplier": 1
 }

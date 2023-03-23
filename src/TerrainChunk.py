@@ -1,6 +1,6 @@
 import src.constants as constants
 import json, math, os, random, sys
-from src.functions import clamp, noise_to_decimal_portion, portion_point_between
+from src.functions import clamp, noise_to_decimal_portion, portion_point_between, save_json
 from PIL import Image
 from src.Biome import Biome 
 from src.Perlin import Perlin 
@@ -17,7 +17,6 @@ class TerrainChunk:
         self.biomes_rangerray = biomes_rangerray
         self.corner_x = self.q * constants.CHUNK_SIZE
         self.corner_y = self.r * constants.CHUNK_SIZE
-        self.create_save_files()
         self.MAX_HEIGHT = 100
         self.TOTAL_HEIGHT = 2 * self.MAX_HEIGHT
         self.config = config
@@ -86,13 +85,6 @@ class TerrainChunk:
         return octaves, overlayed
 
 
-    def create_save_files(self):
-        filepath = os.path.join("worlds", self.WORLD_NAME)
-        if not os.path.exists(filepath):
-            os.makedirs(filepath)
-            os.makedirs(os.path.join(filepath, "images"))
-            os.makedirs(os.path.join(filepath, "chunks"))
-
     def create_ground_map(self, octaves):
 
         self.ground_map = Grid(self.width_in_tiles, self.height_in_tiles, 0)
@@ -158,8 +150,7 @@ class TerrainChunk:
                 ])
             save_file_object["map"].append(row)
         filepath = os.path.join("worlds", self.WORLD_NAME, "chunks", str(self.q) + "x" + str(self.r) + ".json")
-        with open(filepath, "w") as file:
-            json.dump(save_file_object, file, indent = 4)
+        save_json(save_file_object, filepath)
 
     def get_biome_at(self, x, y):
         return self.biome_map.value_at(x, y)

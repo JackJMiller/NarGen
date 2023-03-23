@@ -1,5 +1,6 @@
 import json, os, sys
 from src.Terrain import Terrain
+from src.GameRenderer import GameRenderer
 from src.Renderer3D import Renderer3D
 
 print(sys.argv)
@@ -20,6 +21,11 @@ elif sys.argv[1] == "render":
     WORLD_NAME = sys.argv[2]
     renderer = Renderer3D(WORLD_NAME)
     renderer.run()
+
+elif sys.argv[1] == "render-game":
+    print("rendering " + sys.argv[1])
+    WORLD_NAME = sys.argv[2]
+    renderer = GameRenderer(WORLD_NAME)
 
 else:
     sys.exit(1)

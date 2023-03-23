@@ -29,8 +29,8 @@ class Renderer3D(ShowBase):
 
         # add tasks to the task manager
         self.taskMgr.add(self.move_camera_task, "MoveCameraTask")
-        for q in range(6):
-            for r in range(6):
+        for q in range(5):
+            for r in range(5):
                 self.load_chunk(q, r)
 
     # load specified chunk
@@ -49,7 +49,7 @@ class Renderer3D(ShowBase):
                 block_name = tile[2]
                 if block_name not in constants.AVAILABLE_BLOCKS:
                     block_name = "grass"
-                model = self.loader.loadModel("models/" + block_name + "_block.egg")
+                model = self.loader.loadModel(os.path.join("res", "3d_models", block_name + "_block.egg"))
                 x = chunk_corner_x + _x
                 y = chunk_corner_y + _y
                 model.setPos(x, y, 0)

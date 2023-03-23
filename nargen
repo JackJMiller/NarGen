@@ -49,7 +49,16 @@ elif [[ $# -eq 2 && "$1" == "render" ]]; then
 		echo "Error: Cannot find world named $2"
 	fi
 
-elif [[ $# -eq 2 && "$1" == "view-maps" ]]; then
+elif [[ $# -eq 2 && "$1" == "render-game" ]]; then
+
+	if [ -d "worlds/$2/" ]; then
+		python3 main.py render-game $2
+		viewnior worlds/$2/images/game.png
+	else
+		echo "Error: Cannot find world named $2"
+	fi
+
+elif [[ $# -eq 2 && "$1" == "maps" ]]; then
 
 	if [ -d "worlds/$2/" ]; then
 		viewnior worlds/$2/images/
