@@ -22,10 +22,12 @@ A world named `Mundo` has now been configured and the config files for this worl
 nargen generate Mundo
 ```
 
-We now have a terrain world stored in `worlds/Mundo/`. The world can finally be rendered with the `render` command.
+We now have a terrain world stored in `worlds/Mundo/`. The world can finally be rendered in 3 dimensions with the `render` command. To view maps of the world, the `view-maps` command can be used.
 
 ```
 nargen render Mundo
+
+nargen view-maps Mundo
 ```
 
 For more help on running the program, view the help page with `nargen --help`.
