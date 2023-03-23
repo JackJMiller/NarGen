@@ -31,7 +31,7 @@ class TerrainChunk:
         self.abc_gen(self.seed)
 
         # TODO: size this according to number of biomes
-        initial_noise_tile_size = 128
+        initial_noise_tile_size = 32 * len(biomes)
         self.octave_count = 5
 
         self.width_in_tiles = constants.CHUNK_SIZE

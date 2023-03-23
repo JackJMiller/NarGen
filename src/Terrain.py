@@ -20,6 +20,7 @@ class Terrain:
         self.configure_biomes()
 
         self.join_chunks("surface_map_image")
+        self.join_chunks("surface_map_image")
         self.join_chunks("biome_map_image")
 
         print("Terrain generation complete")
