@@ -24,7 +24,7 @@ elif [[ $# -ge 1 && "$1" == "generate" ]]; then
 	elif [ -d "configs/$2/" ]; then
 		echo "Creating terrain from $2"
 		rm -r worlds/$2/
-		python3 main.py $2
+		python3 main.py generate $2
 	else
 		echo "Error: Cannot find world named $2"
 	fi
@@ -43,7 +43,8 @@ elif [[ $# -ge 1 && "$1" == "delete-world" ]]; then
 elif [[ $# -eq 2 && "$1" == "render" ]]; then
 
 	if [ -d "worlds/$2/" ]; then
-		viewnior worlds/$2/images/
+		python3 main.py render $2
+		# viewnior worlds/$2/images/
 	else
 		echo "Error: Cannot find world named $2"
 	fi

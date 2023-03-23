@@ -6,6 +6,6 @@
 		[-1, "snow"]
 	],
 	"persistence": 0.7,
-	"height_displacement": 60,
-	"height_multiplier": 70
+	"height_displacement": 2,
+	"height_multiplier": 14
 }

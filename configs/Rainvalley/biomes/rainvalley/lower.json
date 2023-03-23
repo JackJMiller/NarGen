@@ -4,6 +4,6 @@
 		[20, "grass"]
 	],
 	"persistence": 0.6,
-	"height_displacement": 2,
-	"height_multiplier": 10
+	"height_displacement": 0,
+	"height_multiplier": 2
 }
