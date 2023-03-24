@@ -1,7 +1,7 @@
 import json, math, os, simplepbr, sys
 import random
 
-import src.constants as constants
+from src.constants import AVAILABLE_BLOCKS, CHUNK_SIZE
 
 from direct.showbase.ShowBase import ShowBase
 from direct.task import Task
@@ -35,19 +35,19 @@ class Renderer3D(ShowBase):
 
     # load specified chunk
     def load_chunk(self, chunk_q, chunk_r):
-        filepath = os.path.join("worlds", self.world_name, "chunks", str(chunk_q) + "x" + str(chunk_r) + ".json")
+        filepath = TerrainChunk.get_filepath(self.world_name, chunk_q, chunk_r)
         file = open(filepath, "r")
         save_object = json.load(file)
-        chunk_corner_x = chunk_q * constants.CHUNK_SIZE
-        chunk_corner_y = chunk_r * constants.CHUNK_SIZE
-        for _x in range(constants.CHUNK_SIZE):
-            for _y in range(constants.CHUNK_SIZE):
+        chunk_corner_x = chunk_q * CHUNK_SIZE
+        chunk_corner_y = chunk_r * CHUNK_SIZE
+        for _x in range(CHUNK_SIZE):
+            for _y in range(CHUNK_SIZE):
                 tile = save_object["map"][_x][_y]
                 height = tile[1]
                 if height < 1:
                     height = 1
                 block_name = tile[2]
-                if block_name not in constants.AVAILABLE_BLOCKS:
+                if block_name not in AVAILABLE_BLOCKS:
                     block_name = "grass"
                 model = self.loader.loadModel(os.path.join("res", "3d_models", block_name + "_block.egg"))
                 x = chunk_corner_x + _x
@@ -72,8 +72,8 @@ class Renderer3D(ShowBase):
         plnp.setPos(self.camera_x, self.camera_y, self.camera_z)
         render.setLight(plnp)
 
-        self.camera_chunk_q = int(self.camera_x / constants.CHUNK_SIZE)
-        self.camera_chunk_r = int(self.camera_y / constants.CHUNK_SIZE)
+        self.camera_chunk_q = int(self.camera_x / CHUNK_SIZE)
+        self.camera_chunk_r = int(self.camera_y / CHUNK_SIZE)
 
         if 0 <= self.camera_chunk_q and 0 <= self.camera_chunk_r and str(self.camera_chunk_q) + "x" + str(self.camera_chunk_r) not in self.chunks_loaded:
             self.load_chunk(self.camera_chunk_q, self.camera_chunk_r)

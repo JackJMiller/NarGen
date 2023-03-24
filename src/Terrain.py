@@ -1,6 +1,6 @@
 import json, math, os
 
-import src.constants as constants
+from src.constants import CHUNK_SIZE
 
 from src.functions import noise_to_decimal_portion, portion_point_between, save_json
 
@@ -15,18 +15,23 @@ class Terrain:
         self.name = name
         self.config = config
         self.width_in_chunks, self.height_in_chunks = config["width"], config["height"]
-        self.width_in_tiles = self.width_in_chunks * constants.CHUNK_SIZE
-        self.height_in_tiles = self.height_in_chunks * constants.CHUNK_SIZE
+        self.width_in_tiles = self.width_in_chunks * CHUNK_SIZE
+        self.height_in_tiles = self.height_in_chunks * CHUNK_SIZE
         self.create_save_files()
+
+        self.max_height = 30
+        self.total_height = 2 * self.max_height
 
         self.configure_biomes()
 
         self.world_info = {
             "width": self.width_in_chunks,
-            "height": self.height_in_chunks
+            "height": self.height_in_chunks,
+            "max_height": self.max_height,
+            "total_height": self.total_height
         }
 
-        save_json(self.world_info, os.path.join("worlds", self.name, "world_info.json"))
+        save_json(self.world_info, os.path.join("worlds", self.name, "WORLD_INFO.json"))
 
         self.join_chunks("surface_map_image")
         self.join_chunks("surface_map_image")
@@ -72,16 +77,8 @@ class Terrain:
 
         for q in range(self.width_in_chunks):
             for r in range(self.height_in_chunks):
-                chunk = TerrainChunk(
-                    self.name,
-                    q,
-                    r,
-                    self.config,
-                    self.biomes,
-                    self.biomes_rangerray
-                )
-
-                corner_x, corner_y = q * constants.CHUNK_SIZE, r * constants.CHUNK_SIZE
+                chunk = TerrainChunk(self, q, r, self.config)
+                corner_x, corner_y = q * CHUNK_SIZE, r * CHUNK_SIZE
                 map_image.overlay(getattr(chunk, map_image_name), corner_x, corner_y)
 
         map_image.save_RGBs(self.name + "_" + map_image_name, self.name)

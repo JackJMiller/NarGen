@@ -2,7 +2,9 @@ import math, os, sys
 
 from PIL import Image, ImageEnhance
 
-from src.functions import load_json
+from src.TerrainChunk import TerrainChunk
+
+from src.functions import get_brightness_at_height, load_json
 from src.constants import CHUNK_SIZE
 
 class GameRenderer:
@@ -10,7 +12,7 @@ class GameRenderer:
     def __init__(self, world_name):
 
         self.world_name = world_name
-        self.world_config = load_json(os.path.join("worlds", world_name, "world_info.json"))
+        self.world_config = load_json(os.path.join("worlds", world_name, "WORLD_INFO.json"))
 
         self.image_width = self.world_config["width"] * CHUNK_SIZE * 20
         self.image_height = self.world_config["height"] * CHUNK_SIZE * 20
@@ -28,7 +30,7 @@ class GameRenderer:
         for r in range(self.world_config["height"]):
             self.chunks = []
             for q in range(self.world_config["width"]):
-                filepath = os.path.join("worlds", self.world_name, "chunks", str(q) + "x" + str(r) + ".json")
+                filepath = TerrainChunk.get_filepath(self.world_name, q, r)
                 chunk = load_json(filepath)
                 self.chunks.append(chunk)
             self.draw_chunk_row(r)
@@ -61,7 +63,8 @@ class GameRenderer:
                 tile_name = "grass"
             sprite = self.sprites[tile_name + "_block"]
             enhancer = ImageEnhance.Brightness(sprite)
-            brightness = 1 - 1 / math.exp(0.3 * (z + 2))
+            # brightness = 1 - 1 / math.exp(0.3 * (z + 2))
+            brightness = get_brightness_at_height(z, self.world_config["max_height"])
             block_image = enhancer.enhance(brightness)
             self.image.paste(block_image, (canvas_x, canvas_y), mask = block_image)
             canvas_y -= 14

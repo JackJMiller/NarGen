@@ -13,6 +13,7 @@ SURFACES = {
 AVAILABLE_BLOCKS = ["grass", "lava", "sand", "snow", "stone", "water"]
 
 CHUNK_SIZE = 20
+MAX_HEIGHT = 100
 
 SAVE_IMAGE_BIOME_MAP = False
 SAVE_IMAGE_SURFACE_MAP = False

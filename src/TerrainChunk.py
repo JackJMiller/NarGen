@@ -1,6 +1,6 @@
-import src.constants as constants
+from src.constants import CHUNK_SIZE, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE_IMAGE_OVERLAYED, SAVE_IMAGE_SURFACE_MAP, SURFACES
 import json, math, os, random, sys
-from src.functions import clamp, noise_to_decimal_portion, portion_point_between, save_json
+from src.functions import clamp, get_brightness_at_height, noise_to_decimal_portion, portion_point_between, save_json
 from PIL import Image
 from src.Biome import Biome 
 from src.Perlin import Perlin 
@@ -8,17 +8,15 @@ from src.Grid import Grid
 
 class TerrainChunk:
 
-    def __init__(self, WORLD_NAME, q, r, config, biomes, biomes_rangerray):
+    def __init__(self, parent_world, q, r, config):
 
-        self.WORLD_NAME = WORLD_NAME
+        self.parent_world = parent_world
         self.q = q
         self.r = r
-        self.biomes = biomes
-        self.biomes_rangerray = biomes_rangerray
-        self.corner_x = self.q * constants.CHUNK_SIZE
-        self.corner_y = self.r * constants.CHUNK_SIZE
-        self.MAX_HEIGHT = 100
-        self.TOTAL_HEIGHT = 2 * self.MAX_HEIGHT
+        self.biomes = self.parent_world.biomes
+        self.biomes_rangerray = self.parent_world.biomes_rangerray
+        self.corner_x = self.q * CHUNK_SIZE
+        self.corner_y = self.r * CHUNK_SIZE
         self.config = config
         self.seed = self.config["seed"]
         self.lacunarity = 0.5
@@ -30,11 +28,11 @@ class TerrainChunk:
         self.abc_gen(self.seed)
 
         # TODO: size this according to number of biomes
-        initial_noise_tile_size = 32 * len(biomes)
+        initial_noise_tile_size = 32 * len(self.biomes)
         self.octave_count = 5
 
-        self.width_in_tiles = constants.CHUNK_SIZE
-        self.height_in_tiles = constants.CHUNK_SIZE
+        self.width_in_tiles = CHUNK_SIZE
+        self.height_in_tiles = CHUNK_SIZE
 
         self.abc_gen(self.seed)
 
@@ -43,8 +41,8 @@ class TerrainChunk:
         # create the biome map
         self.create_biome_map(overlayed)
 
-        if constants.SAVE_IMAGE_OVERLAYED:
-            Perlin.save_as_image(overlayed, WORLD_NAME + "_overlayed", self.WORLD_NAME)
+        if SAVE_IMAGE_OVERLAYED:
+            Perlin.save_as_image(overlayed, self.parent_world.name + "_overlayed", self.parent_world.name)
 
         # TODO: have separate noise maps for biome map and and ground_map
 
@@ -76,8 +74,8 @@ class TerrainChunk:
 
             noise_tile_size = math.ceil(noise_tile_size * self.lacunarity)
 
-            if constants.SAVE_IMAGE_OCTAVE:
-                Perlin.save_as_image(octave, self.WORLD_NAME + "_octave_" + str(octave_no), self.WORLD_NAME)
+            if SAVE_IMAGE_OCTAVE:
+                Perlin.save_as_image(octave, self.parent_world.name + "_octave_" + str(octave_no), self.parent_world.name)
             octaves.append(octave)
 
         overlayed = self.overlay_octaves(octaves, 0.5)
@@ -117,11 +115,16 @@ class TerrainChunk:
                 biome = self.get_biome_at(x, y)
                 v = self.determine_surface(height, biome.altitude_surfaces)
                 self.surface_map.set_value_at(x, y, v)
-                colour = self.get_surface_colour(v, height, biome.height_displacement, self.MAX_HEIGHT)
+                colour = self.get_surface_colour(v, height, biome.height_displacement)
                 self.surface_map_image.set_value_at(x, y, colour)
 
-        if constants.SAVE_IMAGE_SURFACE_MAP:
-            self.surface_map_image.save_RGBs(self.WORLD_NAME + "_" + str(self.q) + "x" + str(self.r) + "_surface_map", self.WORLD_NAME)
+        if SAVE_IMAGE_SURFACE_MAP:
+            filepath = self.get_filepath(self.parent_world.name, self.q, self.r)
+            self.surface_map_image.save_RGBs(filepath, self.parent_world.name)
+
+    @staticmethod
+    def get_filepath(world_name, q, r):
+        return os.path.join("worlds", world_name, "chunks", str(q) + "x" + str(r) + ".json")
 
     def create_biome_map(self, perlin_grid):
         self.biome_map = perlin_grid.copy()
@@ -135,8 +138,8 @@ class TerrainChunk:
                 colour = biome.colour
                 self.biome_map_image.set_value_at(x, y, colour)
 
-        if constants.SAVE_IMAGE_BIOME_MAP:
-            self.biome_map_image.save_RGBs(self.WORLD_NAME + "_biome_map", self.WORLD_NAME)
+        if SAVE_IMAGE_BIOME_MAP:
+            self.biome_map_image.save_RGBs(self.parent_world.name + "_biome_map", self.parent_world.name)
 
     def export_save_file(self):
         save_file_object = { "q": self.q, "r": self.r, "map": [] }
@@ -149,7 +152,7 @@ class TerrainChunk:
                     self.surface_map.value_at(x, y)
                 ])
             save_file_object["map"].append(row)
-        filepath = os.path.join("worlds", self.WORLD_NAME, "chunks", str(self.q) + "x" + str(self.r) + ".json")
+        filepath = self.get_filepath(self.parent_world.name, self.q, self.r)
         save_json(save_file_object, filepath)
 
     def get_biome_at(self, x, y):
@@ -191,14 +194,23 @@ class TerrainChunk:
         # when v exceeds maximum choice, return the last item
         return rangerray[-1][1]
 
-    def get_surface_colour(self, surface_name, height, height_displacement, max_height):
+    def get_surface_colour(self, surface_name, height, height_displacement):
         if height < 0:
             height *= -1
 
-        v = 255 - int(255 * clamp(height, 255) / max_height)
+        brightness = get_brightness_at_height(height, self.parent_world.max_height)
 
-        colour = constants.SURFACES[surface_name]["colour"]
+        v = 255 * brightness
 
+        colour = SURFACES[surface_name]["colour"]
+
+        """
+        colour = (
+            int(0.2 * v + 0.8 * colour[0]),
+            int(0.2 * v + 0.8 * colour[1]),
+            int(0.2 * v + 0.8 * colour[2])
+        )
+        """
         colour = (
             int(0.4 * v + 0.6 * colour[0]),
             int(0.4 * v + 0.6 * colour[1]),
