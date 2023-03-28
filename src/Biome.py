@@ -2,14 +2,9 @@ import json, os, sys
 
 class Biome:
 
-    def __init__(self, WORLD_NAME, parent_biome_name, name):
+    def __init__(self, WORLD_NAME, parent_biome_name, name, config):
         self.parent_biome_name = parent_biome_name
         self.name = name
-
-        config_file_path = os.path.join("configs", WORLD_NAME, "biomes", parent_biome_name, self.name + ".json")
-
-        file = open(config_file_path, "r")
-        config = json.load(file)
 
         self.config = config
         self.colour = tuple(self.config["colour"])

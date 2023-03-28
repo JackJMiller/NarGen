@@ -5,7 +5,7 @@ from PIL import Image, ImageEnhance
 from src.TerrainChunk import TerrainChunk
 
 from src.functions import get_brightness_at_height, load_json
-from src.constants import CHUNK_SIZE
+from src.constants import CHUNK_SIZE, SPRITES
 
 class GameRenderer:
 
@@ -18,14 +18,6 @@ class GameRenderer:
         self.image_height = self.world_config["height"] * CHUNK_SIZE * 20
 
         self.image = Image.new("RGBA", (self.image_width, self.image_height), (40, 160, 255, 255))
-
-        self.sprites = {
-            "grass_block": Image.open("res/sprites/grass_block.png", "r").convert("RGBA"),
-            "sand_block": Image.open("res/sprites/sand_block.png", "r").convert("RGBA"),
-            "snow_block": Image.open("res/sprites/snow_block.png", "r").convert("RGBA"),
-            "stone_block": Image.open("res/sprites/stone_block.png", "r").convert("RGBA"),
-            "water_block": Image.open("res/sprites/water_block.png", "r").convert("RGBA")
-        }
 
         for r in range(self.world_config["height"]):
             self.chunks = []
@@ -46,11 +38,13 @@ class GameRenderer:
                 rgb = Perlin.get_height_colour(v)
                 pixels[x, y] = rgb
 
+
     def draw_chunk_row(self, r):
         for q in range(len(self.chunks)):
             for _y in range(CHUNK_SIZE):
                 for _x in range(CHUNK_SIZE):
                     self.draw_blocks_at(q, _x, r, _y)
+
 
     def draw_blocks_at(self, chunk_q, _x, chunk_r, _y):
         x = chunk_q * CHUNK_SIZE + _x
@@ -59,15 +53,18 @@ class GameRenderer:
         tile = self.chunks[chunk_q]["map"][_x][_y]
         height, tile_name = tile[1], tile[2]
         for z in range(height):
-            if tile_name + "_block" not in self.sprites.keys():
+            if tile_name + "_block" not in SPRITES.keys():
                 tile_name = "grass"
-            sprite = self.sprites[tile_name + "_block"]
-            enhancer = ImageEnhance.Brightness(sprite)
-            # brightness = 1 - 1 / math.exp(0.3 * (z + 2))
-            brightness = get_brightness_at_height(z, self.world_config["max_height"])
-            block_image = enhancer.enhance(brightness)
-            self.image.paste(block_image, (canvas_x, canvas_y), mask = block_image)
+            self.draw_tile(tile_name + "_block", canvas_x, canvas_y, z)
             canvas_y -= 14
         if height <= 0:
-            self.image.paste(self.sprites["water_block"], (canvas_x, canvas_y), mask = self.sprites["water_block"])
+            height = abs(height)
+            self.draw_tile("water_block", canvas_x, canvas_y, height)
+
+    def draw_tile(self, tile_name, canvas_x, canvas_y, z):
+        sprite = SPRITES[tile_name]
+        enhancer = ImageEnhance.Brightness(sprite)
+        brightness = get_brightness_at_height(z, self.world_config["max_height"])
+        block_image = enhancer.enhance(brightness)
+        self.image.paste(block_image, (canvas_x, canvas_y), mask = block_image)
 

@@ -1,3 +1,5 @@
+from PIL import Image, ImageEnhance
+
 SURFACES = {
     "water": { "colour": (0, 0, 120) },
     "grass": { "colour": (30, 160, 30) },
@@ -9,6 +11,15 @@ SURFACES = {
     "lava": { "colour": (240, 30, 0) },
     "coal": { "colour": (0, 0, 0) }
 }
+
+SPRITES = {
+    "grass_block": Image.open("res/sprites/grass_block.png", "r").convert("RGBA"),
+    "sand_block": Image.open("res/sprites/sand_block.png", "r").convert("RGBA"),
+    "snow_block": Image.open("res/sprites/snow_block.png", "r").convert("RGBA"),
+    "stone_block": Image.open("res/sprites/stone_block.png", "r").convert("RGBA"),
+    "water_block": Image.open("res/sprites/water_block.png", "r").convert("RGBA")
+}
+
 
 AVAILABLE_BLOCKS = ["grass", "lava", "sand", "snow", "stone", "water"]
 

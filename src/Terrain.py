@@ -56,7 +56,7 @@ class Terrain:
 
         for biome in self.config["biomes"]:
             range_max, biome_name = biome[0], biome[1]
-            biome_config_path = os.path.join("configs", self.name, "biomes", biome_name, "CONFIG.json")
+            biome_config_path = os.path.join("configs", self.name, "biomes", biome_name + ".json")
             file = open(biome_config_path, "r")
             biome_config = json.load(file)
             for sub_biome in biome_config["ranges"]:
@@ -64,7 +64,7 @@ class Terrain:
                 sub_biome_name = sub_biome[1]
                 portion = noise_to_decimal_portion(sub_biome_portion_point)
                 portion_point = portion_point_between(range_min, range_max, portion)
-                self.biomes[biome_name+"."+sub_biome_name] = Biome(self.name, biome_name, sub_biome_name)
+                self.biomes[biome_name+"."+sub_biome_name] = Biome(self.name, biome_name, sub_biome_name, biome_config[sub_biome_name])
                 self.biomes_rangerray.append([portion_point, biome_name+"."+sub_biome_name])
             range_min = range_max
 

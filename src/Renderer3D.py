@@ -8,6 +8,7 @@ from direct.task import Task
 from panda3d.core import PointLight
 
 class Renderer3D(ShowBase):
+
     def __init__(self, world_name):
         ShowBase.__init__(self)
 
@@ -32,6 +33,7 @@ class Renderer3D(ShowBase):
         for q in range(5):
             for r in range(5):
                 self.load_chunk(q, r)
+
 
     # load specified chunk
     def load_chunk(self, chunk_q, chunk_r):
@@ -58,6 +60,7 @@ class Renderer3D(ShowBase):
                 self.chunk.append(model)
                 self.chunks_loaded.append(str(chunk_q) + "x" + str(chunk_r))
 
+
     # task that moves the camera
     def move_camera_task(self, task):
         elapsed = task.time
@@ -79,3 +82,4 @@ class Renderer3D(ShowBase):
             self.load_chunk(self.camera_chunk_q, self.camera_chunk_r)
 
         return Task.cont
+
