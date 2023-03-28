@@ -6,6 +6,7 @@ from src.functions import noise_to_decimal_portion, portion_point_between, save_
 
 from src.Biome import Biome
 from src.Grid import Grid
+from src.Rangerray import Rangerray
 from src.TerrainChunk import TerrainChunk
 
 class Terrain:
@@ -51,7 +52,7 @@ class Terrain:
 
     def configure_biomes(self):
         self.biomes = { }
-        self.biomes_rangerray = []
+        self.biomes_rangerray = Rangerray()
         range_min = -1
 
         for biome in self.config["biomes"]:
@@ -65,11 +66,11 @@ class Terrain:
                 portion = noise_to_decimal_portion(sub_biome_portion_point)
                 portion_point = portion_point_between(range_min, range_max, portion)
                 self.biomes[biome_name+"."+sub_biome_name] = Biome(self.name, biome_name, sub_biome_name, biome_config[sub_biome_name])
-                self.biomes_rangerray.append([portion_point, biome_name+"."+sub_biome_name])
+                self.biomes_rangerray.insert(portion_point, biome_name+"."+sub_biome_name)
             range_min = range_max
 
         print("Final biomes rangerray")
-        print(self.biomes_rangerray)
+        self.biomes_rangerray.print()
 
     def join_chunks(self, map_image_name):
 

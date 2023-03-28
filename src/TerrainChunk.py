@@ -113,7 +113,7 @@ class TerrainChunk:
             for y in range(self.height_in_tiles):
                 height = self.ground_map.value_at(x, y)
                 biome = self.get_biome_at(x, y)
-                v = self.determine_surface(height, biome.altitude_surfaces)
+                v = self.determine_surface(height, biome)
                 self.surface_map.set_value_at(x, y, v)
                 colour = self.get_surface_colour(v, height, biome.height_displacement)
                 self.surface_map_image.set_value_at(x, y, colour)
@@ -159,7 +159,7 @@ class TerrainChunk:
         return self.biome_map.value_at(x, y)
 
     def determine_biome_by_height(self, height):
-        biome_name = self.select_in_rangerray(height, self.biomes_rangerray)
+        biome_name = self.biomes_rangerray.select(height)
         return self.biomes[biome_name]
 
     def abc_gen(self, seed):
@@ -178,21 +178,12 @@ class TerrainChunk:
         # smoothstep
         return (a1 - a0) * (3.0 - w * 2.0) * w * w + a0
 
-    def determine_surface(self, height, altitude_surfaces):
+    def determine_surface(self, height, biome):
         # sea level is at altitude 0
         if height <= 0:
             return "water"
         else:
-            return self.select_in_rangerray(height, altitude_surfaces)
-
-    def select_in_rangerray(self, v, rangerray):
-
-        for elem in rangerray:
-            if v < elem[0]:
-                return elem[1]
-
-        # when v exceeds maximum choice, return the last item
-        return rangerray[-1][1]
+            return biome.altitude_surfaces.select(height)
 
     def get_surface_colour(self, surface_name, height, height_displacement):
         if height < 0:
@@ -204,13 +195,6 @@ class TerrainChunk:
 
         colour = SURFACES[surface_name]["colour"]
 
-        """
-        colour = (
-            int(0.2 * v + 0.8 * colour[0]),
-            int(0.2 * v + 0.8 * colour[1]),
-            int(0.2 * v + 0.8 * colour[2])
-        )
-        """
         colour = (
             int(0.4 * v + 0.6 * colour[0]),
             int(0.4 * v + 0.6 * colour[1]),
