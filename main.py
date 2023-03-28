@@ -1,7 +1,8 @@
 import json, os, sys
-from src.Terrain import Terrain
+
 from src.GameRenderer import GameRenderer
 from src.Renderer3D import Renderer3D
+from src.Terrain import Terrain
 
 print(sys.argv)
 if sys.argv[1] == "generate":
