@@ -1,14 +1,23 @@
 {
-	"ranges": [
-		[1, "sea"]
-	],
-	"sea": {
-		"colour": [0, 0, 200],
-		"altitude_surfaces": [
-			[-1, "grass"]
-		],
-		"persistence": 0.9,
-		"height_displacement": 0,
-		"height_multiplier": 2
-	}
+    "ranges": [
+        [1, "sea"]
+    ],
+    "sea": {
+        "colour": [40, 40, 255],
+        "altitude_surfaces": [
+            [-1, "grass"]
+        ],
+        "persistence": 0.9,
+        "height_displacement": 0,
+        "height_multiplier": 3
+    },
+    "sea": {
+        "colour": [0, 0, 200],
+        "altitude_surfaces": [
+            [-1, "grass"]
+        ],
+        "persistence": 0.9,
+        "height_displacement": 0,
+        "height_multiplier": 2
+    }
 }

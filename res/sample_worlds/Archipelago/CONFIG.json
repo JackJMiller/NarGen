@@ -1,8 +1,8 @@
 {
-	"seed": 123,
-	"width": 10,
-	"height": 10,
-	"biomes": [
-		[1, "islands"]
-	]
+    "seed": 123,
+    "width": 10,
+    "height": 10,
+    "biomes": [
+        [1, "islands"]
+    ]
 }

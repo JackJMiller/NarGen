@@ -1,0 +1,44 @@
+{
+    "ranges": [
+        [0.1, "lower"],
+        [0.25, "middle"],
+        [1, "upper"]
+    ],
+    "water": {
+        "colour": [0, 0, 255],
+        "altitude_surfaces": [
+            [10, "grass"]
+        ],
+        "persistence": 0.7,
+        "height_displacement": 0,
+        "height_multiplier": 10
+    },
+    "lower": {
+        "colour": [100, 200, 100],
+        "altitude_surfaces": [
+            [2, "sand"],
+            [20, "grass"]
+        ],
+        "persistence": 0.7,
+        "height_displacement": 1,
+        "height_multiplier": 12
+    },
+    "middle": {
+        "colour": [255, 60, 0],
+        "altitude_surfaces": [
+            [20, "grass"]
+        ],
+        "persistence": 0.8,
+        "height_displacement": 10,
+        "height_multiplier": 3
+    },
+    "upper": {
+        "colour": [100, 100, 100],
+        "altitude_surfaces": [
+            [10, "grass"]
+        ],
+        "persistence": 0.9,
+        "height_displacement": 20,
+        "height_multiplier": 3
+    }
+}

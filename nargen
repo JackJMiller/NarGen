@@ -1,80 +1,87 @@
 #!/bin/bash
 
 ConfigureNewWorld() {
-	cp -r res/sample_worlds/$2/ configs/$1/
+    cp -r res/sample_worlds/$2/ configs/$1/
+    echo New world saved at configs/$1/
 }
 
 if [ $# -eq 1 ] && [[ "$1" == "--help" || "$1" == "-h" ]] || [ $# -eq 0 ]; then
-	cat res/ascii_art.txt
-	cat res/help_page.txt
+
+    cat res/ascii_art.txt
+    cat res/help_page.txt
 
 elif [[ $# -eq 3 && "$1" == "new-world" ]]; then
-	if [ -d "configs/$2/" ]; then
-		echo "Error: A world named $2 already exists"
-	elif [ ! -d "res/sample_worlds/$3/" ]; then
-		echo "Error: Could not find sample world named $3"
-	else
-		ConfigureNewWorld $2 $3
-	fi
+
+    if [ -d "configs/$2/" ]; then
+        echo "Error: A world named $2 already exists"
+    elif [ ! -d "res/sample_worlds/$3/" ]; then
+        echo "Error: Could not find sample world named $3"
+    else
+        ConfigureNewWorld $2 $3
+    fi
 
 elif [[ $# -ge 1 && "$1" == "generate" ]]; then
-	if [ $# -lt 2 ]; then
-		echo "Invalid arguments: No config file specified"
-		cat res/help_page.txt
-	elif [ -d "configs/$2/" ]; then
-		echo "Creating terrain from $2"
-		rm -r worlds/$2/
-		python3 main.py generate $2
-	else
-		echo "Error: Cannot find world named $2"
-	fi
+
+    if [ $# -lt 2 ]; then
+        echo "Invalid arguments: No config file specified"
+        cat res/help_page.txt
+    elif [ -d "configs/$2/" ]; then
+        echo "Creating terrain from $2"
+        rm -r worlds/$2/
+        python3 main.py generate $2
+    else
+        echo "Error: Cannot find world named $2"
+    fi
 
 elif [[ $# -ge 1 && "$1" == "delete-world" ]]; then
-	if [ $# -lt 2 ]; then
-		echo "Invalid arguments: No world name specified"
-		cat res/help_page.txt
-	elif [ -d "configs/$2" ]; then
-		rm -r configs/$2
-		echo "Deleted world $2"
-	else
-		echo "Error: Cannot find world named $2"
-	fi
+
+    if [ $# -lt 2 ]; then
+        echo "Invalid arguments: No world name specified"
+        cat res/help_page.txt
+    elif [ -d "configs/$2" ]; then
+        rm -r configs/$2
+        echo "Deleted world $2"
+    else
+        echo "Error: Cannot find world named $2"
+    fi
 
 elif [[ $# -eq 2 && "$1" == "render" ]]; then
 
-	if [ -d "worlds/$2/" ]; then
-		python3 main.py render $2
-		# viewnior worlds/$2/images/
-	else
-		echo "Error: Cannot find world named $2"
-	fi
+    if [ -d "worlds/$2/" ]; then
+        python3 main.py render $2
+        # viewnior worlds/$2/images/
+    else
+        echo "Error: Cannot find world named $2"
+    fi
 
 elif [[ $# -eq 2 && "$1" == "render-game" ]]; then
 
-	if [ -d "worlds/$2/" ]; then
-		python3 main.py render-game $2
-		viewnior worlds/$2/images/game.png
-	else
-		echo "Error: Cannot find world named $2"
-	fi
+    if [ -d "worlds/$2/" ]; then
+        python3 main.py render-game $2
+        viewnior worlds/$2/images/game.png
+    else
+        echo "Error: Cannot find world named $2"
+    fi
 
 elif [[ $# -eq 2 && "$1" == "maps" ]]; then
 
-	if [ -d "worlds/$2/" ]; then
-		viewnior worlds/$2/images/
-	else
-		echo "Error: Cannot find world named $2"
-	fi
+    if [ -d "worlds/$2/" ]; then
+        viewnior worlds/$2/images/
+    else
+        echo "Error: Cannot find world named $2"
+    fi
 
 elif [[ $# -eq 1 && "$1" == "list" ]]; then
 
-	ls configs/
+    ls configs/
 
 elif [[ $# -eq 1 && "$1" == "list-sample-worlds" ]]; then
 
-	ls res/sample_worlds/
+    ls res/sample_worlds/
 
 else
-	echo "Invalid arguments"
-	cat res/help_page.txt
+
+    echo "Invalid arguments"
+    cat res/help_page.txt
+
 fi
