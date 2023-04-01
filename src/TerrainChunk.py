@@ -191,14 +191,12 @@ class TerrainChunk:
 
         brightness = get_brightness_at_height(height, self.parent_world.max_height)
 
-        v = 255 * brightness
-
         colour = SURFACES[surface_name]["colour"]
 
         colour = (
-            int(0.4 * v + 0.6 * colour[0]),
-            int(0.4 * v + 0.6 * colour[1]),
-            int(0.4 * v + 0.6 * colour[2])
+            int(brightness * colour[0]),
+            int(brightness * colour[1]),
+            int(brightness * colour[2])
         )
 
         return colour

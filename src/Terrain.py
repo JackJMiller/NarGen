@@ -35,7 +35,6 @@ class Terrain:
         save_json(self.world_info, os.path.join("worlds", self.name, "WORLD_INFO.json"))
 
         self.join_chunks("surface_map_image")
-        self.join_chunks("surface_map_image")
         self.join_chunks("biome_map_image")
 
         print("Terrain generation complete")
@@ -65,7 +64,7 @@ class Terrain:
                 sub_biome_name = sub_biome[1]
                 portion = noise_to_decimal_portion(sub_biome_portion_point)
                 portion_point = portion_point_between(range_min, range_max, portion)
-                self.biomes[biome_name+"."+sub_biome_name] = Biome(self.name, biome_name, sub_biome_name, biome_config[sub_biome_name])
+                self.biomes[biome_name+"."+sub_biome_name] = Biome(self.name, biome_name, sub_biome_name, biome_config)
                 self.biomes_rangerray.insert(portion_point, biome_name+"."+sub_biome_name)
             range_min = range_max
 

@@ -1,10 +1,10 @@
 from PIL import Image, ImageEnhance
 
 SURFACES = {
-    "water": { "colour": (0, 0, 120) },
-    "grass": { "colour": (30, 160, 30) },
+    "water": { "colour": (80, 180, 255) },
+    "grass": { "colour": (108, 210, 26) },
     "grass-1": { "colour": (50, 230, 115) },
-    "sand": { "colour": (220, 210, 70) },
+    "sand": { "colour": (255, 240, 130) },
     "stone": { "colour": (80, 80, 80) },
     "dirt": { "colour": (90, 60, 30) },
     "snow": { "colour": (255, 255, 255) },
@@ -26,6 +26,7 @@ AVAILABLE_BLOCKS = ["grass", "lava", "sand", "snow", "stone", "water"]
 CHUNK_SIZE = 20
 MAX_HEIGHT = 100
 
+COLOUR_SUB_BIOMES = False
 SAVE_IMAGE_BIOME_MAP = False
 SAVE_IMAGE_SURFACE_MAP = False
 SAVE_IMAGE_OCTAVE = False

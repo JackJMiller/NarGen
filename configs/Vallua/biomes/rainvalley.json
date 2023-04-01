@@ -1,4 +1,5 @@
 {
+    "colour": [255, 0, 0],
     "ranges": [
         [0.1, "lower"],
         [0.15, "middle"],
