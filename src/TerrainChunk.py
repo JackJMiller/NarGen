@@ -36,9 +36,9 @@ class TerrainChunk:
 
         self.abc_gen(self.seed)
 
-        octaves, overlayed = self.produce_octaves(initial_noise_tile_size)
+        octaves, overlayed = self.produce_octaves(self.octave_count, initial_noise_tile_size, "biome_map")
 
-        self.produce_biome_super_map()
+        spam, self.biome_super_map = self.produce_octaves(2, self.parent_world.biome_super_map_tile_size, "super_biome_map")
 
         # create the biome map
         self.create_biome_map(overlayed)
@@ -69,12 +69,12 @@ class TerrainChunk:
             self.AAA, self.BBB, self.CCC
         ).get_grid()
 
-    def produce_octaves(self, noise_tile_size):
+    def produce_octaves(self, octave_count, noise_tile_size, octave_identifier):
 
         octaves = []
 
         # create the octaves
-        for octave_no in range(self.octave_count):
+        for octave_no in range(octave_count):
             self.abc_gen(self.AAA)
             octave = Perlin(
                 self.corner_x,
@@ -88,7 +88,7 @@ class TerrainChunk:
             noise_tile_size = math.ceil(noise_tile_size * self.lacunarity)
 
             if SAVE_IMAGE_OCTAVE:
-                Perlin.save_as_image(octave, self.parent_world.name + "_octave_" + str(octave_no), self.parent_world.name)
+                Perlin.save_as_image(octave, self.parent_world.name + "_" + octave_identifier + "_octave_" + str(octave_no), self.parent_world.name)
             octaves.append(octave)
 
         overlayed = self.overlay_octaves(octaves, 0.5)
