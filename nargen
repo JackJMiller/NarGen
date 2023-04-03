@@ -14,8 +14,10 @@ elif [[ $# -eq 3 && "$1" == "new-world" ]]; then
 
     if [ -d "configs/$2/" ]; then
         echo "Error: A world named $2 already exists"
+        exit 1
     elif [ ! -d "res/sample_worlds/$3/" ]; then
         echo "Error: Could not find sample world named $3"
+        exit 1
     else
         ConfigureNewWorld $2 $3
     fi
@@ -31,6 +33,7 @@ elif [[ $# -ge 1 && "$1" == "generate" ]]; then
         python3 main.py generate $2
     else
         echo "Error: Cannot find world named $2"
+        exit 1
     fi
 
 elif [[ $# -ge 1 && "$1" == "delete-world" ]]; then
@@ -43,6 +46,7 @@ elif [[ $# -ge 1 && "$1" == "delete-world" ]]; then
         echo "Deleted world $2"
     else
         echo "Error: Cannot find world named $2"
+        exit 1
     fi
 
 elif [[ $# -eq 2 && "$1" == "render" ]]; then
@@ -52,7 +56,12 @@ elif [[ $# -eq 2 && "$1" == "render" ]]; then
         # viewnior worlds/$2/images/
     else
         echo "Error: Cannot find world named $2"
+        exit 1
     fi
+
+elif [[ $# -eq 2 && "$1" == "build" ]]; then
+
+    nargen generate $2 && nargen render-game $2
 
 elif [[ $# -eq 2 && "$1" == "render-game" ]]; then
 
@@ -61,6 +70,7 @@ elif [[ $# -eq 2 && "$1" == "render-game" ]]; then
         viewnior worlds/$2/images/game.png
     else
         echo "Error: Cannot find world named $2"
+        exit 1
     fi
 
 elif [[ $# -eq 2 && "$1" == "maps" ]]; then
@@ -69,6 +79,7 @@ elif [[ $# -eq 2 && "$1" == "maps" ]]; then
         viewnior worlds/$2/images/
     else
         echo "Error: Cannot find world named $2"
+        exit 1
     fi
 
 elif [[ $# -eq 1 && "$1" == "list" ]]; then

@@ -1,9 +1,9 @@
 {
     "seed": 100,
-    "width": 8,
-    "height": 8,
+    "width": 10,
+    "height": 10,
     "biomes": [
-        [1, "islands"],
-        [1, "rainvalley"]
+        [0.2, "rainvalley"],
+        [1, "islands"]
     ]
 }

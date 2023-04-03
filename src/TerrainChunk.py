@@ -18,7 +18,7 @@ class TerrainChunk:
         self.corner_x = self.q * CHUNK_SIZE
         self.corner_y = self.r * CHUNK_SIZE
         self.config = config
-        self.seed = self.config["seed"]
+        self.seed = parent_world.seed
         self.lacunarity = 0.5
         self.seed = config["seed"]
         self.MIN_WORLD_HEIGHT = -100
@@ -38,6 +38,8 @@ class TerrainChunk:
 
         octaves, overlayed = self.produce_octaves(initial_noise_tile_size)
 
+        self.produce_biome_super_map()
+
         # create the biome map
         self.create_biome_map(overlayed)
 
@@ -55,6 +57,17 @@ class TerrainChunk:
         self.create_surface_map()
 
         self.export_save_file()
+
+    def produce_biome_super_map(self):
+        self.abc_gen(self.AAA)
+        self.biome_super_map = Perlin(
+            self.corner_x,
+            self.corner_y,
+            self.width_in_tiles,
+            self.height_in_tiles,
+            self.parent_world.biome_super_map_tile_size,
+            self.AAA, self.BBB, self.CCC
+        ).get_grid()
 
     def produce_octaves(self, noise_tile_size):
 
@@ -132,7 +145,11 @@ class TerrainChunk:
 
         for x in range(perlin_grid.width):
             for y in range(perlin_grid.height):
-                height = self.biome_map.value_at(x, y)
+                # TODO: determine biome map based on both the bottom octave and the biome super map
+                # height_1 = self.biome_map.value_at(x, y)
+                # height_2 = self.biome_super_map.value_at(x, y)
+                # height = (height_1 + height_2) / 2
+                height = self.biome_super_map.value_at(x, y)
                 biome = self.determine_biome_by_height(height)
                 self.biome_map.set_value_at(x, y, biome)
                 colour = biome.colour

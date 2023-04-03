@@ -1,6 +1,6 @@
-import json, math, os
+import json, math, os, sys
 
-from src.constants import CHUNK_SIZE
+from src.constants import CHUNK_SIZE, SIZE_OF_BIOMES
 
 from src.functions import noise_to_decimal_portion, portion_point_between, save_json
 
@@ -15,6 +15,7 @@ class Terrain:
 
         self.name = name
         self.config = config
+        self.seed = config["seed"]
         self.width_in_chunks, self.height_in_chunks = config["width"], config["height"]
         self.width_in_tiles = self.width_in_chunks * CHUNK_SIZE
         self.height_in_tiles = self.height_in_chunks * CHUNK_SIZE
@@ -26,6 +27,7 @@ class Terrain:
         self.configure_biomes()
 
         self.world_info = {
+            "seed": self.seed,
             "width": self.width_in_chunks,
             "height": self.height_in_chunks,
             "max_height": self.max_height,
@@ -68,6 +70,8 @@ class Terrain:
                 self.biomes_rangerray.insert(portion_point, biome_name+"."+sub_biome_name)
             range_min = range_max
 
+        self.biome_super_map_tile_size = len(self.config["biomes"]) * SIZE_OF_BIOMES
+
         print("Final biomes rangerray")
         self.biomes_rangerray.print()
 
@@ -82,5 +86,4 @@ class Terrain:
                 map_image.overlay(getattr(chunk, map_image_name), corner_x, corner_y)
 
         map_image.save_RGBs(self.name + "_" + map_image_name, self.name)
-
 
