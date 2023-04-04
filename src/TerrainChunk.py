@@ -1,6 +1,6 @@
 from src.constants import CHUNK_SIZE, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE_IMAGE_OVERLAYED, SAVE_IMAGE_SURFACE_MAP, SURFACES
 import json, math, os, random, sys
-from src.functions import clamp, get_brightness_at_height, noise_to_decimal_portion, portion_point_between, save_json
+from src.functions import clamp, get_brightness_at_height, portion_point_between, save_json
 from PIL import Image
 from src.Biome import Biome 
 from src.Perlin import Perlin 
@@ -8,19 +8,18 @@ from src.Grid import Grid
 
 class TerrainChunk:
 
-    def __init__(self, parent_world, q, r, config):
+    def __init__(self, parent_world, q, r):
 
         self.parent_world = parent_world
+        self.config = self.parent_world.config
+        self.seed = parent_world.seed
         self.q = q
         self.r = r
         self.biomes = self.parent_world.biomes
         self.biomes_rangerray = self.parent_world.biomes_rangerray
         self.corner_x = self.q * CHUNK_SIZE
         self.corner_y = self.r * CHUNK_SIZE
-        self.config = config
-        self.seed = parent_world.seed
         self.lacunarity = 0.5
-        self.seed = config["seed"]
         self.MIN_WORLD_HEIGHT = -100
         self.MAX_WORLD_HEIGHT = 200
         self.TOTAL_WORLD_HEIGHT = self.MAX_WORLD_HEIGHT - self.MIN_WORLD_HEIGHT
@@ -28,7 +27,7 @@ class TerrainChunk:
         self.abc_gen(self.seed)
 
         # TODO: size this according to number of biomes
-        initial_noise_tile_size = 32 * len(self.biomes)
+        initial_noise_tile_size = 2 * CHUNK_SIZE
         self.octave_count = 5
 
         self.width_in_tiles = CHUNK_SIZE
@@ -38,15 +37,13 @@ class TerrainChunk:
 
         octaves, overlayed = self.produce_octaves(self.octave_count, initial_noise_tile_size, "biome_map")
 
-        spam, self.biome_super_map = self.produce_octaves(2, self.parent_world.biome_super_map_tile_size, "super_biome_map")
+        spam, self.biome_super_map = self.produce_octaves(1, self.parent_world.biome_super_map_tile_size, "biome_super_map")
 
         # create the biome map
         self.create_biome_map(overlayed)
 
         if SAVE_IMAGE_OVERLAYED:
             Perlin.save_as_image(overlayed, self.parent_world.name + "_overlayed", self.parent_world.name)
-
-        # TODO: have separate noise maps for biome map and and ground_map
 
         # create the ground map
         self.abc_gen(self.seed)
@@ -58,32 +55,24 @@ class TerrainChunk:
 
         self.export_save_file()
 
-    def produce_biome_super_map(self):
-        self.abc_gen(self.AAA)
-        self.biome_super_map = Perlin(
-            self.corner_x,
-            self.corner_y,
-            self.width_in_tiles,
-            self.height_in_tiles,
-            self.parent_world.biome_super_map_tile_size,
-            self.AAA, self.BBB, self.CCC
-        ).get_grid()
-
     def produce_octaves(self, octave_count, noise_tile_size, octave_identifier):
 
         octaves = []
+        save_stats = (octave_identifier == "biome_super_map")
 
         # create the octaves
         for octave_no in range(octave_count):
             self.abc_gen(self.AAA)
-            octave = Perlin(
+            perlin = Perlin(
                 self.corner_x,
                 self.corner_y,
                 self.width_in_tiles,
                 self.height_in_tiles,
                 noise_tile_size,
                 self.AAA, self.BBB, self.CCC
-            ).get_grid()
+            )
+
+            octave = perlin.get_grid()
 
             noise_tile_size = math.ceil(noise_tile_size * self.lacunarity)
 
@@ -142,16 +131,17 @@ class TerrainChunk:
     def create_biome_map(self, perlin_grid):
         self.biome_map = perlin_grid.copy()
         self.biome_map_image = Grid(perlin_grid.width, perlin_grid.height, 0)
+        min_noise, max_noise = 1, 0
 
         for x in range(perlin_grid.width):
             for y in range(perlin_grid.height):
-                # TODO: determine biome map based on both the bottom octave and the biome super map
-                # height_1 = self.biome_map.value_at(x, y)
-                # height_2 = self.biome_super_map.value_at(x, y)
-                # height = (height_1 + height_2) / 2
-                height = self.biome_super_map.value_at(x, y)
+                height_1 = self.biome_map.value_at(x, y)
+                height_2 = self.biome_super_map.value_at(x, y)
+                height = (height_1 + height_2) / 2
+                height = height_2 # TEMP
                 biome = self.determine_biome_by_height(height)
                 self.biome_map.set_value_at(x, y, biome)
+                self.parent_world.biome_sizes[biome.parent_biome_name] += 1
                 colour = biome.colour
                 self.biome_map_image.set_value_at(x, y, colour)
 

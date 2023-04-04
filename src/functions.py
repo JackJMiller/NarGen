@@ -8,9 +8,6 @@ def clamp(value, maximum):
     else:
         return value
 
-def noise_to_decimal_portion(noise):
-    return (noise + 1) / 2
-
 def portion_point_between(a, b, portion):
     r = b - a
     return a + portion * r

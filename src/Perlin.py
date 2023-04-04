@@ -19,6 +19,8 @@ class Perlin:
         self.AAA = AAA
         self.BBB = BBB
         self.CCC = CCC
+        self.min_noise, self.max_noise = 1, 0
+        self.noise_acc, self.noise_count = 0, 0
 
         self.grid = Grid(self.width_in_tiles, self.height_in_tiles, 0)
 
@@ -31,10 +33,25 @@ class Perlin:
                 chunk_x = int(map_x / chunk_size) + _x / self.chunk_size
                 chunk_y = int(map_y / chunk_size) + _y / self.chunk_size
                 NOISE = self.noise(chunk_x, chunk_y)
+                if NOISE > self.max_noise:
+                    self.max_noise = NOISE
+                elif NOISE < self.min_noise:
+                    self.min_noise = NOISE
+                self.noise_acc += abs(NOISE)
+                self.noise_count += 1
                 self.grid.set_value_at(x, y, NOISE)
 
     def value_at(self, x, y):
         return self.grid.value_at(x, y)
+
+    def get_average_value(self):
+        return self.noise_acc / self.noise_count
+
+    def get_min_value(self):
+        return self.min_noise
+
+    def get_max_value(self):
+        return self.max_noise
 
     def interpolate(self, a0, a1, w):
         # if (0.0 > w) return a0
@@ -93,6 +110,8 @@ class Perlin:
         ix1 = self.interpolate(n0, n1, sx)
 
         value = self.interpolate(ix0, ix1, sy)
+
+        value = (value + 1) / 2
 
         return value
 

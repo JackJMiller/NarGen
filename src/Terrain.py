@@ -2,7 +2,7 @@ import json, math, os, sys
 
 from src.constants import CHUNK_SIZE, SIZE_OF_BIOMES
 
-from src.functions import noise_to_decimal_portion, portion_point_between, save_json
+from src.functions import portion_point_between, save_json
 
 from src.Biome import Biome
 from src.Grid import Grid
@@ -21,10 +21,16 @@ class Terrain:
         self.height_in_tiles = self.height_in_chunks * CHUNK_SIZE
         self.create_save_files()
 
+
         self.max_height = 30
         self.total_height = 2 * self.max_height
 
         self.configure_biomes()
+
+        # stats
+        self.min_noise, self.max_noise = 1, 0
+        self.noise_acc, self.noise_count = 0, 0
+        self.biome_sizes = dict(zip(self.biome_names, [0] * len(self.biome_names)))
 
         self.world_info = {
             "seed": self.seed,
@@ -52,19 +58,21 @@ class Terrain:
 
 
     def configure_biomes(self):
+        self.biome_names = []
         self.biomes = { }
         self.biomes_rangerray = Rangerray()
-        range_min = -1
+        range_min = 0
 
         for biome in self.config["biomes"]:
             range_max, biome_name = biome[0], biome[1]
+            if biome_name not in self.biome_names:
+                self.biome_names.append(biome_name)
             biome_config_path = os.path.join("configs", self.name, "biomes", biome_name + ".json")
             file = open(biome_config_path, "r")
             biome_config = json.load(file)
             for sub_biome in biome_config["ranges"]:
-                sub_biome_portion_point = sub_biome[0]
+                portion = sub_biome[0]
                 sub_biome_name = sub_biome[1]
-                portion = noise_to_decimal_portion(sub_biome_portion_point)
                 portion_point = portion_point_between(range_min, range_max, portion)
                 self.biomes[biome_name+"."+sub_biome_name] = Biome(self.name, biome_name, sub_biome_name, biome_config)
                 self.biomes_rangerray.insert(portion_point, biome_name+"."+sub_biome_name)
@@ -81,7 +89,7 @@ class Terrain:
 
         for q in range(self.width_in_chunks):
             for r in range(self.height_in_chunks):
-                chunk = TerrainChunk(self, q, r, self.config)
+                chunk = TerrainChunk(self, q, r)
                 corner_x, corner_y = q * CHUNK_SIZE, r * CHUNK_SIZE
                 map_image.overlay(getattr(chunk, map_image_name), corner_x, corner_y)
 
