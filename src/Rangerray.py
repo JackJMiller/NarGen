@@ -1,7 +1,9 @@
 class Rangerray:
 
-    def __init__(self, items = []):
+    def __init__(self, items = None):
 
+        if items == None:
+            items = []
         self.items = items
 
     def select(self, v):
@@ -23,11 +25,12 @@ class Rangerray:
             self.items.append([item_index, item_value])
         else:
             self.items.insert(i, [item_index, item_value])
-        self.print()
 
     def print(self):
+        print("------ rangerray -------")
         for item in self.items:
-            print(item[0], "\t", item[1])
+            print(str(item[0]) + "\t" + str(item[1]))
+        print("--- end of rangerray ---")
         print()
 
     def values(self):
@@ -38,4 +41,4 @@ class Rangerray:
         return values
 
     def __str__(self):
-        return str(self.items)
+        return "YEAH YOU'RE RIGHT JACK ... " + str(self.items)

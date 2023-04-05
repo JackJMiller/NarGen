@@ -21,7 +21,6 @@ class Terrain:
         self.height_in_tiles = self.height_in_chunks * CHUNK_SIZE
         self.create_save_files()
 
-
         self.max_height = 30
         self.total_height = 2 * self.max_height
 
@@ -30,7 +29,7 @@ class Terrain:
         # stats
         self.min_noise, self.max_noise = 1, 0
         self.noise_acc, self.noise_count = 0, 0
-        self.biome_sizes = dict(zip(self.biome_names, [0] * len(self.biome_names)))
+        self.biome_sizes = dict(zip(self.biomes.keys(), [0] * len(self.biomes.keys())))
 
         self.world_info = {
             "seed": self.seed,
@@ -56,32 +55,48 @@ class Terrain:
             os.makedirs(os.path.join(filepath, "images"))
             os.makedirs(os.path.join(filepath, "chunks"))
 
-
     def configure_biomes(self):
-        self.biome_names = []
         self.biomes = { }
         self.biomes_rangerray = Rangerray()
-        range_min = 0
+        print("Biomes rangerray initially")
+        self.biomes_rangerray.print()
 
         for biome in self.config["biomes"]:
-            range_max, biome_name = biome[0], biome[1]
-            if biome_name not in self.biome_names:
-                self.biome_names.append(biome_name)
-            biome_config_path = os.path.join("configs", self.name, "biomes", biome_name + ".json")
-            file = open(biome_config_path, "r")
-            biome_config = json.load(file)
-            for sub_biome in biome_config["ranges"]:
-                portion = sub_biome[0]
-                sub_biome_name = sub_biome[1]
-                portion_point = portion_point_between(range_min, range_max, portion)
-                self.biomes[biome_name+"."+sub_biome_name] = Biome(self.name, biome_name, sub_biome_name, biome_config)
-                self.biomes_rangerray.insert(portion_point, biome_name+"."+sub_biome_name)
-            range_min = range_max
+            point, biome_name = biome[0], biome[1]
+            if biome_name not in self.biomes.keys():
+                rangerray = self.create_biome(biome_name)
+                self.biomes[biome_name] = rangerray
+                self.biomes_rangerray.insert(point, biome_name)
+                print("Created 2")
+                rangerray.print()
 
         self.biome_super_map_tile_size = len(self.config["biomes"]) * SIZE_OF_BIOMES
 
         print("Final biomes rangerray")
         self.biomes_rangerray.print()
+
+        print("Biome names:")
+        print(self.biomes)
+        for biome_name in self.biomes.keys():
+            print(biome_name + ":")
+            self.biomes[biome_name].print()
+
+
+    def create_biome(self, biome_name):
+        rangerray = Rangerray()
+        biome_config_path = os.path.join("configs", self.name, "biomes", biome_name + ".json")
+        file = open(biome_config_path, "r")
+        biome_config = json.load(file)
+        noise_lower, noise_upper = 0, 0
+
+        for sub_biome in biome_config["ranges"]:
+            noise_upper, sub_biome_name = sub_biome[0], sub_biome[1]
+            obj = Biome(self.name, biome_name, sub_biome_name, biome_config, noise_lower, noise_upper)
+            rangerray.insert(noise_upper, obj)
+            noise_lower = noise_upper
+
+        return rangerray
+
 
     def join_chunks(self, map_image_name):
 

@@ -25,7 +25,7 @@ AVAILABLE_BLOCKS = ["grass", "lava", "sand", "snow", "stone", "water"]
 
 CHUNK_SIZE = 20
 MAX_HEIGHT = 100
-SIZE_OF_BIOMES = 40
+SIZE_OF_BIOMES = 80
 
 COLOUR_SUB_BIOMES = True
 SAVE_IMAGE_BIOME_MAP = False

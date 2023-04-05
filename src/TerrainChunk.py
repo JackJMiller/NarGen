@@ -27,7 +27,7 @@ class TerrainChunk:
         self.abc_gen(self.seed)
 
         # TODO: size this according to number of biomes
-        initial_noise_tile_size = 2 * CHUNK_SIZE
+        initial_noise_tile_size = 10 * CHUNK_SIZE
         self.octave_count = 5
 
         self.width_in_tiles = CHUNK_SIZE
@@ -37,7 +37,7 @@ class TerrainChunk:
 
         octaves, overlayed = self.produce_octaves(self.octave_count, initial_noise_tile_size, "biome_map")
 
-        spam, self.biome_super_map = self.produce_octaves(1, self.parent_world.biome_super_map_tile_size, "biome_super_map")
+        spam, self.biome_super_map = self.produce_octaves(4, self.parent_world.biome_super_map_tile_size, "biome_super_map")
 
         # create the biome map
         self.create_biome_map(overlayed)
@@ -135,13 +135,10 @@ class TerrainChunk:
 
         for x in range(perlin_grid.width):
             for y in range(perlin_grid.height):
-                height_1 = self.biome_map.value_at(x, y)
-                height_2 = self.biome_super_map.value_at(x, y)
-                height = (height_1 + height_2) / 2
-                height = height_2 # TEMP
-                biome = self.determine_biome_by_height(height)
+                height_1 = self.biome_super_map.value_at(x, y)
+                height_2 = self.biome_map.value_at(x, y)
+                biome = self.determine_biome_by_height(height_1, height_2)
                 self.biome_map.set_value_at(x, y, biome)
-                self.parent_world.biome_sizes[biome.parent_biome_name] += 1
                 colour = biome.colour
                 self.biome_map_image.set_value_at(x, y, colour)
 
@@ -165,9 +162,11 @@ class TerrainChunk:
     def get_biome_at(self, x, y):
         return self.biome_map.value_at(x, y)
 
-    def determine_biome_by_height(self, height):
-        biome_name = self.biomes_rangerray.select(height)
-        return self.biomes[biome_name]
+    def determine_biome_by_height(self, height_1, height_2):
+        biome_name = self.biomes_rangerray.select(height_1)
+        biome_obj = self.parent_world.biomes[biome_name]
+        sub_biome = biome_obj.select(height_2)
+        return sub_biome
 
     def abc_gen(self, seed):
         random.seed(seed)
@@ -211,12 +210,19 @@ class TerrainChunk:
     def overlay_octaves(self, octaves, persistence):
         height_map = Grid(self.width_in_tiles, self.height_in_tiles, 0)
 
+        # if i were smart i would turn this into an equation
+        # sadly i am not
+        persistence_sum = 0
+        for index in range(len(octaves)):
+            persistence_sum += persistence ** index
+        r = 1 / persistence_sum
+
         for octave_no, octave in enumerate(octaves):
             amplitude = persistence ** octave_no
             for x in range(self.width_in_tiles):
                 for y in range(self.height_in_tiles):
-                    v = octave.value_at(x, y) * amplitude
                     original_value = height_map.value_at(x, y)
+                    v = octave.value_at(x, y) * amplitude * r
                     height_map.set_value_at(x, y, original_value + v)
 
         return height_map
