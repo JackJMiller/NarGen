@@ -30,7 +30,7 @@ class Rangerray:
     def print(self):
         print("------ rangerray -------")
         print("name: " + self.name)
-        print()
+        print("items:")
         for item in self.items:
             print(str(item[0]) + "\t" + str(item[1]))
         print("--- end of rangerray ---")

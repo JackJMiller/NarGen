@@ -2,7 +2,7 @@ from src.constants import CHUNK_SIZE, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_I
 import json, math, os, random, sys
 from src.functions import clamp, get_brightness_at_height, portion_point_between, save_json
 from PIL import Image
-from src.Biome import Biome 
+from src.SubBiome import SubBiome 
 from src.Perlin import Perlin 
 from src.Grid import Grid 
 

@@ -5,7 +5,7 @@ from src.Rangerray import Rangerray
 from src.constants import COLOUR_SUB_BIOMES, OCTAVE_COUNT
 from src.functions import int_median
 
-class Biome:
+class SubBiome:
 
     def __init__(self, WORLD_NAME, parent_biome_name, name, config, noise_lower, noise_upper):
         self.parent_biome_name = parent_biome_name

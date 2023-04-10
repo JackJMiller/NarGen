@@ -4,7 +4,7 @@ from src.constants import CHUNK_SIZE, SIZE_OF_BIOMES
 
 from src.functions import portion_point_between, save_json
 
-from src.Biome import Biome
+from src.SubBiome import SubBiome
 from src.Grid import Grid
 from src.Rangerray import Rangerray
 from src.TerrainChunk import TerrainChunk
@@ -80,7 +80,7 @@ class Terrain:
 
         for sub_biome in biome_config["ranges"]:
             noise_upper, sub_biome_name = sub_biome[0], sub_biome[1]
-            obj = Biome(self.name, biome_name, sub_biome_name, biome_config, noise_lower, noise_upper)
+            obj = SubBiome(self.name, biome_name, sub_biome_name, biome_config, noise_lower, noise_upper)
             rangerray.insert(noise_upper, obj)
             noise_lower = noise_upper
 
