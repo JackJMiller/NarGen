@@ -92,8 +92,7 @@ class Chunk:
                 for y in range(self.height_in_tiles):
                     biome = self.get_biome_at(x, y)
                     underlying_noise = self.overlayed.value_at(x, y)
-                    persistence = biome.persistence
-                    amplitude = persistence ** octave_no
+                    amplitude = biome.get_amplitude(octave_no)
                     original = self.ground_map.value_at(x, y)
                     v = octave.value_at(x, y)
                     v *= amplitude * biome.get_height_multiplier(underlying_noise)

@@ -43,9 +43,6 @@ class Terrain:
         self.join_chunks("surface_map_image")
         self.join_chunks("biome_map_image")
 
-        print("Terrain generation complete")
-        print("World can be found in worlds/" + self.name + "/")
-
 
     def create_save_files(self):
         filepath = os.path.join("worlds", self.name)
@@ -56,21 +53,15 @@ class Terrain:
 
     def configure_biomes(self):
         self.biomes_rangerray = Rangerray("biomes_rangerray")
-        print("Biomes rangerray initially")
-        self.biomes_rangerray.print()
         lower_point = 0
 
         for biome in self.config["biomes"]:
             upper_point, biome_name = biome[0], biome[1]
             rangerray = self.create_biome(biome_name, lower_point, upper_point)
             self.biomes_rangerray.insert(upper_point, rangerray)
-            rangerray.print()
             lower_point = upper_point
 
         self.biome_super_map_tile_size = len(self.config["biomes"]) * SIZE_OF_BIOMES
-
-        print("Final biomes rangerray")
-        self.biomes_rangerray.print()
 
 
     def create_biome(self, biome_name, biome_noise_lower, biome_noise_upper):

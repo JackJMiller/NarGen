@@ -28,7 +28,6 @@ elif [[ $# -ge 1 && "$1" == "generate" ]]; then
         echo "Invalid arguments: No config file specified"
         cat res/help_page.txt
     elif [ -d "configs/$2/" ]; then
-        echo "Creating terrain from $2"
         rm -r worlds/$2/
         python3 main.py generate $2
     else
@@ -53,7 +52,6 @@ elif [[ $# -eq 2 && "$1" == "render" ]]; then
 
     if [ -d "worlds/$2/" ]; then
         python3 main.py render $2
-        # viewnior worlds/$2/images/
     else
         echo "Error: Cannot find world named $2"
         exit 1
@@ -67,7 +65,7 @@ elif [[ $# -eq 2 && "$1" == "render-game" ]]; then
 
     if [ -d "worlds/$2/" ]; then
         python3 main.py render-game $2
-        viewnior worlds/$2/images/game.png
+        viewnior worlds/$2/images/game.png > /dev/null 2>&1
     else
         echo "Error: Cannot find world named $2"
         exit 1
@@ -76,7 +74,7 @@ elif [[ $# -eq 2 && "$1" == "render-game" ]]; then
 elif [[ $# -eq 2 && "$1" == "maps" ]]; then
 
     if [ -d "worlds/$2/" ]; then
-        viewnior worlds/$2/images/
+        viewnior worlds/$2/images/ > /dev/null 2>&1
     else
         echo "Error: Cannot find world named $2"
         exit 1

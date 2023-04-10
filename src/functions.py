@@ -1,4 +1,6 @@
-import json
+import json, sys
+
+from src.constants import COLOUR_RED, COLOUR_NONE
 
 def clamp(value, maximum):
     if value < 0:
@@ -38,3 +40,7 @@ def int_median(arrays):
         median = int(acc / length)
         result.append(median)
     return result
+
+def exit_with_error(error_type, message):
+    print("NarGen: " + COLOUR_RED + error_type + " error: " + COLOUR_NONE + message)
+    sys.exit(1)
