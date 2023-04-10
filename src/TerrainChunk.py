@@ -1,4 +1,4 @@
-from src.constants import CHUNK_SIZE, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE_IMAGE_OVERLAYED, SAVE_IMAGE_SURFACE_MAP, SURFACES
+from src.constants import CHUNK_SIZE, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE_IMAGE_OVERLAYED, SAVE_IMAGE_SURFACE_MAP, SURFACES
 import json, math, os, random, sys
 from src.functions import clamp, get_brightness_at_height, portion_point_between, save_json
 from PIL import Image
@@ -15,7 +15,6 @@ class TerrainChunk:
         self.seed = parent_world.seed
         self.q = q
         self.r = r
-        self.biomes = self.parent_world.biomes
         self.biomes_rangerray = self.parent_world.biomes_rangerray
         self.corner_x = self.q * CHUNK_SIZE
         self.corner_y = self.r * CHUNK_SIZE
@@ -28,16 +27,16 @@ class TerrainChunk:
 
         # TODO: size this according to number of biomes
         initial_noise_tile_size = 10 * CHUNK_SIZE
-        self.octave_count = 5
+        self.octave_count = OCTAVE_COUNT
 
         self.width_in_tiles = CHUNK_SIZE
         self.height_in_tiles = CHUNK_SIZE
 
         self.abc_gen(self.seed)
 
-        octaves, overlayed = self.produce_octaves(self.octave_count, initial_noise_tile_size, "biome_map")
+        octaves, overlayed = self.produce_octaves(self.octave_count, initial_noise_tile_size, 0.5, "biome_map")
 
-        spam, self.biome_super_map = self.produce_octaves(4, self.parent_world.biome_super_map_tile_size, "biome_super_map")
+        spam, self.biome_super_map = self.produce_octaves(3, self.parent_world.biome_super_map_tile_size, 0.5, "biome_super_map")
 
         # create the biome map
         self.create_biome_map(overlayed)
@@ -55,7 +54,7 @@ class TerrainChunk:
 
         self.export_save_file()
 
-    def produce_octaves(self, octave_count, noise_tile_size, octave_identifier):
+    def produce_octaves(self, octave_count, noise_tile_size, persistence, octave_identifier):
 
         octaves = []
         save_stats = (octave_identifier == "biome_super_map")
@@ -80,7 +79,7 @@ class TerrainChunk:
                 Perlin.save_as_image(octave, self.parent_world.name + "_" + octave_identifier + "_octave_" + str(octave_no), self.parent_world.name)
             octaves.append(octave)
 
-        overlayed = self.overlay_octaves(octaves, 0.5)
+        overlayed = self.overlay_octaves(octaves, persistence)
 
         return octaves, overlayed
 
@@ -104,8 +103,9 @@ class TerrainChunk:
             for y in range(self.height_in_tiles):
                 biome = self.get_biome_at(x, y)
                 original = self.ground_map.value_at(x, y)
-                v = biome.height_displacement
-                self.ground_map.set_value_at(x, y, int(original + v))
+                new_value = original / biome.noise_scale
+                new_value += biome.height_displacement
+                self.ground_map.set_value_at(x, y, int(new_value))
 
     def create_surface_map(self):
 
@@ -163,8 +163,7 @@ class TerrainChunk:
         return self.biome_map.value_at(x, y)
 
     def determine_biome_by_height(self, height_1, height_2):
-        biome_name = self.biomes_rangerray.select(height_1)
-        biome_obj = self.parent_world.biomes[biome_name]
+        biome_obj = self.biomes_rangerray.select(height_1)
         sub_biome = biome_obj.select(height_2)
         return sub_biome
 
@@ -215,14 +214,14 @@ class TerrainChunk:
         persistence_sum = 0
         for index in range(len(octaves)):
             persistence_sum += persistence ** index
-        r = 1 / persistence_sum
+        noise_scale_inverse = 1 / persistence_sum
 
         for octave_no, octave in enumerate(octaves):
             amplitude = persistence ** octave_no
             for x in range(self.width_in_tiles):
                 for y in range(self.height_in_tiles):
                     original_value = height_map.value_at(x, y)
-                    v = octave.value_at(x, y) * amplitude * r
+                    v = octave.value_at(x, y) * amplitude * noise_scale_inverse
                     height_map.set_value_at(x, y, original_value + v)
 
         return height_map

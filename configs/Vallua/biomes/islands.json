@@ -1,25 +1,25 @@
 {
     "colour": [0, 255, 0],
     "ranges": [
-        [0.5, "lower"],
+        [0.6, "beach"],
         [1, "hills"]
     ],
-    "lower": {
-        "colour": [255, 255, 255],
+    "beach": {
+        "colour": [127, 127, 127],
         "altitude_surfaces": [
-            [2, "sand"],
+            [4, "sand"],
             [5, "grass"] ],
-        "persistence": 0.85,
-        "height_displacement": -12,
-        "height_multiplier": 8
+        "persistence": 0.5,
+        "height_displacement": -54,
+        "height_multiplier": 120
     },
     "hills": {
-        "colour": [0, 0, 0],
+        "colour": [255, 255, 255],
         "altitude_surfaces": [
-            [1, "grass"]
-        ],
-        "persistence": 0.9,
-        "height_displacement": -12,
-        "height_multiplier": 8
+            [3, "sand"],
+            [5, "grass"] ],
+        "persistence": 0.5,
+        "height_displacement": -54,
+        "height_multiplier": 120
     }
 }

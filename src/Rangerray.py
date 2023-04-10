@@ -1,7 +1,8 @@
 class Rangerray:
 
-    def __init__(self, items = None):
+    def __init__(self, name, items = None):
 
+        self.name = name
         if items == None:
             items = []
         self.items = items
@@ -28,6 +29,8 @@ class Rangerray:
 
     def print(self):
         print("------ rangerray -------")
+        print("name: " + self.name)
+        print()
         for item in self.items:
             print(str(item[0]) + "\t" + str(item[1]))
         print("--- end of rangerray ---")
@@ -41,4 +44,4 @@ class Rangerray:
         return values
 
     def __str__(self):
-        return "YEAH YOU'RE RIGHT JACK ... " + str(self.items)
+        return "<Rangerray name=\"" + self.name + "\">"

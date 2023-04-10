@@ -21,7 +21,7 @@ class Terrain:
         self.height_in_tiles = self.height_in_chunks * CHUNK_SIZE
         self.create_save_files()
 
-        self.max_height = 30
+        self.max_height = int(self.config["max_height"])
         self.total_height = 2 * self.max_height
 
         self.configure_biomes()
@@ -29,7 +29,6 @@ class Terrain:
         # stats
         self.min_noise, self.max_noise = 1, 0
         self.noise_acc, self.noise_count = 0, 0
-        self.biome_sizes = dict(zip(self.biomes.keys(), [0] * len(self.biomes.keys())))
 
         self.world_info = {
             "seed": self.seed,
@@ -56,34 +55,24 @@ class Terrain:
             os.makedirs(os.path.join(filepath, "chunks"))
 
     def configure_biomes(self):
-        self.biomes = { }
-        self.biomes_rangerray = Rangerray()
+        self.biomes_rangerray = Rangerray("biomes_rangerray")
         print("Biomes rangerray initially")
         self.biomes_rangerray.print()
 
         for biome in self.config["biomes"]:
             point, biome_name = biome[0], biome[1]
-            if biome_name not in self.biomes.keys():
-                rangerray = self.create_biome(biome_name)
-                self.biomes[biome_name] = rangerray
-                self.biomes_rangerray.insert(point, biome_name)
-                print("Created 2")
-                rangerray.print()
+            rangerray = self.create_biome(biome_name)
+            self.biomes_rangerray.insert(point, rangerray)
+            rangerray.print()
 
         self.biome_super_map_tile_size = len(self.config["biomes"]) * SIZE_OF_BIOMES
 
         print("Final biomes rangerray")
         self.biomes_rangerray.print()
 
-        print("Biome names:")
-        print(self.biomes)
-        for biome_name in self.biomes.keys():
-            print(biome_name + ":")
-            self.biomes[biome_name].print()
-
 
     def create_biome(self, biome_name):
-        rangerray = Rangerray()
+        rangerray = Rangerray(biome_name)
         biome_config_path = os.path.join("configs", self.name, "biomes", biome_name + ".json")
         file = open(biome_config_path, "r")
         biome_config = json.load(file)

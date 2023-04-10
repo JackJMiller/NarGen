@@ -13,6 +13,7 @@
         ],
         "persistence": 0.7,
         "height_displacement": 1,
+        "height_exponent": 1,
         "height_multiplier": 3
     },
     "middle": {
@@ -22,6 +23,7 @@
         ],
         "persistence": 0.8,
         "height_displacement": 10,
+        "height_exponent": 1,
         "height_multiplier": 3
     },
     "upper": {
@@ -31,6 +33,7 @@
         ],
         "persistence": 0.9,
         "height_displacement": 20,
+        "height_exponent": 1,
         "height_multiplier": 3
     }
 }

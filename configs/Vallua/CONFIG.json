@@ -1,8 +1,10 @@
 {
     "seed": 100,
+    "max_height": 80,
     "width": 10,
     "height": 6,
     "biomes": [
+        [0.5, "rainvalley"],
         [1, "islands"]
     ]
 }
