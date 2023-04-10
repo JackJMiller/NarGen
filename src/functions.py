@@ -8,9 +8,14 @@ def clamp(value, maximum):
     else:
         return value
 
-def portion_point_between(a, b, portion):
+def point_at_portion_between(a, b, portion):
     r = b - a
     return a + portion * r
+
+def portion_at_point_between(a, b, point):
+    b = b - a
+    point = point - a
+    return point / b
 
 def load_json(filepath):
     file = open(filepath, "r")

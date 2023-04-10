@@ -2,7 +2,7 @@ import json, math, os, sys
 
 from src.constants import CHUNK_SIZE, SIZE_OF_BIOMES
 
-from src.functions import portion_point_between, save_json
+from src.functions import point_at_portion_between, save_json
 
 from src.SubBiome import SubBiome
 from src.Grid import Grid
@@ -58,12 +58,14 @@ class Terrain:
         self.biomes_rangerray = Rangerray("biomes_rangerray")
         print("Biomes rangerray initially")
         self.biomes_rangerray.print()
+        lower_point = 0
 
         for biome in self.config["biomes"]:
-            point, biome_name = biome[0], biome[1]
-            rangerray = self.create_biome(biome_name)
-            self.biomes_rangerray.insert(point, rangerray)
+            upper_point, biome_name = biome[0], biome[1]
+            rangerray = self.create_biome(biome_name, lower_point, upper_point)
+            self.biomes_rangerray.insert(upper_point, rangerray)
             rangerray.print()
+            lower_point = upper_point
 
         self.biome_super_map_tile_size = len(self.config["biomes"]) * SIZE_OF_BIOMES
 
@@ -71,7 +73,7 @@ class Terrain:
         self.biomes_rangerray.print()
 
 
-    def create_biome(self, biome_name):
+    def create_biome(self, biome_name, biome_noise_lower, biome_noise_upper):
         rangerray = Rangerray(biome_name)
         biome_config_path = os.path.join("configs", self.name, "biomes", biome_name + ".json")
         file = open(biome_config_path, "r")
@@ -80,6 +82,8 @@ class Terrain:
 
         for sub_biome in biome_config["ranges"]:
             noise_upper, sub_biome_name = sub_biome[0], sub_biome[1]
+            noise_lower_literal = point_at_portion_between(biome_noise_lower, biome_noise_upper, noise_lower)
+            noise_upper_literal = point_at_portion_between(biome_noise_lower, biome_noise_upper, noise_upper)
             obj = SubBiome(self.name, biome_name, sub_biome_name, biome_config, noise_lower, noise_upper)
             rangerray.insert(noise_upper, obj)
             noise_lower = noise_upper

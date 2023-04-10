@@ -1,7 +1,7 @@
 {
     "colour": [0, 255, 0],
     "ranges": [
-        [0.6, "beach"],
+        [0.56, "beach"],
         [1, "hills"]
     ],
     "beach": {
@@ -20,6 +20,7 @@
             [5, "grass"] ],
         "persistence": 0.5,
         "height_displacement": -54,
-        "height_multiplier": 120
+        "lower_height_multiplier": 120,
+        "upper_height_multiplier": 250
     }
 }

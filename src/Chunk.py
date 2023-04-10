@@ -1,8 +1,7 @@
 from src.constants import CHUNK_SIZE, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE_IMAGE_OVERLAYED, SAVE_IMAGE_SURFACE_MAP, SURFACES
 import json, math, os, random, sys
-from src.functions import clamp, get_brightness_at_height, portion_point_between, save_json
+from src.functions import clamp, get_brightness_at_height, point_at_portion_between, save_json
 from PIL import Image
-from src.SubBiome import SubBiome 
 from src.Perlin import Perlin 
 from src.Grid import Grid 
 
@@ -34,15 +33,15 @@ class Chunk:
 
         self.abc_gen(self.seed)
 
-        octaves, overlayed = self.produce_octaves(self.octave_count, initial_noise_tile_size, 0.5, "biome_map")
+        octaves, self.overlayed = self.produce_octaves(self.octave_count, initial_noise_tile_size, 0.5, "biome_map")
 
         spam, self.biome_super_map = self.produce_octaves(3, self.parent_world.biome_super_map_tile_size, 0.5, "biome_super_map")
 
         # create the biome map
-        self.create_biome_map(overlayed)
+        self.create_biome_map(self.overlayed)
 
         if SAVE_IMAGE_OVERLAYED:
-            Perlin.save_as_image(overlayed, self.parent_world.name + "_overlayed", self.parent_world.name)
+            Perlin.save_as_image(self.overlayed, self.parent_world.name + "_overlayed", self.parent_world.name)
 
         # create the ground map
         self.abc_gen(self.seed)
@@ -92,11 +91,12 @@ class Chunk:
             for x in range(self.width_in_tiles):
                 for y in range(self.height_in_tiles):
                     biome = self.get_biome_at(x, y)
+                    underlying_noise = self.overlayed.value_at(x, y)
                     persistence = biome.persistence
                     amplitude = persistence ** octave_no
                     original = self.ground_map.value_at(x, y)
                     v = octave.value_at(x, y)
-                    v *= amplitude * biome.height_multiplier
+                    v *= amplitude * biome.get_height_multiplier(underlying_noise)
                     self.ground_map.set_value_at(x, y, original + v)
 
         for x in range(self.width_in_tiles):

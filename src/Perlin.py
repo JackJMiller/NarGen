@@ -1,7 +1,6 @@
 import src.constants as constants 
 import math, os, random
 from PIL import Image
-from src.SubBiome import SubBiome 
 from src.Grid import Grid 
 
 class Perlin:
