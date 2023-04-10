@@ -4,7 +4,7 @@ Options:
   generate CONFIG_FILE       generate and save terrain world according to config file
   render WORLD_NAME          render a saved world
   render-game WORLD_NAME     render world in a style similar to Nargon
-  maps WORLD_NAME            view maps pertaining to world
+  view WORLD_NAME            view images of a world
   delete-world WORLD_NAME    delete configuration files for world
   list                       list all world configurations
   list-sample-worlds         list all sample world configurations

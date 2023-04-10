@@ -1,6 +1,6 @@
 from src.constants import CHUNK_SIZE, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE_IMAGE_OVERLAYED, SAVE_IMAGE_SURFACE_MAP, SURFACES
 import json, math, os, random, sys
-from src.functions import clamp, get_brightness_at_height, point_at_portion_between, save_json
+from src.functions import clamp, get_brightness_at_height, point_at_portion_between, raise_warning, save_json
 from PIL import Image
 from src.Perlin import Perlin 
 from src.Grid import Grid 
@@ -103,8 +103,12 @@ class Chunk:
                 biome = self.get_biome_at(x, y)
                 original = self.ground_map.value_at(x, y)
                 new_value = original / biome.noise_scale
-                new_value += biome.height_displacement
-                self.ground_map.set_value_at(x, y, int(new_value))
+                new_value = int(new_value + biome.height_displacement)
+                if new_value > self.parent_world.max_height and biome.full_name not in self.parent_world.max_height_warnings_raised:
+                    new_value = clamp(new_value, self.parent_world.max_height)
+                    raise_warning("Extreme terrain", "Ground map value inside " + biome.full_name + " has exceeded the maximum world height. Value has been capped at " + str(self.parent_world.max_height) + ".")
+                    self.parent_world.max_height_warnings_raised.append(biome.full_name)
+                self.ground_map.set_value_at(x, y, new_value)
 
     def create_surface_map(self):
 

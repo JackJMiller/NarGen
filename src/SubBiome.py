@@ -2,8 +2,8 @@ import json, os, sys
 
 from src.Rangerray import Rangerray
 
-from src.constants import COLOUR_SUB_BIOMES, OCTAVE_COUNT
-from src.functions import exit_with_error, int_median, point_at_portion_between, portion_at_point_between
+from src.constants import COLOUR_SUB_BIOMES, OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES
+from src.functions import exit_with_error, int_median, point_at_portion_between, portion_at_point_between, raise_warning
 
 class SubBiome:
 
@@ -15,6 +15,9 @@ class SubBiome:
 
         self.config = config[self.name]
         self.config_keys = self.config.keys()
+        for key in self.config_keys:
+            if key not in RECOGNISED_SUB_BIOME_ATTRIBUTES:
+                exit_with_error("Unrecognised attribute", "Cannot recognise attribute " + key + " in configuration for " + self.full_name + ".")
         if COLOUR_SUB_BIOMES:
             self.colour = tuple(int_median([config["colour"], self.config["colour"]]))
         else:
@@ -38,7 +41,11 @@ class SubBiome:
 
     def configure_values(self):
         if "amplitudes" in self.config_keys:
-            self.amplitudes = self.config["amplitude"]
+            self.amplitudes = self.config["amplitudes"]
+            if len(self.amplitudes) != OCTAVE_COUNT:
+                exit_with_error("Invalid config value", "Length of amplitudes in configuration for " + self.full_name + " is equal to " + str(len(self.amplitudes)) + ". Length should be " + str(OCTAVE_COUNT) + ".")
+            if "persistence" in self.config_keys:
+                raise_warning("Redundant attribute", "Both persistence and amplitudes are attributes specified in configuration for " + self.full_name + ". Program is defaulting to ampltides attributes.")
         elif "persistence" in self.config_keys:
             persistence = float(self.config["persistence"])
             self.amplitudes = []

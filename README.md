@@ -1,6 +1,8 @@
-# NarGen
+<img src="https://jackjmiller.ams3.digitaloceanspaces.com/nargen/game.png"/>
 
-Terrain generation for Nargon. Created by Jack Miller.
+## About
+
+NarGen is a procedural terrain generator that produces terrain for use in a computer game.
 
 ## Usage
 
@@ -22,13 +24,12 @@ A world named `Mundo` has now been configured and the config files for this worl
 nargen generate Mundo
 ```
 
-We now have a terrain world stored in `worlds/Mundo/`. The world can finally be rendered in 3 dimensions with the `render` command. To view maps of the world, the `view-maps` command can be used.
+We now have a terrain world stored in `worlds/Mundo/`. A top-down image of the world can now be created.
 
 ```
-nargen render Mundo
-
-nargen view-maps Mundo
+nargen render-game Mundo
 ```
 
-For more help on running the program, view the help page with `nargen --help`.
+The image will be opened once created and you can view your world.
 
+For more help on running the program, view the help page with the `--help` flag.

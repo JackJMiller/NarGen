@@ -2,7 +2,7 @@ import json, math, os, sys
 
 from src.constants import CHUNK_SIZE, SIZE_OF_BIOMES
 
-from src.functions import point_at_portion_between, save_json
+from src.functions import exit_with_error, point_at_portion_between, save_json
 
 from src.SubBiome import SubBiome
 from src.Grid import Grid
@@ -20,6 +20,8 @@ class Terrain:
         self.width_in_tiles = self.width_in_chunks * CHUNK_SIZE
         self.height_in_tiles = self.height_in_chunks * CHUNK_SIZE
         self.create_save_files()
+
+        self.max_height_warnings_raised = []
 
         self.max_height = int(self.config["max_height"])
         self.total_height = 2 * self.max_height
@@ -73,6 +75,8 @@ class Terrain:
 
         for sub_biome in biome_config["ranges"]:
             noise_upper, sub_biome_name = sub_biome[0], sub_biome[1]
+            if sub_biome_name not in biome_config:
+                exit_with_error("Undefined sub-biome", "An undefined sub-biome named " + sub_biome_name + " is referenced inside ranges attribute of biome " + biome_name + ".")
             noise_lower_literal = point_at_portion_between(biome_noise_lower, biome_noise_upper, noise_lower)
             noise_upper_literal = point_at_portion_between(biome_noise_lower, biome_noise_upper, noise_upper)
             obj = SubBiome(self.name, biome_name, sub_biome_name, biome_config, noise_lower, noise_upper)

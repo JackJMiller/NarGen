@@ -24,7 +24,6 @@ SPRITES = {
 AVAILABLE_BLOCKS = ["grass", "lava", "sand", "snow", "stone", "water"]
 
 CHUNK_SIZE = 20
-MAX_HEIGHT = 200
 SIZE_OF_BIOMES = 80
 
 OCTAVE_COUNT = 5
@@ -40,5 +39,16 @@ COLOUR_RED = "\033[0;31m"
 COLOUR_GREEN = "\033[0;32m"
 COLOUR_YELLOW = "\033[2;33m"
 COLOUR_BLUE = "\033[0;34m"
-COLOUR_PURPLE = "\033[0;35m"
+COLOUR_MAGENTA = "\033[0;35m"
 COLOUR_CYAN = "\033[0;36m"
+
+RECOGNISED_SUB_BIOME_ATTRIBUTES = [
+    "altitude_surfaces",
+    "amplitudes",
+    "colour",
+    "height_displacement",
+    "height_multiplier",
+    "lower_height_multiplier",
+    "persistence",
+    "upper_height_multiplier"
+]
