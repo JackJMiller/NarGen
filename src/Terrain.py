@@ -7,7 +7,7 @@ from src.functions import portion_point_between, save_json
 from src.SubBiome import SubBiome
 from src.Grid import Grid
 from src.Rangerray import Rangerray
-from src.TerrainChunk import TerrainChunk
+from src.Chunk import Chunk
 
 class Terrain:
 
@@ -93,7 +93,7 @@ class Terrain:
 
         for q in range(self.width_in_chunks):
             for r in range(self.height_in_chunks):
-                chunk = TerrainChunk(self, q, r)
+                chunk = Chunk(self, q, r)
                 corner_x, corner_y = q * CHUNK_SIZE, r * CHUNK_SIZE
                 map_image.overlay(getattr(chunk, map_image_name), corner_x, corner_y)
 

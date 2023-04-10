@@ -2,7 +2,7 @@ import math, os, sys
 
 from PIL import Image, ImageEnhance
 
-from src.TerrainChunk import TerrainChunk
+from src.Chunk import Chunk
 
 from src.functions import get_brightness_at_height, load_json
 from src.constants import CHUNK_SIZE, SPRITES
@@ -22,7 +22,7 @@ class GameRenderer:
         for r in range(self.world_config["height"]):
             self.chunks = []
             for q in range(self.world_config["width"]):
-                filepath = TerrainChunk.get_filepath(self.world_name, q, r)
+                filepath = Chunk.get_filepath(self.world_name, q, r)
                 chunk = load_json(filepath)
                 self.chunks.append(chunk)
             self.draw_chunk_row(r)

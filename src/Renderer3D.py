@@ -37,7 +37,7 @@ class Renderer3D(ShowBase):
 
     # load specified chunk
     def load_chunk(self, chunk_q, chunk_r):
-        filepath = TerrainChunk.get_filepath(self.world_name, chunk_q, chunk_r)
+        filepath = Chunk.get_filepath(self.world_name, chunk_q, chunk_r)
         file = open(filepath, "r")
         save_object = json.load(file)
         chunk_corner_x = chunk_q * CHUNK_SIZE

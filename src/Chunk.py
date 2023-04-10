@@ -6,7 +6,7 @@ from src.SubBiome import SubBiome
 from src.Perlin import Perlin 
 from src.Grid import Grid 
 
-class TerrainChunk:
+class Chunk:
 
     def __init__(self, parent_world, q, r):
 
