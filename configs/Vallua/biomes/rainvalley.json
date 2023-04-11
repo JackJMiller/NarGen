@@ -12,7 +12,12 @@
         "colour": [0, 0, 255],
         "altitude_surfaces": [
             [4, "sand"],
-            [5, "grass"] ],
+            [5, "grass"]
+        ],
+        "vegetation": [
+            ["tree_1", 0, 4, 0.25],
+            ["tree_2", 3, 100, 0.25]
+        ],
         "amplitudes": [0, 0, 0, 0, 1],
         "height_displacement": -20,
         "height_multiplier": 50

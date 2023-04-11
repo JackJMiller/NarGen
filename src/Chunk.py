@@ -1,9 +1,12 @@
-from src.constants import CHUNK_SIZE, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE_IMAGE_OVERLAYED, SAVE_IMAGE_SURFACE_MAP, SURFACES
 import json, math, os, random, sys
-from src.functions import clamp, get_brightness_at_height, point_at_portion_between, raise_warning, save_json
+
 from PIL import Image
+
 from src.Perlin import Perlin 
 from src.Grid import Grid 
+
+from src.constants import CHUNK_SIZE, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE_IMAGE_OVERLAYED, SAVE_IMAGE_SURFACE_MAP, SURFACES, VEGETATION_ROOT_BLOCKS
+from src.functions import clamp, get_brightness_at_height, point_at_portion_between, raise_warning, random_element, save_json
 
 class Chunk:
 
@@ -50,6 +53,9 @@ class Chunk:
         self.abc_gen(random.randint(1, 100))
         self.create_surface_map()
 
+        # create the area map to include vegetation
+        self.create_area_map()
+
         self.export_save_file()
 
     def produce_octaves(self, octave_count, noise_tile_size, persistence, octave_identifier):
@@ -82,6 +88,33 @@ class Chunk:
         return octaves, overlayed
 
 
+    def create_area_map(self):
+        self.area_map = Grid(self.width_in_tiles, self.height_in_tiles, "")
+        for x in range(self.width_in_tiles):
+            for y in range(self.height_in_tiles):
+                area_object_name = self.decide_vegetation_at(x, y)
+                if area_object_name != "":
+                    self.area_map.set_value_at(x, y, area_object_name)
+
+    def decide_vegetation_at(self, x, y):
+        altitude = self.ground_map.value_at(x, y)
+        if altitude <= 0:
+            return ""
+
+        biome = self.biome_map.value_at(x, y)
+        ground_tile_name = self.surface_map.value_at(x, y)
+        candidates = []
+        for veg in biome.vegetation:
+            veg_name, min_altitude, max_altitude, veg_probability = veg[0], veg[1], veg[2], veg[3]
+            if min_altitude <= altitude <= max_altitude and ground_tile_name in VEGETATION_ROOT_BLOCKS[veg_name] and random.random() < veg_probability:
+                candidates.append(veg_name)
+        if len(candidates) > 0:
+            return random_element(candidates)
+        else:
+            return ""
+
+
+
     def create_ground_map(self, octaves):
 
         self.ground_map = Grid(self.width_in_tiles, self.height_in_tiles, 0)
@@ -108,6 +141,7 @@ class Chunk:
                     raise_warning("Extreme terrain", "Ground map value inside " + biome.full_name + " has exceeded the maximum world height. Value has been capped at " + str(self.parent_world.max_height) + ".")
                     self.parent_world.max_height_warnings_raised.append(biome.full_name)
                 self.ground_map.set_value_at(x, y, new_value)
+
 
     def create_surface_map(self):
 
@@ -152,10 +186,14 @@ class Chunk:
         for x in range(self.width_in_tiles):
             row = []
             for y in range(self.height_in_tiles):
+                altitude = self.ground_map.value_at(x, y)
+                ground_tile_name = self.surface_map.value_at(x, y)
+                area_object_name = self.area_map.value_at(x, y)
                 row.append([
                     str(self.biome_map.value_at(x, y)),
-                    self.ground_map.value_at(x, y),
-                    self.surface_map.value_at(x, y)
+                    altitude,
+                    ground_tile_name,
+                    area_object_name
                 ])
             save_file_object["map"].append(row)
         filepath = self.get_filepath(self.parent_world.name, self.q, self.r)

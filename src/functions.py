@@ -1,4 +1,4 @@
-import json, sys
+import json, random, sys
 
 from src.constants import COLOUR_RED, COLOUR_MAGENTA, COLOUR_NONE
 
@@ -47,3 +47,7 @@ def exit_with_error(error_type, message):
 
 def raise_warning(warning_type, message):
     print("NarGen: " + COLOUR_MAGENTA + "WARNING" + COLOUR_NONE + ": " + warning_type + ": " + message)
+
+def random_element(array):
+    index = random.randrange(0, len(array))
+    return array[index]

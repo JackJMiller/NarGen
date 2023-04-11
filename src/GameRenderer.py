@@ -29,15 +29,6 @@ class GameRenderer:
 
         self.image.save(os.path.join("worlds", self.world_name, "images", "game.png"), format = "png")
 
-        sys.exit(0)
-
-        for x in range(self.world_config["width"]):
-            for y in range(self.world_config["height"]):
-                v = grid.value_at(x, y)
-                v = 0.5 * (v + 1)
-                rgb = Perlin.get_height_colour(v)
-                pixels[x, y] = rgb
-
 
     def draw_chunk_row(self, r):
         for q in range(len(self.chunks)):
@@ -51,15 +42,20 @@ class GameRenderer:
         y = chunk_r * CHUNK_SIZE + _y
         canvas_x, canvas_y = x * CHUNK_SIZE, y * CHUNK_SIZE
         tile = self.chunks[chunk_q]["map"][_x][_y]
-        height, tile_name = tile[1], tile[2]
+        height, tile_name, area_object_name = tile[1], tile[2], tile[3]
         for z in range(height):
             if tile_name + "_block" not in SPRITES.keys():
                 tile_name = "grass"
             self.draw_tile(tile_name + "_block", canvas_x, canvas_y, z)
             canvas_y -= 14
+
         if height <= 0:
             height = abs(height)
             self.draw_tile("water_block", canvas_x, canvas_y, height)
+
+        if area_object_name != "":
+            self.draw_tile(area_object_name, canvas_x, canvas_y, height)
+
 
     def draw_tile(self, tile_name, canvas_x, canvas_y, z):
         sprite = SPRITES[tile_name]

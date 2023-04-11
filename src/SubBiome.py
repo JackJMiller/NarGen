@@ -38,6 +38,11 @@ class SubBiome:
 
         self.altitude_surfaces = Rangerray(self.full_name, self.config["altitude_surfaces"])
 
+        if "vegetation" in self.config_keys:
+            self.vegetation = self.config["vegetation"]
+        else:
+            self.vegetation = []
+
 
     def configure_values(self):
         if "amplitudes" in self.config_keys:
