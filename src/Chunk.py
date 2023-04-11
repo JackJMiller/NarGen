@@ -24,7 +24,6 @@ class Chunk:
 
         self.abc_gen(self.seed)
 
-        # TODO: size this according to number of biomes
         initial_noise_tile_size = 10 * CHUNK_SIZE
         self.octave_count = OCTAVE_COUNT
 

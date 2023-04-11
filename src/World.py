@@ -9,7 +9,7 @@ from src.Grid import Grid
 from src.Rangerray import Rangerray
 from src.Chunk import Chunk
 
-class Terrain:
+class World:
 
     def __init__(self, name, config):
 

@@ -2,7 +2,7 @@ import json, os, sys
 
 from src.GameRenderer import GameRenderer
 from src.Renderer3D import Renderer3D
-from src.Terrain import Terrain
+from src.World import World
 
 if sys.argv[1] == "generate":
     # locate world configuration
@@ -12,8 +12,8 @@ if sys.argv[1] == "generate":
     file = open(config_file_path, "r")
     config = json.load(file)
 
-    # generate terrain according to configuration
-    terrain = Terrain(WORLD_NAME, config)
+    # generate terrain world according to configuration
+    world = World(WORLD_NAME, config)
 
 elif sys.argv[1] == "render":
     WORLD_NAME = sys.argv[2]
