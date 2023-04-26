@@ -1,0 +1,45 @@
+{
+    "colour": [0, 200, 140],
+    "ranges": [
+        [0.8, "water"],
+        [1, "hill"]
+    ],
+    "water": {
+        "colour": [0, 0, 80],
+        "altitude_surfaces": [
+            [5, "long_grass"]
+        ],
+        "ornaments": [
+            ["OCCURRENCE", 0.3],
+            ["bruce_tree", 0, 100, 3],
+            ["poppy_bed_1", 0, 100, 1],
+            ["poppy_bed_2", 0, 100, 1],
+            ["daisy_poppy_bed", 0, 100, 3],
+            ["medium_moonflower", 0, 100, 2],
+            ["moonflower", 0, 100, 2]
+        ],
+        "amplitudes": [0, 0, 0, 0, 1],
+        "height_displacement": -15,
+        "height_multiplier": 25
+    },
+    "hill": {
+        "colour": [0, 80, 0],
+        "altitude_surfaces": [
+            [4, "long_grass"],
+            [10, "medium_grass"]
+        ],
+        "ornaments": [
+            ["OCCURRENCE", 0.3],
+            ["bruce_tree", 0, 100, 3],
+            ["poppy_bed_1", 0, 100, 1],
+            ["poppy_bed_2", 0, 100, 1],
+            ["daisy_poppy_bed", 0, 100, 3],
+            ["medium_moonflower", 0, 100, 2],
+            ["moonflower", 0, 100, 2]
+        ],
+        "amplitudes": [0.3, 0, 0, 0.5, 1],
+        "height_displacement": -15,
+        "lower_height_multiplier": 25,
+        "upper_height_multiplier": 30
+    }
+}

@@ -28,8 +28,19 @@ elif [[ $# -ge 1 && "$1" == "generate" ]]; then
         echo "Invalid arguments: No config file specified"
         cat res/help_page.txt
     elif [ -d "configs/$2/" ]; then
+        cat configs/$2/CONFIG.json
         rm -r -f worlds/$2/
-        python3 main.py generate $2
+        if [ $# -ge 3 ]; then
+            if [ $3 == "--no-rendering" ]; then
+                python3 main.py generate $2 0
+            else
+                echo "Invalid arguments: Cannot recognise option $3"
+                cat res/help_page.txt
+            fi
+        else
+            python3 main.py generate $2 1
+        fi
+
     else
         echo "Error: Cannot find world named $2"
         exit 1

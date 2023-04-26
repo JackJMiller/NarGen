@@ -12,7 +12,7 @@
         "colour": [0, 0, 255],
         "altitude_surfaces": [
             [4, "sand"],
-            [5, "grass"] ],
+            [5, "medium_grass"] ],
         "amplitudes": [0, 0, 0, 0, 1],
         "height_displacement": -20,
         "height_multiplier": 50
@@ -20,7 +20,7 @@
     "bottom_shelf": {
         "colour": [127, 127, 127],
         "altitude_surfaces": [
-            [20, "grass"]
+            [20, "medium_grass"]
         ],
         "amplitudes": [1, 0, 0, 0, 1],
         "height_displacement": 10,
@@ -30,7 +30,7 @@
     "middle_shelf": {
         "colour": [100, 100, 100],
         "altitude_surfaces": [
-            [20, "grass"]
+            [20, "medium_grass"]
         ],
         "amplitudes": [1, 0, 0, 0, 1],
         "height_displacement": 14,
@@ -39,7 +39,7 @@
     "top_shelf": {
         "colour": [0, 0, 0],
         "altitude_surfaces": [
-            [100, "grass"]
+            [100, "medium_grass"]
         ],
         "amplitudes": [0, 0, 0.2, 0.4, 0.6],
         "height_displacement": 20,

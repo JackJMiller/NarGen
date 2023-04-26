@@ -2,11 +2,12 @@ import json, math, os, random, sys
 
 from PIL import Image
 
-from src.Perlin import Perlin 
 from src.Grid import Grid 
+from src.Perlin import Perlin 
+from src.Rangerray import Rangerray 
 
-from src.constants import CHUNK_SIZE, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE_IMAGE_OVERLAYED, SAVE_IMAGE_SURFACE_MAP, SURFACES, VEGETATION_ROOT_BLOCKS
-from src.functions import clamp, get_brightness_at_height, point_at_portion_between, raise_warning, random_element, save_json
+from src.constants import CHUNK_SIZE, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE_IMAGE_OVERLAYED, SAVE_IMAGE_SURFACE_MAP, SURFACES, ORNAMENTATION_ROOT_BLOCKS
+from src.functions import clamp, get_brightness_at_height, point_at_portion_between, portion_at_point_between, raise_warning, random_element, save_json
 
 class Chunk:
 
@@ -35,15 +36,22 @@ class Chunk:
 
         self.abc_gen(self.seed)
 
-        octaves, self.overlayed = self.produce_octaves(self.octave_count, initial_noise_tile_size, 0.5, "biome_map")
+        octaves, self.overlayed = self.produce_octaves(self.octave_count, initial_noise_tile_size, 0.5, "biome_map", lacunarity = 0.5)
 
-        spam, self.biome_super_map = self.produce_octaves(3, self.parent_world.biome_super_map_tile_size, 0.5, "biome_super_map")
+        spam, self.biome_super_map = self.produce_octaves(3, self.parent_world.biome_super_map_tile_size, 0.25, "biome_super_map", tile_sizes = [self.parent_world.biome_super_map_tile_size, 50, 20])
+
+        self.parent_world.temp_acc += self.biome_super_map.calculate_average()
+        self.parent_world.temp_count += 1
 
         # create the biome map
         self.create_biome_map(self.overlayed)
 
+        self.perlin_image = Perlin.create_grid_image(self.biome_super_map)
+
+        """
         if SAVE_IMAGE_OVERLAYED:
             Perlin.save_as_image(self.overlayed, self.parent_world.name + "_overlayed", self.parent_world.name)
+        """
 
         # create the ground map
         self.abc_gen(self.seed)
@@ -53,18 +61,23 @@ class Chunk:
         self.abc_gen(random.randint(1, 100))
         self.create_surface_map()
 
-        # create the area map to include vegetation
+        # create the area map to include ornamentation
         self.create_area_map()
 
         self.export_save_file()
 
-    def produce_octaves(self, octave_count, noise_tile_size, persistence, octave_identifier):
+    def produce_octaves(self, octave_count, noise_tile_size, persistence, octave_identifier, tile_sizes = [], lacunarity = None):
 
-        octaves = []
-        save_stats = (octave_identifier == "biome_super_map")
+        # configure the noise tile sizes
+        if len(tile_sizes) == 0:
+            tile_size = noise_tile_size
+            for i in range(octave_count):
+                tile_sizes.append(tile_size)
+                tile_size = math.ceil(tile_size * lacunarity)
 
         # create the octaves
-        for octave_no in range(octave_count):
+        octaves = []
+        for octave_no, noise_tile_size in enumerate(tile_sizes):
             self.abc_gen(self.AAA)
             perlin = Perlin(
                 self.corner_x,
@@ -77,10 +90,6 @@ class Chunk:
 
             octave = perlin.get_grid()
 
-            noise_tile_size = math.ceil(noise_tile_size * self.lacunarity)
-
-            if SAVE_IMAGE_OCTAVE:
-                Perlin.save_as_image(octave, self.parent_world.name + "_" + octave_identifier + "_octave_" + str(octave_no), self.parent_world.name)
             octaves.append(octave)
 
         overlayed = self.overlay_octaves(octaves, persistence)
@@ -92,24 +101,31 @@ class Chunk:
         self.area_map = Grid(self.width_in_tiles, self.height_in_tiles, "")
         for x in range(self.width_in_tiles):
             for y in range(self.height_in_tiles):
-                area_object_name = self.decide_vegetation_at(x, y)
+                area_object_name = self.decide_ornamentation_at(x, y)
                 if area_object_name != "":
                     self.area_map.set_value_at(x, y, area_object_name)
 
-    def decide_vegetation_at(self, x, y):
+    def decide_ornamentation_at(self, x, y):
+        # TEMP
+        # return ""
         altitude = self.ground_map.value_at(x, y)
         if altitude <= 0:
             return ""
 
-        biome = self.biome_map.value_at(x, y)
+        biome = self.get_biome_at(x, y)
+        if random.random() > biome.ornament_occurrence_rate:
+            return ""
         ground_tile_name = self.surface_map.value_at(x, y)
         candidates = []
-        for veg in biome.vegetation:
-            veg_name, min_altitude, max_altitude, veg_probability = veg[0], veg[1], veg[2], veg[3]
-            if min_altitude <= altitude <= max_altitude and ground_tile_name in VEGETATION_ROOT_BLOCKS[veg_name] and random.random() < veg_probability:
-                candidates.append(veg_name)
+        acc, candidates = 0, Rangerray()
+        for veg in biome.ornaments:
+            veg_name, min_altitude, max_altitude, veg_occurrence_chance = veg[0], veg[1], veg[2], veg[3]
+            if min_altitude <= altitude <= max_altitude and ground_tile_name in ORNAMENTATION_ROOT_BLOCKS[veg_name]:
+                acc += veg_occurrence_chance
+                candidates.insert(acc, veg_name)
         if len(candidates) > 0:
-            return random_element(candidates)
+            random_number = round(random.random() * acc)
+            return candidates.select_value(random_number)
         else:
             return ""
 
@@ -122,29 +138,41 @@ class Chunk:
         for octave_no, octave in enumerate(octaves):
             for x in range(self.width_in_tiles):
                 for y in range(self.height_in_tiles):
-                    biome = self.get_biome_at(x, y)
-                    underlying_noise = self.overlayed.value_at(x, y)
-                    amplitude = biome.get_amplitude(octave_no)
                     original = self.ground_map.value_at(x, y)
-                    v = octave.value_at(x, y)
-                    v *= amplitude * biome.get_height_multiplier(underlying_noise)
+                    v = self.get_ground_octave_value(x, y, octave, octave_no)
                     self.ground_map.set_value_at(x, y, original + v)
 
         for x in range(self.width_in_tiles):
             for y in range(self.height_in_tiles):
-                biome = self.get_biome_at(x, y)
+                displacement = 0
+                for balance in self.biome_map.value_at(x, y):
+                    biome, biome_influence = balance[0], balance[1]
+                    displacement += biome.height_displacement * biome_influence
                 original = self.ground_map.value_at(x, y)
-                new_value = original / biome.noise_scale
-                new_value = int(new_value + biome.height_displacement)
-                if new_value > self.parent_world.max_height and biome.full_name not in self.parent_world.max_height_warnings_raised:
+                new_value = int(original + displacement)
+                if new_value > self.parent_world.max_height and biome.full_name not in self.parent_world.warnings_raised["max_height"]:
                     new_value = clamp(new_value, self.parent_world.max_height)
                     raise_warning("Extreme terrain", "Ground map value inside " + biome.full_name + " has exceeded the maximum world height. Value has been capped at " + str(self.parent_world.max_height) + ".")
-                    self.parent_world.max_height_warnings_raised.append(biome.full_name)
+                    self.parent_world.warnings_raised["max_height"].append(biome.full_name)
                 self.ground_map.set_value_at(x, y, new_value)
 
+    def get_ground_octave_value(self, x, y, octave, octave_no):
+        biome_balance = self.biome_map.value_at(x, y)
+        V = 0
+        biome_influence_sum = 0
+        for balance in biome_balance:
+            biome_influence_sum += balance[1]
+        for balance in biome_balance:
+            underlying_noise = self.overlayed.value_at(x, y)
+            biome, biome_influence = balance[0], balance[1]
+            amplitude = biome.get_amplitude(octave_no)
+            v = octave.value_at(x, y)
+            v *= amplitude * biome.get_height_multiplier(underlying_noise) * biome_influence
+            v /= biome.noise_scale
+            V += v
+        return V
 
     def create_surface_map(self):
-
         self.surface_map = Grid(self.width_in_tiles, self.height_in_tiles, 0)
         self.surface_map_image = Grid(self.width_in_tiles, self.height_in_tiles, 0)
         for x in range(self.width_in_tiles):
@@ -167,16 +195,18 @@ class Chunk:
     def create_biome_map(self, perlin_grid):
         self.biome_map = perlin_grid.copy()
         self.biome_map_image = Grid(perlin_grid.width, perlin_grid.height, 0)
+        self.sub_biome_map_image = Grid(perlin_grid.width, perlin_grid.height, 0)
         min_noise, max_noise = 1, 0
 
         for x in range(perlin_grid.width):
             for y in range(perlin_grid.height):
                 height_1 = self.biome_super_map.value_at(x, y)
                 height_2 = self.biome_map.value_at(x, y)
-                biome = self.determine_biome_by_height(height_1, height_2)
-                self.biome_map.set_value_at(x, y, biome)
-                colour = biome.colour
-                self.biome_map_image.set_value_at(x, y, colour)
+                biome_balance = self.determine_biome_by_height(height_1, height_2)
+                self.biome_map.set_value_at(x, y, biome_balance)
+                biome = biome_balance[0][0]
+                self.biome_map_image.set_value_at(x, y, biome.parent_colour)
+                self.sub_biome_map_image.set_value_at(x, y, biome.colour)
 
         if SAVE_IMAGE_BIOME_MAP:
             self.biome_map_image.save_RGBs(self.parent_world.name + "_biome_map", self.parent_world.name)
@@ -190,7 +220,7 @@ class Chunk:
                 ground_tile_name = self.surface_map.value_at(x, y)
                 area_object_name = self.area_map.value_at(x, y)
                 row.append([
-                    str(self.biome_map.value_at(x, y)),
+                    str(self.get_biome_at(x, y)),
                     altitude,
                     ground_tile_name,
                     area_object_name
@@ -200,12 +230,42 @@ class Chunk:
         save_json(save_file_object, filepath)
 
     def get_biome_at(self, x, y):
-        return self.biome_map.value_at(x, y)
+        return self.biome_map.value_at(x, y)[0][0]
 
     def determine_biome_by_height(self, height_1, height_2):
-        biome_obj = self.biomes_rangerray.select(height_1)
-        sub_biome = biome_obj.select(height_2)
-        return sub_biome
+        # get main biome
+        main_biome = self.biomes_rangerray.select(height_1)
+        biome_obj = main_biome["value"]
+        self.parent_world.biome_sizes[biome_obj.name] += 1
+        sub_biome = biome_obj.select_value(height_2)
+
+        portion_point = portion_at_point_between(main_biome["lower_point"], main_biome["upper_point"], height_1)
+        blend_region = 0.05
+        if portion_point <= blend_region:
+            blended_biome_index = main_biome["index"] - 1
+            influence = 1 - portion_at_point_between(0, blend_region, portion_point)
+            influence /= 2
+        elif portion_point >= 1 - blend_region:
+            blended_biome_index = main_biome["index"] + 1
+            influence = portion_at_point_between(1 - blend_region, 1, portion_point)
+            influence /= 2
+        else:
+            blended_biome_index = -1
+
+        # TEMP
+        # return [(sub_biome, 1)]
+
+        if 0 <= blended_biome_index < len(self.biomes_rangerray):
+            balance = [(sub_biome, 1 - influence)]
+            blended_biome = self.biomes_rangerray.select_by_index(blended_biome_index)
+            blended_biome_obj = blended_biome["value"]
+            sub_biome = blended_biome_obj.select_value(height_2)
+            balance.append((sub_biome, influence))
+        else:
+            balance = [(sub_biome, 1)]
+
+
+        return balance
 
     def abc_gen(self, seed):
         random.seed(seed)
@@ -228,7 +288,7 @@ class Chunk:
         if height <= 0:
             return "water"
         else:
-            return biome.altitude_surfaces.select(height)
+            return biome.altitude_surfaces.select_value(height)
 
     def get_surface_colour(self, surface_name, height, height_displacement):
         if height < 0:
@@ -273,14 +333,4 @@ class Chunk:
             return maximum
         else:
             return v
-
-    def colour_average(self, c1, c2):
-        return (
-            self.mean(c1[0], c2[0]),
-            self.mean(c1[1], c2[1]),
-            self.mean(c1[2], c2[2])
-        )
-
-    def mean(self, v1, v2):
-        return int((v1 + v2) / 2)
 

@@ -1,0 +1,10 @@
+{
+    "seed": 111,
+    "max_height": 120,
+    "width": 60,
+    "height": 60,
+    "biomes": [
+        [0.5, "plains"],
+        [1, "rainvalley"]
+    ]
+}

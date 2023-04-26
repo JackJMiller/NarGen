@@ -1,20 +1,61 @@
 class Rangerray:
 
-    def __init__(self, name, items = None):
+    def __init__(self, name = "", items = None):
 
         self.name = name
         if items == None:
             items = []
         self.items = items
 
+    def select_value(self, v):
+
+        item = self.select(v)
+        return item["value"]
+
     def select(self, v):
 
-        for item in self.items:
-            if v < item[0]:
-                return item[1]
+        lower_point = 0
+        for index, item in enumerate(self.items):
+            upper_point = item[0]
+            if v < upper_point:
+                return {
+                    "value": item[1],
+                    "lower_point": lower_point,
+                    "upper_point": item[0],
+                    "index": index
+                }
+            lower_point = upper_point
 
         # when v exceeds maximum choice, return the last item
-        return self.items[-1][1]
+        item = self.items[-1]
+        if len(self.items) > 1:
+            lower_point = self.items[-2][0]
+        else:
+            lower_point = 0
+
+        return {
+            "value": item[1],
+            "lower_point": lower_point,
+            "upper_point": item[0],
+            "index": len(self.items) - 1
+        }
+
+    def select_by_index(self, index):
+        if index == 0:
+            lower_point = 0
+        else:
+            lower_point = self.items[index - 1][0]
+        item = self.items[index]
+        return {
+            "value": item[1],
+            "lower_point": lower_point,
+            "upper_point": item[0],
+            "index": index
+        }
+
+
+    def __len__(self):
+        return len(self.items)
 
     def insert(self, item_index, item_value):
         index = -1

@@ -1,0 +1,9 @@
+{
+    "seed": 673,
+    "max_height": 120,
+    "width": 2,
+    "height": 2,
+    "biomes": [
+        [1, "forest"]
+    ]
+}

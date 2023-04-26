@@ -1,9 +1,14 @@
 {
-    "seed": 60,
+    "seed": 1201999,
     "max_height": 100,
-    "width": 6,
-    "height": 6,
+    "width": 40,
+    "height": 40,
     "biomes": [
-        [1, "rainvalley"]
+        [0.16667, "islands"],
+        [0.33333, "desert"],
+        [0.50000, "swamp"],
+        [0.66667, "snow_desert"],
+        [0.83333, "plains"],
+        [1.00000, "rainvalley"]
     ]
 }

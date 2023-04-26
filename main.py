@@ -7,13 +7,14 @@ from src.World import World
 if sys.argv[1] == "generate":
     # locate world configuration
     WORLD_NAME = sys.argv[2]
+    render_world = bool(int(sys.argv[3]))
     config_file_path = os.path.join("configs", WORLD_NAME, "CONFIG.json")
 
     file = open(config_file_path, "r")
     config = json.load(file)
 
     # generate terrain world according to configuration
-    world = World(WORLD_NAME, config)
+    world = World(WORLD_NAME, config, render_world)
 
 elif sys.argv[1] == "render":
     WORLD_NAME = sys.argv[2]

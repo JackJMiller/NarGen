@@ -2,12 +2,13 @@ import json, os, sys
 
 from src.Rangerray import Rangerray
 
-from src.constants import COLOUR_SUB_BIOMES, OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES
-from src.functions import exit_with_error, int_median, point_at_portion_between, portion_at_point_between, raise_warning
+from src.constants import OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES
+from src.functions import colour_average, exit_with_error, int_median, point_at_portion_between, portion_at_point_between, validate, raise_warning
 
 class SubBiome:
 
-    def __init__(self, WORLD_NAME, parent_biome_name, name, config, noise_lower, noise_upper):
+    def __init__(self, parent_world, parent_biome_name, name, config, noise_lower, noise_upper):
+        self.parent_world = parent_world
         self.parent_biome_name = parent_biome_name
         self.name = name
         self.full_name = self.parent_biome_name + "." + self.name
@@ -18,10 +19,8 @@ class SubBiome:
         for key in self.config_keys:
             if key not in RECOGNISED_SUB_BIOME_ATTRIBUTES:
                 exit_with_error("Unrecognised attribute", "Cannot recognise attribute " + key + " in configuration for " + self.full_name + ".")
-        if COLOUR_SUB_BIOMES:
-            self.colour = tuple(int_median([config["colour"], self.config["colour"]]))
-        else:
-            self.colour = tuple(config["colour"])
+        self.parent_colour = tuple(config["colour"])
+        self.colour = tuple(colour_average(self.config["colour"], config["colour"]))
 
         self.configure_values()
 
@@ -38,11 +37,18 @@ class SubBiome:
 
         self.altitude_surfaces = Rangerray(self.full_name, self.config["altitude_surfaces"])
 
-        if "vegetation" in self.config_keys:
-            self.vegetation = self.config["vegetation"]
-        else:
-            self.vegetation = []
-
+        self.configure_ornaments()
+    
+    def configure_ornaments(self):
+        self.ornaments = []
+        self.ornament_occurrence_rate = 0
+        if "ornaments" in self.config.keys():
+            validate("ornaments", self.config["ornaments"], { "sub_biome_name": self.full_name })
+            for value in self.config["ornaments"]:
+                if value[0] != "OCCURRENCE":
+                    self.ornaments.append(value)
+                else:
+                    self.ornament_occurrence_rate = value[1]
 
     def configure_values(self):
         if "amplitudes" in self.config_keys:

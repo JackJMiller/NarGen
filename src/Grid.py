@@ -64,3 +64,12 @@ class Grid:
                 grid.set_value_at(x, y, v)
 
         return grid
+
+    def calculate_average(self):
+        acc = 0
+        for x in range(self.width):
+            for y in range(self.height):
+                acc += self.value_at(x, y)
+
+        return acc / (self.width * self.height)
+

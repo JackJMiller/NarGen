@@ -1,5 +1,6 @@
 import src.constants as constants 
 import math, os, random
+
 from PIL import Image
 from src.Grid import Grid 
 
@@ -39,6 +40,8 @@ class Perlin:
                 self.noise_acc += abs(NOISE)
                 self.noise_count += 1
                 self.grid.set_value_at(x, y, NOISE)
+
+        self.average = self.noise_acc / self.noise_count
 
     def value_at(self, x, y):
         return self.grid.value_at(x, y)
@@ -116,14 +119,17 @@ class Perlin:
 
     @staticmethod
     def get_height_colour(height):
-        v = int((1 - height) * 255)
+        v = height - 0.5
+        v *= 5
+        v += 0.5
+        v = int((1 - v) * 255)
         return (v, v, v)
 
     def save_image(self, filename, WORLD_NAME):
-        Perlin.save_as_image(self.grid, filename, WORLD_NAME)
+        Perlin.save(self.grid, os.path.join("worlds", WORLD_NAME, "images", filename + ".png"))
 
     @staticmethod
-    def save_as_image(grid, filename, WORLD_NAME):
+    def create_image(grid):
         img = Image.new("RGB", (grid.width, grid.height), "black")
 
         pixels = img.load()
@@ -135,7 +141,26 @@ class Perlin:
                 rgb = Perlin.get_height_colour(v)
                 pixels[x, y] = rgb
 
-        img.save(os.path.join("worlds", WORLD_NAME, "images", filename + ".png"))
+        return img
+
+    @staticmethod
+    def create_grid_image(grid):
+        image = Grid(grid.width, grid.height, 0)
+
+        for x in range(grid.width):
+            for y in range(grid.height):
+                v = grid.value_at(x, y)
+                rgb = Perlin.get_height_colour(v)
+                image.set_value_at(x, y, rgb)
+
+        return image
+
+    @staticmethod
+    def save(grid, path):
+        img = Perlin.create_image(grid)
+
+        img.save(path)
 
     def get_grid(self):
         return self.grid
+

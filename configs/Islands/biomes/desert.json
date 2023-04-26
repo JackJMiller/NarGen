@@ -1,0 +1,38 @@
+{
+    "colour": [255, 255, 0],
+    "ranges": [
+        [0.04, "oasis"],
+        [1, "desert"]
+    ],
+    "desert": {
+        "colour": [255, 255, 0],
+        "altitude_surfaces": [
+            [2, "sand"]
+        ],
+        "amplitudes": [0.6, 0.8, 1, 0, 0],
+        "height_displacement": -16,
+        "lower_height_multiplier": 60,
+        "upper_height_multiplier": 40
+    },
+    "oasis": {
+        "colour": [0, 255, 0],
+        "altitude_surfaces": [
+            [3, "medium_grass"],
+            [5, "short_grass"],
+            [10, "sand"]
+        ],
+        "ornaments": [
+            ["OCCURRENCE", 0.4],
+            ["bruce_tree", 1, 35, 0.1],
+            ["fat_bruce_tree", 1, 35, 0.1],
+            ["plank_tree", 1, 30, 0.1],
+            ["poppy_bed_1", 1, 30, 0.02],
+            ["poppy_bed_2", 1, 30, 0.02],
+            ["daisy_poppy_bed", 1, 30, 0.05]
+        ],
+        "amplitudes": [0.6, 0.8, 1, 0, 0],
+        "height_displacement": -15,
+        "upper_height_multiplier": 60,
+        "lower_height_multiplier": -60
+    }
+}

@@ -1,0 +1,12 @@
+{
+    "seed": 765,
+    "max_height": 120,
+    "width": 60,
+    "height": 60,
+    "biome_size": 20,
+    "biomes": [
+        [0.5, "ploon_hills"],
+        [0.54, "river"],
+        [1, "desert"]
+    ]
+}

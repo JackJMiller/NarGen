@@ -1,7 +1,7 @@
 {
 	"colour": [140, 20, 20],
 	"altitude_surfaces": [
-		[4, "grass"],
+		[4, "medium_grass"],
 		[16, "stone"],
 		[-1, "snow"]
 	],

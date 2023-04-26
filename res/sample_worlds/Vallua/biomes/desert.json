@@ -16,7 +16,8 @@
     "oasis": {
         "colour": [0, 255, 0],
         "altitude_surfaces": [
-            [2, "grass"]
+            [2, "medium_grass"],
+            [4, "medium_grass"]
         ],
         "persistence": 0.6,
         "height_displacement": 5,

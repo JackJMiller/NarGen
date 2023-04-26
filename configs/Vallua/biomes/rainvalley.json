@@ -1,22 +1,33 @@
 {
     "colour": [255, 0, 0],
     "ranges": [
-        [0.50, "clusters"],
-        [0.51, "bottom_shelf"],
-        [0.52, "middle_shelf"],
-        [0.59, "top_shelf"],
-        [0.60, "middle_shelf"],
+        [0.52, "clusters"],
+        [0.53, "bottom_shelf"],
+        [0.54, "middle_shelf"],
+        [0.60, "top_shelf"],
+        [0.61, "middle_shelf"],
         [1, "bottom_shelf"]
     ],
-    "clusters": {
+    "river": {
         "colour": [0, 0, 255],
         "altitude_surfaces": [
-            [4, "sand"],
-            [5, "grass"]
+            [4, "sand"]
         ],
-        "vegetation": [
+        "persistence": 0.5,
+        "height_displacement": -30,
+        "height_multiplier": 10
+    },
+    "clusters": {
+        "colour": [0, 255, 0],
+        "altitude_surfaces": [
+            [4, "sand"],
+            [5, "medium_grass"]
+        ],
+        "ornaments": [
             ["tree_1", 0, 4, 0.25],
-            ["tree_2", 3, 100, 0.25]
+            ["tree_2", 3, 100, 0.5],
+            ["tree_3", 3, 100, 0.25],
+            ["tree_4", 3, 100, 0.5]
         ],
         "amplitudes": [0, 0, 0, 0, 1],
         "height_displacement": -20,
@@ -25,7 +36,7 @@
     "bottom_shelf": {
         "colour": [127, 127, 127],
         "altitude_surfaces": [
-            [20, "grass"]
+            [20, "medium_grass"]
         ],
         "amplitudes": [1, 0, 0, 0, 1],
         "height_displacement": 10,
@@ -35,7 +46,7 @@
     "middle_shelf": {
         "colour": [100, 100, 100],
         "altitude_surfaces": [
-            [20, "grass"]
+            [20, "medium_grass"]
         ],
         "amplitudes": [1, 0, 0, 0, 1],
         "height_displacement": 14,
@@ -44,7 +55,7 @@
     "top_shelf": {
         "colour": [0, 0, 0],
         "altitude_surfaces": [
-            [100, "grass"]
+            [100, "medium_grass"]
         ],
         "amplitudes": [0, 0, 0.2, 0.4, 0.6],
         "height_displacement": 20,
