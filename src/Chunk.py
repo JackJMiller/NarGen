@@ -38,7 +38,7 @@ class Chunk:
 
         octaves, self.overlayed = self.produce_octaves(self.octave_count, initial_noise_tile_size, 0.5, "biome_map", lacunarity = 0.5)
 
-        spam, self.biome_super_map = self.produce_octaves(3, self.parent_world.biome_super_map_tile_size, 0.25, "biome_super_map", tile_sizes = [self.parent_world.biome_super_map_tile_size, 50, 20])
+        spam, self.biome_super_map = self.produce_octaves(3, self.parent_world.biome_super_map_tile_size, 0.1, "biome_super_map", tile_sizes = [self.parent_world.biome_super_map_tile_size, 50, 20])
 
         self.parent_world.temp_acc += self.biome_super_map.calculate_average()
         self.parent_world.temp_count += 1

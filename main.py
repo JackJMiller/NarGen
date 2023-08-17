@@ -1,7 +1,7 @@
 import json, os, sys
 
 from src.GameRenderer import GameRenderer
-from src.Renderer3D import Renderer3D
+# from src.Renderer3D import Renderer3D
 from src.World import World
 
 if sys.argv[1] == "generate":

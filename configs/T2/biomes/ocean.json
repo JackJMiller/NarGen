@@ -1,0 +1,15 @@
+{
+    "colour": [20, 100, 255],
+    "ranges": [
+        [1, "water"]
+    ],
+    "water": {
+        "colour": [20, 100, 255],
+        "altitude_surfaces": [
+            [10, "short_grass"]
+        ],
+        "amplitudes": [1, 0.5, 0.25, 0.2, 0],
+        "height_displacement": -22,
+        "height_multiplier": 10
+    }
+}

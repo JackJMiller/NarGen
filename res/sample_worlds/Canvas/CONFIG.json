@@ -1,9 +1,10 @@
 {
-    "seed": 74523,
+    "seed": 765,
     "max_height": 120,
     "width": 10,
     "height": 10,
+    "biome_size": 20,
     "biomes": [
-        [1, "islands"]
+        [1, "land"]
     ]
 }

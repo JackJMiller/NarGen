@@ -1,11 +1,12 @@
-import json, math, os, simplepbr, sys
+# import json, math, os, simplepbr, sys
+import json, math, os, sys
 import random
 
 from src.constants import AVAILABLE_BLOCKS, CHUNK_SIZE
 
-from direct.showbase.ShowBase import ShowBase
-from direct.task import Task
-from panda3d.core import PointLight
+# from direct.showbase.ShowBase import ShowBase
+# from direct.task import Task
+# from panda3d.core import PointLight
 
 class Renderer3D(ShowBase):
 

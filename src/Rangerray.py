@@ -86,3 +86,13 @@ class Rangerray:
 
     def __str__(self):
         return "<Rangerray name=\"" + self.name + "\">"
+
+    @staticmethod
+    def fracrray_to_rangerray(fracrray):
+        total = 0
+        for element in fracrray:
+            total += element[0]
+        acc = 0
+        for element in fracrray:
+            acc += element[0]
+            element[0] = acc / total

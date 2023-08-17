@@ -2,6 +2,4 @@ __pycache__/
 cell-automata/images/
 models/*.blend*
 worlds/*
-shite
-command
-notes
+notes.txt

@@ -47,9 +47,10 @@ class World:
             "total_height": self.total_height
         }
 
+        self.generate_chunks()
+
         save_json(self.world_info, os.path.join("worlds", self.name, "WORLD_INFO.json"))
 
-        self.generate_chunks()
         self.summarise()
 
 
@@ -72,6 +73,8 @@ class World:
         else:
             self.biome_size = 1
 
+        Rangerray.fracrray_to_rangerray(self.config["biomes"])
+
         for biome in self.config["biomes"]:
             upper_point, biome_name = biome[0], biome[1]
             upper_point = flatten_noise_distribution(upper_point)
@@ -92,6 +95,8 @@ class World:
         if tuple(biome_config["colour"]) in self.biome_colours.values():
             raise_warning("Matching biome colours", "The biome " + biome_name + " is using a colour already in use.")
         self.biome_colours[biome_name] = tuple(biome_config["colour"])
+
+        Rangerray.fracrray_to_rangerray(biome_config["ranges"])
 
         for sub_biome in biome_config["ranges"]:
             noise_upper, sub_biome_name = sub_biome[0], sub_biome[1]

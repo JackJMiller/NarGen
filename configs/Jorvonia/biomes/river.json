@@ -1,0 +1,15 @@
+{
+    "colour": [0, 0, 255],
+    "ranges": [
+        [1, "main"]
+    ],
+    "main": {
+        "colour": [0, 255, 0],
+        "altitude_surfaces": [
+            [1, "medium_grass"]
+        ],
+        "persistence": 0.5,
+        "height_displacement": -10,
+        "height_multiplier": 12
+    }
+}

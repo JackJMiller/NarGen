@@ -22,7 +22,11 @@ elif [[ $# -eq 3 && "$1" == "new-world" ]]; then
         ConfigureNewWorld $2 $3
     fi
 
-elif [[ $# -ge 1 && "$1" == "generate" ]]; then
+elif [[ $# -eq 2 && "$1" == "generate-and-render" ]]; then
+
+    nargen generate $2 && nargen render-game $2
+
+elif [[ $# -eq 2 && "$1" == "generate" ]]; then
 
     if [ $# -lt 2 ]; then
         echo "Invalid arguments: No config file specified"
@@ -62,9 +66,14 @@ elif [[ $# -ge 1 && "$1" == "delete-world" ]]; then
 elif [[ $# -eq 2 && "$1" == "render" ]]; then
 
     if [ -d "worlds/$2/" ]; then
-        python3 main.py render $2
+        if [ -f "worlds/$2/WORLD_INFO.json" ]; then
+            python3 main.py render $2
+        else
+            echo "Error: A world named $2 is found but is not fully rendered. Execute 'nargen generate $2' to generate the world."
+            exit 1
+        fi
     else
-        echo "Error: Cannot find world named $2"
+        echo "Error: No world named $2 has been generated. Execute 'nargen generate $2' to generate the world."
         exit 1
     fi
 
@@ -75,10 +84,14 @@ elif [[ $# -eq 2 && "$1" == "build" ]]; then
 elif [[ $# -eq 2 && "$1" == "render-game" ]]; then
 
     if [ -d "worlds/$2/" ]; then
-        python3 main.py render-game $2
-        viewnior worlds/$2/images/game.png > /dev/null 2>&1
+        if [ -f "worlds/$2/WORLD_INFO.json" ]; then
+            python3 main.py render-game $2
+            viewnior worlds/$2/images/game.png > /dev/null 2>&1
+        else
+            echo "Error: A world named $2 is found but is not fully rendered. Execute 'nargen generate $2' to generate the world."
+        fi
     else
-        echo "Error: Cannot find world named $2"
+        echo "Error: Cannot find world named $2. Execute 'nargen generate $2' to generate the world."
         exit 1
     fi
 
@@ -86,8 +99,11 @@ elif [[ $# -eq 2 && "$1" == "view" ]]; then
 
     if [ -d "worlds/$2/" ]; then
         viewnior worlds/$2/images/ > /dev/null 2>&1
+    elif [ -d "configs/$2/" ]; then
+        echo "Error: $2 has not yet been generated"
+        nargen generate $2
     else
-        echo "Error: Cannot find world named $2"
+        echo "Error: Cannot find world named $2."
         exit 1
     fi
 
