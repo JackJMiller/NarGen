@@ -4,6 +4,14 @@
 
 NarGen is a procedural terrain generator that produces terrain for use in a computer game. It is in its early days, though a demo/tutorial can be found [here](https://jackjmiller.net/articles/generating-terrain-with-nargen.html).
 
+## Installation
+
+After you have cloned this repository, add it to $PATH. Move inside the project directory and run the following.
+
+```
+nargen install
+```
+
 ## Usage
 
 To generate a terrain world, you must first create the config files that configure the generation process. A selection of example config files in `res/sample_worlds/` can be listed with the following command.

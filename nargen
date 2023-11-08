@@ -115,6 +115,10 @@ elif [[ $# -eq 1 && "$1" == "list-sample-worlds" ]]; then
 
     ls res/sample_worlds/
 
+elif [[ $# -eq 1 && "$1" == "install" ]]; then
+
+    mkdir worlds/
+
 else
 
     echo "Invalid arguments"
