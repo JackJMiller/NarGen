@@ -42,4 +42,4 @@ The image will be opened once created and you can view your world.
 
 For more help on running the program, view the help page with the `--help` flag.
 
-<img src="https://jackjmiller.ams3.digitaloceanspaces.com/nargen/island.png"/>
+<img src="https://jackjmiller.ams3.digitaloceanspaces.com/nargen/readme_island.png"/>
