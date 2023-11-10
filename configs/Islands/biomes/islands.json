@@ -34,7 +34,7 @@
             ["poppy_bed_1", 0, 15, 6],
             ["poppy_bed_2", 0, 15, 6],
             ["daisy_poppy_bed", 0, 20, 12],
-            ["glim_rock", 3, 10, 10]
+            ["glim_rock", 1, 10, 10]
         ],
         "amplitudes": [1, 0.1, 0, 0.2, 0.3],
         "height_displacement": -80,
