@@ -59,7 +59,7 @@ class World {
         this.temp_acc = 0;
         this.temp_count = 0;
 
-        this.biomes_rangerray = Rangerray("biomes_rangerray");
+        this.biomes_rangerray = new Rangerray("biomes_rangerray");
 
         this.configure_biomes()
 
@@ -126,7 +126,7 @@ class World {
     }
 
     public create_biome(biome_name: string, biome_noise_lower: number, biome_noise_upper: number) {
-        let rangerray = Rangerray(biome_name)
+        let rangerray = new Rangerray(biome_name)
         let biome_config_path = path.join(__dirname, "configs", this.name, "biomes", biome_name + ".json")
         let biome_config = require(biome_config_path);
         let noise_lower = 0;
