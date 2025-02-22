@@ -1,7 +1,6 @@
 import json, os, sys
 
 from src.GameRenderer import GameRenderer
-# from src.Renderer3D import Renderer3D
 from src.World import World
 
 if sys.argv[1] == "generate":
@@ -15,11 +14,6 @@ if sys.argv[1] == "generate":
 
     # generate terrain world according to configuration
     world = World(WORLD_NAME, config, render_world)
-
-elif sys.argv[1] == "render":
-    WORLD_NAME = sys.argv[2]
-    renderer = Renderer3D(WORLD_NAME)
-    renderer.run()
 
 elif sys.argv[1] == "render-game":
     WORLD_NAME = sys.argv[2]
