@@ -7,10 +7,19 @@ export function clamp(value: number, maximum: number): number {
     else return value;
 }
 
+export function leftJustify(str: string, length: number): string {
+    let padding = length - str.length;
+    return str + " ".repeat(padding);
+}
+
 export function limit(value: number, minimum: number, maximum: number): number {
     if (value < minimum) return minimum;
     else if (value > maximum) return maximum;
     else return value;
+}
+
+export function objectFromEntries(keys: string[], values: any) {
+    return Object.fromEntries(keys.map((key: any, index: number) => [key, values[index]]));
 }
 
 export function point_at_portion_between(a: number, b: number, portion: number): number {
