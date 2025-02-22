@@ -148,7 +148,7 @@ class World {
                 exit_with_error("Undefined sub-biome", `An undefined sub-biome named ${sub_biome_name} is referenced inside ranges attribute of biome ${biome_name}.`);
             }
             noise_upper = flatten_noise_distribution(noise_upper);
-            let obj = SubBiome(this, biome_name, sub_biome_name, biome_config, noise_lower, noise_upper);
+            let obj = new SubBiome(this, biome_name, sub_biome_name, biome_config, noise_lower, noise_upper);
             rangerray.insert(noise_upper, obj);
             noise_lower = noise_upper;
         }
