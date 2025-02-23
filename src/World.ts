@@ -162,7 +162,7 @@ class World {
 
         let map_image_names = (this.render_world) ? ["surface_map_image", "biome_map_image", "sub_biome_map_image", "perlin_image"] : [];
 
-        let grids: Grid[] = map_image_names.map((imageName: string) => new Grid(this.width_in_tiles, this.height_in_tiles, 0));
+        let grids: Grid<number>[] = map_image_names.map((imageName: string) => new Grid<number>(this.width_in_tiles, this.height_in_tiles, 0));
 
         let map_images = objectFromEntries(map_image_names, grids);
 
