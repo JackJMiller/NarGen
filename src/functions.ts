@@ -69,7 +69,7 @@ export function raise_warning(warning_type: string, message: string): void {
     console.log(`NarGen: ${COLOUR_MAGENTA}WARNING${COLOUR_NONE}: ${warning_type}: ${message}`);
 }
 
-function random(): number {
+export function random(): number {
     return Math.random();
 }
 

@@ -13,7 +13,7 @@ class SubBiome {
     public noise_lower: number;
     public noise_upper: number;
     public noise_scale: number = 1;
-    public altitude_surfaces: Rangerray;
+    public altitude_surfaces: Rangerray<string>;
     public height_displacement: number;
     public lower_height_multiplier: number;
     public upper_height_multiplier: number;
@@ -58,7 +58,7 @@ class SubBiome {
             this.upper_height_multiplier = this.config["upper_height_multiplier"];
         }
 
-        this.altitude_surfaces = new Rangerray(this.full_name, this.config["altitude_surfaces"]);
+        this.altitude_surfaces = new Rangerray<string>(this.full_name, this.config["altitude_surfaces"]);
 
         this.configure_ornaments();
     }

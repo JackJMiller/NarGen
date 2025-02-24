@@ -86,8 +86,8 @@ elif [[ $# -eq 2 && "$1" == "render-game" ]]; then
 
     if [ -d "worlds/$2/" ]; then
         if [ -f "worlds/$2/WORLD_INFO.json" ]; then
-            node main.js render-game $2
-            # python3 main.py render-game $2
+            # node main.js render-game $2
+            python3 main.py render-game $2
             viewnior worlds/$2/images/game.png > /dev/null 2>&1
         else
             echo "Error: A world named $2 is found but is not fully rendered. Execute 'nargen generate $2' to generate the world."

@@ -8,7 +8,7 @@ function set_default_root_blocks(root_blocks: any) {
     }
 }
 
-export const SURFACES = {
+export const SURFACES: any = {
     "water": { "colour": [80, 180, 255] },
     "short_grass": { "colour": [108, 210, 26] },
     "medium_grass": { "colour": [108, 210, 26] },
@@ -25,7 +25,7 @@ export const SPRITE_NAMES = fs.readdirSync("res/sprites");
 
 export const AVAILABLE_BLOCKS = ["grass", "lava", "sand", "snow", "stone", "water"];
 
-export const ORNAMENTATION_ROOT_BLOCKS = {};
+export const ORNAMENTATION_ROOT_BLOCKS: any = {};
 
 set_default_root_blocks(ORNAMENTATION_ROOT_BLOCKS);
 

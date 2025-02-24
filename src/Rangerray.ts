@@ -1,4 +1,4 @@
-class Rangerray {
+class Rangerray<T> {
 
     public name: string;
     public items: any[];
@@ -59,7 +59,7 @@ class Rangerray {
         return this.items.length;
     }
 
-    public insert(item_index: number, item_value: any) {
+    public insert(item_index: number, item_value: T) {
         let index = -1
         for (let i = 0; i < this.items.length; i++) {
             if (item_index <= this.items[i][0]) {

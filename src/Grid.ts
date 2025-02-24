@@ -61,19 +61,19 @@ class Grid<T> {
     //
     //}
 
-    //public save_RGBs(self, filename, WORLD_NAME) {
-    //    img = Image.new("RGB", (this.width, this.height), "black")
-    //
-    //    pixels = img.load()
-    //
-    //    for x in range(this.width) {
-    //        for y in range(this.height) {
-    //            pixels[x, y] = this.grid[x][y]
-    //        }
-    //    }
-    //
-    //    img.save(os.path.join("worlds", WORLD_NAME, "images", filename + ".png"))
-    //}
+    public save_RGBs(filename: string, WORLD_NAME: string): void {
+        //img = Image.new("RGB", (this.width, this.height), "black")
+        //
+        //pixels = img.load()
+        //
+        //for x in range(this.width) {
+        //    for y in range(this.height) {
+        //        pixels[x, y] = this.grid[x][y]
+        //    }
+        //}
+        //
+        //img.save(os.path.join("worlds", WORLD_NAME, "images", filename + ".png"))
+    }
 
     public copy(): Grid<T> {
         let grid = new Grid<T>(this.width, this.height, this.fillValue);

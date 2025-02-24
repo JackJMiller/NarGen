@@ -27,7 +27,7 @@ class World {
     public noise_acc: number;
     public noise_count: number;
     public warnings_raised: any;
-    public biomes_rangerray: Rangerray;
+    public biomes_rangerray: Rangerray<Rangerray<SubBiome>>;
     public biome_size: number = 1;
     public biome_super_map_tile_size: number = 1;
     public biome_sizes: any = {};
@@ -115,19 +115,19 @@ class World {
         for (let biome of this.config["biomes"]) {
             let upper_point = biome[0];
             let biome_name = biome[1];
-            upper_point = flatten_noise_distribution(upper_point)
-            let rangerray = this.create_biome(biome_name, lower_point, upper_point)
-            this.biomes_rangerray.insert(upper_point, rangerray)
-            lower_point = upper_point
+            upper_point = flatten_noise_distribution(upper_point);
+            let rangerray = this.create_biome(biome_name, lower_point, upper_point);
+            this.biomes_rangerray.insert(upper_point, rangerray);
+            lower_point = upper_point;
         }
 
         this.biome_super_map_tile_size = this.config["biomes"].length * BASE_BIOME_SIZE * this.biome_size;
 
     }
 
-    public create_biome(biome_name: string, biome_noise_lower: number, biome_noise_upper: number) {
-        let rangerray = new Rangerray(biome_name)
-        let biome_config_path = path.join(__dirname, "configs", this.name, "biomes", biome_name + ".json")
+    public create_biome(biome_name: string, biome_noise_lower: number, biome_noise_upper: number): Rangerray<SubBiome> {
+        let rangerray = new Rangerray(biome_name);
+        let biome_config_path = path.join(__dirname, "configs", this.name, "biomes", biome_name + ".json");
         let biome_config = require(biome_config_path);
         let noise_lower = 0;
         let noise_upper = 0;
@@ -160,7 +160,7 @@ class World {
 
     public generate_chunks() {
 
-        let map_image_names = (this.render_world) ? ["surface_map_image", "biome_map_image", "sub_biome_map_image", "perlin_image"] : [];
+        let map_image_names: MapImageName[] = (this.render_world) ? ["surface_map_image", "biome_map_image", "sub_biome_map_image", "perlin_image"] : [];
 
         let grids: Grid<number>[] = map_image_names.map((imageName: string) => new Grid<number>(this.width_in_tiles, this.height_in_tiles, 0));
 
@@ -168,11 +168,11 @@ class World {
 
         for (let q = 0; q < this.width_in_chunks; q++) {
             for (let r = 0; r < this.height_in_chunks; r++) {
-                let chunk = Chunk(this, q, r)
+                let chunk = new Chunk(this, q, r);
                 let corner_x = q * CHUNK_SIZE;
                 let corner_y = r * CHUNK_SIZE;
                 for (let map_image_name of map_image_names) {
-                    map_images[map_image_name].overlay(chunk["map_image_name"], corner_x, corner_y);
+                    map_images[map_image_name].overlay(chunk.getMapImage(map_image_name), corner_x, corner_y);
                 }
             }
         }
