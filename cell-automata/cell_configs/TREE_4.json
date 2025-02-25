@@ -1,9 +1,0 @@
-{
-    "colour": [190, 0, 150],
-    "lifespan": 25,
-    "reach": 2,
-    "view": 5,
-    "reproduce": [0, 8],
-    "survive": [4, 12],
-    "comment": "Submissive. Results in strains of patches."
-}

@@ -1,9 +1,0 @@
-{
-    "colour": [0, 220, 0],
-    "lifespan": 40,
-    "reach": 5,
-    "view": 5,
-    "reproduce": ["0.0", "0.14"],
-    "survive": ["0", "0.37"],
-    "comment": "Somewhat aggressive. Results in clearings."
-}

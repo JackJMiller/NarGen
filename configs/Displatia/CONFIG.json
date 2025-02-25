@@ -1,9 +1,0 @@
-{
-    "seed": 153,
-    "max_height": 120,
-    "width": 6,
-    "height": 6,
-    "biomes": [
-        [1, "grassbank"]
-    ]
-}
