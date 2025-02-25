@@ -36,13 +36,13 @@ elif [[ $# -eq 2 && "$1" == "generate" ]]; then
         rm -r -f worlds/$2/
         if [ $# -ge 3 ]; then
             if [ $3 == "--no-rendering" ]; then
-                python3 main.py generate $2 0
+                node main.js generate $2 0
             else
                 echo "Invalid arguments: Cannot recognise option $3"
                 cat res/help_page.txt
             fi
         else
-            python3 main.py generate $2 1
+            node main.js generate $2 1
         fi
 
     else
@@ -86,7 +86,6 @@ elif [[ $# -eq 2 && "$1" == "render-game" ]]; then
 
     if [ -d "worlds/$2/" ]; then
         if [ -f "worlds/$2/WORLD_INFO.json" ]; then
-            # node main.js render-game $2
             python3 main.py render-game $2
             viewnior worlds/$2/images/game.png > /dev/null 2>&1
         else

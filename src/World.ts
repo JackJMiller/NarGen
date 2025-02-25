@@ -4,7 +4,7 @@ import Chunk from "./Chunk";
 import Grid from "./Grid";
 import Rangerray from "./Rangerray";
 import SubBiome from "./SubBiome";
-import { BASE_BIOME_SIZE, CHUNK_SIZE } from "./constants";
+import { BASE_BIOME_SIZE, CHUNK_SIZE, NARGEN_FILEPATH } from "./constants";
 import { exit_with_error, flatten_noise_distribution, leftJustify, objectFromEntries, point_at_portion_between, raise_warning, save_json } from "./functions";
 
 class World {
@@ -79,7 +79,7 @@ class World {
 
         this.generate_chunks();
 
-        save_json(this.world_info, path.join(__dirname, "worlds", this.name, "WORLD_INFO.json"));
+        save_json(this.world_info, path.join(NARGEN_FILEPATH, "worlds", this.name, "WORLD_INFO.json"));
 
         this.summarise()
 
@@ -87,7 +87,7 @@ class World {
 
 
     public create_save_files() {
-        let filepath = path.join(__dirname, "worlds", this.name);
+        let filepath = path.join(NARGEN_FILEPATH, "worlds", this.name);
         if (!fs.existsSync(filepath)) {
             fs.mkdirSync(filepath);
             fs.mkdirSync(path.join(filepath, "images"));
@@ -127,7 +127,7 @@ class World {
 
     public create_biome(biome_name: string, biome_noise_lower: number, biome_noise_upper: number): Rangerray<SubBiome> {
         let rangerray = new Rangerray(biome_name);
-        let biome_config_path = path.join(__dirname, "configs", this.name, "biomes", biome_name + ".json");
+        let biome_config_path = path.join(NARGEN_FILEPATH, "configs", this.name, "biomes", biome_name + ".json");
         let biome_config = require(biome_config_path);
         let noise_lower = 0;
         let noise_upper = 0;

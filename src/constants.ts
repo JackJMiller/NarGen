@@ -1,4 +1,6 @@
 import fs from "fs";
+import path from "path";
+import { mkAlea } from "./lib/alea";
 
 function set_default_root_blocks(root_blocks: any) {
     for (let sprite_name of SPRITE_NAMES) {
@@ -21,7 +23,7 @@ export const SURFACES: any = {
     "coal": { "colour": [0, 0, 0] }
 };
 
-export const SPRITE_NAMES = fs.readdirSync("res/sprites");
+export const SPRITE_NAMES = fs.readdirSync("res/sprites").map((filepath: string) => path.parse(filepath).name);
 
 export const AVAILABLE_BLOCKS = ["grass", "lava", "sand", "snow", "stone", "water"];
 
@@ -58,3 +60,7 @@ export const RECOGNISED_SUB_BIOME_ATTRIBUTES = [
     "upper_height_multiplier",
     "ornaments"
 ];
+
+export const NARGEN_FILEPATH = "/home/jack/Development/NarGen";
+
+export const PRNG = mkAlea("jack");

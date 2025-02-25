@@ -1,5 +1,6 @@
 import fs from "fs";
-import { COLOUR_RED, COLOUR_MAGENTA, COLOUR_NONE } from "./constants";
+import { AleaPRNG } from "./lib/alea";
+import { COLOUR_RED, COLOUR_MAGENTA, COLOUR_NONE, PRNG } from "./constants";
 
 export function clamp(value: number, maximum: number): number {
     if (value < 0) return 0;
@@ -39,7 +40,7 @@ export function load_json(filepath: string): any {
 }
 
 export function save_json(data: any, filepath: string): void {
-    fs.writeFileSync(filepath, data);
+    fs.writeFileSync(filepath, JSON.stringify(data));
 }
 
 export function get_brightness_at_height(height: number, max_height: number): number {
@@ -69,16 +70,16 @@ export function raise_warning(warning_type: string, message: string): void {
     console.log(`NarGen: ${COLOUR_MAGENTA}WARNING${COLOUR_NONE}: ${warning_type}: ${message}`);
 }
 
-export function random(): number {
-    return Math.random();
+export function random(prng: AleaPRNG = PRNG): number {
+    return prng.random();
 }
 
-export function randint(min: number, max: number): number {
-    return Math.floor(random() * (max + 1 - min)) + min;
+export function randint(min: number, max: number, prng: AleaPRNG = PRNG): number {
+    return Math.floor(random(prng) * (max + 1 - min)) + min;
 }
 
-export function random_element<T>(array: T[]): T {
-    let index = randint(0, array.length - 1);
+export function random_element<T>(array: T[], prng: AleaPRNG = PRNG): T {
+    let index = randint(0, array.length - 1, prng);
     return array[index];
 }
 

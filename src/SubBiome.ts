@@ -20,7 +20,7 @@ class SubBiome {
     public ornaments: any[] = [];
     public ornament_occurrence_rate: number = 0;
     public config: any;
-    public config_keys: string;
+    public config_keys: string[];
     public parent_colour: number[];
     public colour: number[];
 
@@ -33,7 +33,7 @@ class SubBiome {
         this.noise_upper = noise_upper;
 
         this.config = config[this.name];
-        this.config_keys = this.config.keys();
+        this.config_keys = Object.keys(this.config);
         for (let key of this.config_keys) {
             if (!RECOGNISED_SUB_BIOME_ATTRIBUTES.includes(key)) {
                 exit_with_error("Unrecognised attribute", "Cannot recognise attribute " + key + " in configuration for " + this.full_name + ".");

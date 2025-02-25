@@ -18,7 +18,7 @@ class Rangerray<T> {
         let lower_point = 0;
         for (let index = 0; index < this.items.length; index++) {
             let item = this.items[index];
-            let upper_point = item[0]
+            let upper_point = item[0];
             if (v < upper_point) {
                 return {
                     "value": item[1],
@@ -31,8 +31,8 @@ class Rangerray<T> {
         }
 
         // when v exceeds maximum choice, return the last item
-        let item = this.items[-1]
-        lower_point = (this.items.length > 1) ? this.items[-2][0] : 0;
+        let item = this.items[this.items.length - 1];
+        lower_point = (this.items.length > 1) ? this.items[this.items.length - 2][0] : 0;
 
         return {
             "value": item[1],

@@ -3,6 +3,8 @@ import json, os, sys
 from src.GameRenderer import GameRenderer
 from src.World import World
 
+print("===== PYTHON =====");
+
 if sys.argv[1] == "generate":
     # locate world configuration
     WORLD_NAME = sys.argv[2]

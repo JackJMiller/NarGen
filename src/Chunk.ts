@@ -6,6 +6,7 @@ import SubBiome from "./SubBiome";
 import World from "./World";
 import { CHUNK_SIZE, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE_IMAGE_OVERLAYED, SAVE_IMAGE_SURFACE_MAP, SURFACES, ORNAMENTATION_ROOT_BLOCKS } from "./constants";
 import { clamp, get_brightness_at_height, point_at_portion_between, portion_at_point_between, raise_warning, randint, random, random_element, save_json } from "./functions";
+import { mkAlea } from "./lib/alea";
 
 class Chunk {
 
@@ -257,7 +258,7 @@ class Chunk {
     }
 
     public static get_filepath(world_name: string, q: number, r: number) {
-        return path.join(__dirname, "worlds", world_name, "chunks", q.toString() + "x" + r.toString() + ".json");
+        return path.join("worlds", world_name, "chunks", q.toString() + "x" + r.toString() + ".json");
     }
 
     public create_biome_map(perlin_grid: Grid<number>): { biome_map: Grid<any[][]>, biome_map_image: Grid<number[]>, sub_biome_map_image: Grid<number[]> } {
@@ -353,10 +354,10 @@ class Chunk {
     }
 
     public abc_gen(seed: number): void {
-        // random.seed(seed); // TODO un-comment
-        this.AAA = randint(1111111111, 9999999999);
-        this.BBB = randint(1111111111, 9999999999);
-        this.CCC = randint(1111111111, 9999999999);
+        let prng = mkAlea(seed.toString());
+        this.AAA = randint(1111111111, 9999999999, prng);
+        this.BBB = randint(1111111111, 9999999999, prng);
+        this.CCC = randint(1111111111, 9999999999, prng);
     }
 
     public interpolate(a0: number, a1: number, w: number): number {
