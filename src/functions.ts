@@ -19,8 +19,8 @@ export function limit(value: number, minimum: number, maximum: number): number {
     else return value;
 }
 
-export function objectFromEntries(keys: string[], values: any) {
-    return Object.fromEntries(keys.map((key: any, index: number) => [key, values[index]]));
+export function objectFromEntries<T>(keys: string[], values: T[]) {
+    return Object.fromEntries(keys.map((key: string, index: number) => [key, values[index]]));
 }
 
 export function pointAtPortionBetween(a: number, b: number, portion: number): number {

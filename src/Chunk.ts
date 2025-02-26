@@ -393,7 +393,7 @@ class Chunk {
 
         let brightness = getBrightnessAtHeight(height, this.parentWorld.maxHeight);
 
-        let colour = (SURFACES[surfaceName])["colour"];
+        let colour = SURFACES[surfaceName];
 
         colour = [
             Math.floor(brightness * colour[0]),

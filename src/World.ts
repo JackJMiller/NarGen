@@ -30,7 +30,7 @@ class World {
     public biomesRangerray: Rangerray<Rangerray<SubBiome>>;
     public biomeSize: number = 1;
     public biomeSuperMapTileSize: number = 1;
-    public biomeSizes: any = {};
+    public biomeSizes!: { [index: string]: number };
     public biomeNames: string[] = [];
     public biomeColours: { [index: string]: Colour };
     public worldInfo: WorldInfo;
@@ -99,7 +99,7 @@ class World {
 
         let lowerPoint = 0;
         this.biomeNames = this.config["biomes"].map((biome: [number, string]) => biome[1]);
-        this.biomeSizes = Object.fromEntries(this.biomeNames.map((biomeName: string) => [biomeName as string, 0]));
+        this.biomeSizes = objectFromEntries<number>(this.biomeNames, new Array(this.biomeNames.length).fill(0));
 
         let keys = Object.keys(this.config);
 
@@ -164,8 +164,10 @@ class World {
         let mapImageNames: MapImageName[] = (this.renderWorld) ? ["surfaceMapImage", "biomeMapImage", "subBiomeMapImage", "perlinImage"] : [];
 
         let grids: Grid<number>[] = mapImageNames.map((imageName: string) => new Grid<number>(this.widthInTiles, this.heightInTiles, 0));
-
-        let mapImages = objectFromEntries(mapImageNames, grids);
+        let mapImages: { [index: string]: Grid<number[]> } = {};
+        for (let mapImageName of mapImageNames) {
+            mapImages[mapImageName] = new Grid<number[]>(this.widthInTiles, this.heightInTiles, [0, 0, 0]);
+        }
 
         for (let q = 0; q < this.widthInChunks; q++) {
             for (let r = 0; r < this.heightInChunks; r++) {

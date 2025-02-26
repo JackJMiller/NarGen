@@ -10,17 +10,17 @@ function set_default_root_blocks(root_blocks: any) {
     }
 }
 
-export const SURFACES: any = {
-    "water": { "colour": [80, 180, 255] },
-    "short_grass": { "colour": [108, 210, 26] },
-    "medium_grass": { "colour": [108, 210, 26] },
-    "long_grass": { "colour": [108, 210, 26] },
-    "sand": { "colour": [255, 240, 130] },
-    "stone": { "colour": [80, 80, 80] },
-    "dirt": { "colour": [90, 60, 30] },
-    "snow": { "colour": [255, 255, 255] },
-    "lava": { "colour": [240, 30, 0] },
-    "coal": { "colour": [0, 0, 0] }
+export const SURFACES: { [index: string]: Colour } = {
+    "water": [80, 180, 255],
+    "short_grass": [108, 210, 26],
+    "medium_grass": [108, 210, 26],
+    "long_grass": [108, 210, 26],
+    "sand": [255, 240, 130],
+    "stone": [80, 80, 80],
+    "dirt": [90, 60, 30],
+    "snow": [255, 255, 255],
+    "lava": [240, 30, 0],
+    "coal": [0, 0, 0]
 };
 
 export const SPRITE_NAMES = fs.readdirSync("res/sprites").map((filepath: string) => path.parse(filepath).name);
