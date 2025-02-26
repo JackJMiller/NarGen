@@ -1,7 +1,8 @@
 import Rangerray from "./Rangerray";
 import World from "./World";
 import { OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES } from "./constants";
-import { colour_average, exit_with_error, int_median, point_at_portion_between, portion_at_point_between, validate, raise_warning } from "./functions";
+import { colour_average, exit_with_error, int_median, point_at_portion_between, portion_at_point_between, raise_warning } from "./functions";
+import { validateOrnaments } from "./validation";
 
 class SubBiome {
 
@@ -17,9 +18,9 @@ class SubBiome {
     public height_displacement: number;
     public lower_height_multiplier: number;
     public upper_height_multiplier: number;
-    public ornaments: any[] = [];
+    public ornaments: OrnamentDefinition[] = [];
     public ornament_occurrence_rate: number = 0;
-    public config: any;
+    public config: SubBiomeConfig;
     public config_keys: string[];
     public parent_colour: number[];
     public colour: number[];
@@ -32,7 +33,7 @@ class SubBiome {
         this.noise_lower = noise_lower;
         this.noise_upper = noise_upper;
 
-        this.config = config[this.name];
+        this.config = config[this.name] as SubBiomeConfig;
         this.config_keys = Object.keys(this.config);
         for (let key of this.config_keys) {
             if (!RECOGNISED_SUB_BIOME_ATTRIBUTES.includes(key)) {
@@ -68,7 +69,7 @@ class SubBiome {
         this.ornament_occurrence_rate = 0;
         let keys = Object.keys(this.config);
         if (keys.includes("ornaments")) {
-            validate("ornaments", this.config["ornaments"], { "sub_biome_name": this.full_name });
+            validateOrnaments(this.config["ornaments"], this.full_name);
             for (let value of this.config["ornaments"]) {
                 if (value[0] !== "OCCURRENCE") {
                     this.ornaments.push(value);
@@ -91,7 +92,7 @@ class SubBiome {
             }
         }
         else if (this.config_keys.includes("persistence")) {
-            let persistence = Number.parseFloat(this.config["persistence"]);
+            let persistence = this.config["persistence"];
             this.amplitudes = [];
             let amplitude = 1;
             for (let i = 0; i < OCTAVE_COUNT; i++) {

@@ -34,12 +34,7 @@ export function portion_at_point_between(a: number, b: number, point: number): n
     return point / b;
 }
 
-// TODO: remove
-export function load_json(filepath: string): any {
-    return require(filepath);
-}
-
-export function save_json(data: any, filepath: string): void {
+export function save_json(data: object, filepath: string): void {
     fs.writeFileSync(filepath, JSON.stringify(data));
 }
 
@@ -94,15 +89,6 @@ export function flatten_noise_distribution(noise_value: number): number {
     noise_value = mean + sine * noise_value
     noise_value = limit(noise_value, 0, 1)
     return noise_value;
-}
-
-export function validate(data_type: string, value: any, context: any): void {
-    if (data_type === "ornaments") {
-        let keys = value.map((entry: any[]) => entry[0]);
-        if (!keys.includes("OCCURRENCE")) {
-            exit_with_error("Invalid configuration", `The OCCURRENCE attribute is missing from the ornaments list inside the configuration for ${context["sub_biome_name"]}.`);
-        }
-    }
 }
 
 export function colour_average(c1: number[], c2: number[]): number[] {

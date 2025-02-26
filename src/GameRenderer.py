@@ -41,7 +41,7 @@ class GameRenderer:
         x = chunk_q * CHUNK_SIZE + _x
         y = chunk_r * CHUNK_SIZE + _y
         canvas_x, canvas_y = x * CHUNK_SIZE, y * CHUNK_SIZE
-        tile = self.chunks[chunk_q]["map"][_x][_y]
+        tile = self.chunks[chunk_q]["tileMap"][_x][_y]
         height, tile_name, area_object_name = tile[1], tile[2], tile[3]
         for z in range(height):
             if tile_name + "_block" not in SPRITES.keys():

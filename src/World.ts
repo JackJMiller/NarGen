@@ -10,7 +10,7 @@ import { exit_with_error, flatten_noise_distribution, leftJustify, objectFromEnt
 class World {
 
     public name: string;
-    public config: any;
+    public config: WorldConfig;
     public render_world: boolean;
     public width_in_tiles: number;
     public height_in_tiles: number;
@@ -26,16 +26,16 @@ class World {
     public temp_count: number;
     public noise_acc: number;
     public noise_count: number;
-    public warnings_raised: any;
+    public warningRecord: WarningRecord;
     public biomes_rangerray: Rangerray<Rangerray<SubBiome>>;
     public biome_size: number = 1;
     public biome_super_map_tile_size: number = 1;
     public biome_sizes: any = {};
     public biome_names: string[] = [];
-    public biome_colours: any;
-    public world_info: any = {};
+    public biome_colours: { [index: string]: Colour };
+    public world_info: WorldInfo;
 
-    public constructor(name: string, config: any, render_world: boolean) {
+    public constructor(name: string, config: WorldConfig, render_world: boolean) {
 
         this.name = name;
         this.config = config;
@@ -48,7 +48,7 @@ class World {
         this.total_area_in_tiles = this.width_in_tiles * this.height_in_tiles;
         this.create_save_files();
 
-        this.warnings_raised = {
+        this.warningRecord = {
             "max_height": [],
             "matching_biome_colours": []
         }
@@ -98,8 +98,8 @@ class World {
     public configure_biomes() {
 
         let lower_point = 0;
-        this.biome_names = this.config["biomes"].map((biome: any) => biome[1]);
-        this.biome_sizes = Object.fromEntries(this.biome_names.map((biomeName: any) => [biomeName as string, 0]));
+        this.biome_names = this.config["biomes"].map((biome: [number, string]) => biome[1]);
+        this.biome_sizes = Object.fromEntries(this.biome_names.map((biomeName: string) => [biomeName as string, 0]));
 
         let keys = Object.keys(this.config);
 
@@ -126,7 +126,7 @@ class World {
     }
 
     public create_biome(biome_name: string, biome_noise_lower: number, biome_noise_upper: number): Rangerray<SubBiome> {
-        let rangerray = new Rangerray(biome_name);
+        let rangerray = new Rangerray<SubBiome>(biome_name);
         let biome_config_path = path.join(NARGEN_FILEPATH, "configs", this.name, "biomes", biome_name + ".json");
         let biome_config = require(biome_config_path);
         let noise_lower = 0;
@@ -135,6 +135,7 @@ class World {
         // TODO
         // if tuple(biome_config["colour"]) in this.biome_colours.values() {
         //     raise_warning("Matching biome colours", "The biome " + biome_name + " is using a colour already in use.")
+        //     this.parent_world.warningRecord["matching_biome_colours"].push(biome_name);
         // }
 
         this.biome_colours[biome_name] = biome_config["colour"];

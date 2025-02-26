@@ -20,7 +20,7 @@ To generate a terrain world, you must first create the config files that configu
 nargen list-sample-worlds
 ```
 
-Once you have decided which configuration you will use, you can create a world using that same configuration. The following command configures a new world named `Mundo` using the sample configuration `Rainworld`.
+Once you have decided which configuration you will use, you can create a world using that same configuration. The following command configures a new world named `Mundo` using the sample configuration `Rainvalley`.
 
 ```
 nargen new-world Mundo Rainworld

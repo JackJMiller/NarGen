@@ -6,3 +6,4 @@ models/*.blend*
 worlds/*
 notes.txt
 *.js
+configs/

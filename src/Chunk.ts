@@ -8,10 +8,12 @@ import { CHUNK_SIZE, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE
 import { clamp, get_brightness_at_height, point_at_portion_between, portion_at_point_between, raise_warning, randint, random, random_element, save_json } from "./functions";
 import { mkAlea } from "./lib/alea";
 
+type BiomeBalance = { biome: SubBiome, influence: number }[];
+
 class Chunk {
 
     public parent_world: World;
-    public config: any;
+    public config: WorldConfig;
     public seed: number;
     public q: number;
     public r: number;
@@ -32,7 +34,7 @@ class Chunk {
     public AAA: number = 0;
     public BBB: number = 0;
     public CCC: number = 0;
-    public biome_map: Grid<any[][]>;
+    public biome_map: Grid<BiomeBalance>;
     public ground_map: Grid<number>;
     public surface_map: Grid<string>;
     public area_map: Grid<string>;
@@ -156,7 +158,7 @@ class Chunk {
         if (random() > biome.ornament_occurrence_rate) return "";
         let ground_tile_name = this.surface_map.value_at(x, y)
         let acc = 0;
-        let candidates = new Rangerray();
+        let candidates = new Rangerray<string>();
         for (let veg of biome.ornaments) {
             let veg_name = veg[0];
             let min_altitude = veg[1];
@@ -194,18 +196,18 @@ class Chunk {
         for (let x = 0; x < this.width_in_tiles; x++) {
             for (let y = 0; y < this.height_in_tiles; y++) {
                 let displacement = 0;
-                let biome: SubBiome = this.biome_map.value_at(x, y)[0][0]; // ADDED
+                let biome: SubBiome = this.biome_map.value_at(x, y)[0].biome; // ADDED
                 for (let balance of this.biome_map.value_at(x, y)) {
-                    biome = balance[0];
-                    let biome_influence = balance[1];
+                    biome = balance.biome;
+                    let biome_influence = balance.influence;
                     displacement += biome.height_displacement * biome_influence;
                 }
                 let original = this.ground_map.value_at(x, y)
                 let new_value = Math.floor(original + displacement)
-                if (new_value > this.parent_world.max_height && !this.parent_world.warnings_raised["max_height"].includes(biome.full_name)) {
+                if (new_value > this.parent_world.max_height && !this.parent_world.warningRecord["max_height"].includes(biome.full_name)) {
                     new_value = clamp(new_value, this.parent_world.max_height);
                     raise_warning("Extreme terrain", "Ground map value inside " + biome.full_name + " has exceeded the maximum world height. Value has been capped at " + this.parent_world.max_height.toString() + ".");
-                    this.parent_world.warnings_raised["max_height"].push(biome.full_name);
+                    this.parent_world.warningRecord["max_height"].push(biome.full_name);
                 }
                 this.ground_map.set_value_at(x, y, new_value);
             }
@@ -220,12 +222,12 @@ class Chunk {
         let V = 0;
         let biome_influence_sum = 0;
         for (let balance of biome_balance) {
-            biome_influence_sum += balance[1]
+            biome_influence_sum += balance.influence;
         }
         for (let balance of biome_balance) {
             let underlying_noise = this.overlayed.value_at(x, y);
-            let biome = balance[0];
-            let biome_influence = balance[1];
+            let biome = balance.biome;
+            let biome_influence = balance.influence;
             let amplitude = biome.get_amplitude(octave_no);
             let v = octave.value_at(x, y);
             v *= amplitude * biome.get_height_multiplier(underlying_noise) * biome_influence;
@@ -257,13 +259,13 @@ class Chunk {
         return { surface_map: this.surface_map, surface_map_image: this.surface_map_image };
     }
 
-    public static get_filepath(world_name: string, q: number, r: number) {
-        return path.join("worlds", world_name, "chunks", q.toString() + "x" + r.toString() + ".json");
+    public static get_filepath(world_name: string, q: number, r: number): string {
+        return path.join("worlds", world_name, "chunks", `${q}x${r}.json`);
     }
 
-    public create_biome_map(perlin_grid: Grid<number>): { biome_map: Grid<any[][]>, biome_map_image: Grid<number[]>, sub_biome_map_image: Grid<number[]> } {
+    public create_biome_map(perlin_grid: Grid<number>): { biome_map: Grid<BiomeBalance>, biome_map_image: Grid<number[]>, sub_biome_map_image: Grid<number[]> } {
         let perlin_copy = perlin_grid.copy();
-        let biome_map = new Grid<any[][]>(perlin_grid.width, perlin_grid.height, []);
+        let biome_map = new Grid<BiomeBalance>(perlin_grid.width, perlin_grid.height, []);
         this.biome_map_image = new Grid<number[]>(perlin_grid.width, perlin_grid.height, []);
         this.sub_biome_map_image = new Grid<number[]>(perlin_grid.width, perlin_grid.height, []);
         let min_noise = 1;
@@ -275,7 +277,7 @@ class Chunk {
                 let height_2 = perlin_copy.value_at(x, y);
                 let biome_balance = this.determine_biome_by_height(height_1, height_2);
                 biome_map.set_value_at(x, y, biome_balance);
-                let biome = biome_balance[0][0];
+                let biome = biome_balance[0].biome;
                 this.biome_map_image.set_value_at(x, y, biome.parent_colour)
                 this.sub_biome_map_image.set_value_at(x, y, biome.colour)
             }
@@ -290,31 +292,40 @@ class Chunk {
     }
 
     public export_save_file(): void {
-        let save_file_object: { q: number, r: number, map: any[][] } = { "q": this.q, "r": this.r, "map": [] };
-        for (let x = 0; x < this.width_in_tiles; x++) {
-            let row = []
-            for (let y = 0; y < this.height_in_tiles; y++) {
-                let altitude = this.ground_map.value_at(x, y);
-                let ground_tile_name = this.surface_map.value_at(x, y);
-                let area_object_name = this.area_map.value_at(x, y);
-                row.push([
-                    this.get_biome_at(x, y).toString(),
-                    altitude,
-                    ground_tile_name,
-                    area_object_name
-                ]);
-            }
-            save_file_object["map"].push(row);
-        }
+        let save_file_object = this.createSaveObject();
         let filepath = Chunk.get_filepath(this.parent_world.name, this.q, this.r);
         save_json(save_file_object, filepath);
     }
 
-    public get_biome_at(x: number, y: number): SubBiome {
-        return this.biome_map.value_at(x, y)[0][0] as SubBiome;
+    private createSaveObject(): ChunkSaveObject {
+        let saveFileObject: ChunkSaveObject = { q: this.q, r: this.r, tileMap: [] };
+        for (let x = 0; x < this.width_in_tiles; x++) {
+            let row: TileSaveObject[] = [];
+            for (let y = 0; y < this.height_in_tiles; y++) {
+                row.push(this.createTileSaveObject(x, y));
+            }
+            saveFileObject.tileMap.push(row);
+        }
+        return saveFileObject;
     }
 
-    public determine_biome_by_height(height_1: number, height_2: number): any[][] {
+    private createTileSaveObject(x: number, y: number): TileSaveObject {
+        let altitude = this.ground_map.value_at(x, y);
+        let ground_tile_name = this.surface_map.value_at(x, y);
+        let area_object_name = this.area_map.value_at(x, y);
+        return [
+            this.get_biome_at(x, y).toString(),
+            altitude,
+            ground_tile_name,
+            area_object_name
+        ];
+    }
+
+    public get_biome_at(x: number, y: number): SubBiome {
+        return this.biome_map.value_at(x, y)[0].biome as SubBiome;
+    }
+
+    public determine_biome_by_height(height_1: number, height_2: number): BiomeBalance {
         // get main biome
         let main_biome = this.biomes_rangerray.select(height_1);
         let biome_obj = main_biome["value"];
@@ -340,15 +351,15 @@ class Chunk {
         }
 
         if (0 <= blended_biome_index && blended_biome_index < this.biomes_rangerray.length()) {
-            let balance = [[sub_biome, 1 - influence]];
+            let balance = [{ biome: sub_biome, influence: 1 - influence }];
             let blended_biome = this.biomes_rangerray.select_by_index(blended_biome_index);
             let blended_biome_obj = blended_biome["value"];
             sub_biome = blended_biome_obj.select_value(height_2);
-            balance.push([sub_biome, influence]);
+            balance.push({ biome: sub_biome, influence: influence });
             return balance;
         }
         else {
-            let balance = [[sub_biome, 1]]
+            let balance = [{ biome: sub_biome, influence: 1 }];
             return balance;
         }
     }

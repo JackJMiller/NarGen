@@ -1,19 +1,19 @@
 class Rangerray<T> {
 
     public name: string;
-    public items: any[];
+    public items: [number, T][];
 
-    public constructor(name: string = "", items: any = []) {
+    public constructor(name: string = "", items: [number, T][] = []) {
         this.name = name
         this.items = items;
     }
 
-    public select_value(v: number): any {
+    public select_value(v: number): T {
         let item = this.select(v)
         return item["value"];
     }
 
-    public select(v: number): any {
+    public select(v: number): { value: T, lower_point: number, upper_point: number, index: number } {
 
         let lower_point = 0;
         for (let index = 0; index < this.items.length; index++) {
@@ -42,7 +42,7 @@ class Rangerray<T> {
         }
     }
 
-    public select_by_index(index: number): any {
+    public select_by_index(index: number): { value: T, lower_point: number, upper_point: number, index: number } {
         let lower_point = (index === 0) ? 0 : this.items[index - 1][0];
         let item = this.items[index];
         return {
@@ -86,13 +86,13 @@ class Rangerray<T> {
         console.log();
     }
 
-    public values() {
-        let values: any[] = [];
-        for (let item in this.items) {
+    public values(): T[] {
+        let values: T[] = [];
+        this.items.forEach((item: [number, T]) => {
             if (!values.includes(item[1])) {
                 values.push(item[1]);
             }
-        }
+        });
         return values;
     }
 
@@ -101,7 +101,7 @@ class Rangerray<T> {
         return `<Rangerray name="${this.name}">`;
     }
 
-    public static fracrray_to_rangerray(fracrray: any[]) {
+    public static fracrray_to_rangerray(fracrray: [number, string][]) {
         let total = 0;
         for (let element of fracrray) {
             total += element[0];

@@ -12,7 +12,7 @@ if (ARGS[1] == "generate") {
     let mustRenderWorld = (ARGS[3] === "1");
     let configFilePath = path.join(NARGEN_FILEPATH, "configs", worldName, "CONFIG.json");
 
-    let config = require(configFilePath);
+    let config = require(configFilePath) as WorldConfig;
 
     // generate terrain world according to configuration
     let world = new World(worldName, config, mustRenderWorld);
