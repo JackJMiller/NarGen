@@ -2,43 +2,39 @@
 
 ## About
 
-NarGen is a procedural terrain generator that produces terrain for use in a computer game. With the thoughtful tuning of values, the user can generate a wide variety of features such as oceans, mountains, rivers, volcanoes, deserts, etc. Unique biomes can be generated and blended together. A demo/tutorial can be found [here](https://jackjmiller.net/articles/generating-terrain-with-nargen.html).
+NarGen is a procedural terrain generator that produces terrain for use in a computer game. Unique biomes can be generated and blended together. A demo/tutorial can be found [here](https://jackjmiller.net/articles/generating-terrain-with-nargen.html).
 
 ## Installation
 
-After you have cloned this repository, add it to $PATH. Move inside the project directory and run the following.
-
-```
-nargen install
-```
+After cloning this repository, set a global shell variable `$NARGEN_PATH` to the repository's location on your system. Append that value to your shell's global `$PATH` variable.
 
 ## Usage
 
-To generate a terrain world, you must first create the config files that configure the generation process. A selection of example config files in `res/sample_worlds/` can be listed with the following command.
+To generate a terrain world, you must first create the configuration files that guide the generation process. A selection of example configuration files in `res/sample_worlds/` can be listed with the following command.
 
 ```
 nargen list-sample-worlds
 ```
 
-Once you have decided which configuration you will use, you can create a world using that same configuration. The following command configures a new world named `Mundo` using the sample configuration `Rainvalley`.
+Once you have decided which configuration you will use, you can create a world using that same configuration. The following command uses the sample world `Rainvalley` to create a new world named `Mundo` stored in our home directory.
 
 ```
-nargen new-world Mundo Rainworld
+nargen new-world ~/Mundo/ Rainworld
 ```
 
-A world named `Mundo` has now been configured and the config files for this world can be found in `configs/Mundo/`. We may freely change the contents of these files to configure the generation process to produce the world that we want. Once configured, we can generate our terrain world with the following command.
+A world named `Mundo` has now been configured and the configuration files for this world can be found in the `~/Mundo/` directory created. We may freely change the contents of these files to generate the terrain we want for our world. To generate terrain according to our configuration, we run the command below.
 
 ```
-nargen generate Mundo
+nargen generate ~/Mundo/
 ```
 
-We now have a terrain world stored in `worlds/Mundo/`. A top-down image of the world can now be created.
+If there are no errors in our configuration files, we should now have a terrain world stored in `~/Mundo/GENERATED/`. An image of the world can now be rendered.
 
 ```
-nargen render Mundo
+nargen render ~/Mundo/
 ```
 
-The image will be opened once created and you can view your world.
+The images will be opened once created so that you can view your world. You can view these images again with `nargen view ~/Mundo/`.
 
 For more help on running the program, view the help page with the `--help` flag.
 

@@ -1,14 +1,9 @@
 
 Usage:
-  new-world WORLD_NAME WORLD_CONFIG     configure a new world according to a world configuration file
+  new-world WORLD_NAME SAMPLE_PATH      create a new world according to a sample world
   generate CONFIG_FILE                  generate and save terrain world according to config file
-  render WORLD_NAME                     render a saved world
-  generate-and-render CONFIG_FILE       generate and fully render world according to config file
-  view WORLD_NAME                       view images of a world
-  delete-world WORLD_NAME               delete configuration files for world
-  list                                  list all world configurations
+  render WORLD_PATH                     render a saved world
+  view WORLD_PATH                       view images of a world
+  delete-terrain WORLD_PATH             delete generated terrain of a world
   list-sample-worlds                    list all sample world configurations
   -h, --help                            show this page
-
-Options:
-  --no-rendering             generate world without rendering maps

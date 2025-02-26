@@ -1,9 +1,38 @@
 #!/bin/bash
 
 ConfigureNewWorld() {
-    cp -r res/sample_worlds/$2/ worlds/$1/
-    mkdir -p worlds/$1/GENERATED/chunks/ worlds/$1/GENERATED/images/
-    echo New world saved at worlds/$1/
+    WORLD_PATH=$1
+    SAMPLE_WORLD_NAME=$2
+    cp -r $NARGEN_PATH/res/sample_worlds/$SAMPLE_WORLD_NAME $WORLD_PATH
+    mkdir -p \
+        $WORLD_PATH/GENERATED/chunks/ \
+        $WORLD_PATH/GENERATED/images/
+    echo New world saved at $WORLD_PATH
+}
+
+AssureWorldExists() {
+    WORLD_PATH=$1
+    if [ ! -d "$WORLD_PATH" ]; then
+        echo "Error: Cannot find world at $WORLD_PATH"
+        exit 1
+    fi
+}
+
+DeleteTerrain() {
+    WORLD_PATH=$1
+    rm -rf $WORLD_PATH/GENERATED/*
+    mkdir $WORLD_PATH/GENERATED/chunks/ $WORLD_PATH/GENERATED/images/
+}
+
+Render() {
+    WORLD_PATH=$1
+    python3 main.py render $WORLD_PATH
+    ViewWorld $WORLD_PATH
+}
+
+ViewWorld() {
+    WORLD_PATH=$1
+    xdg-open $WORLD_PATH/GENERATED/images/* > /dev/null 2>&1
 }
 
 if [ $# -eq 1 ] && [[ "$1" == "--help" || "$1" == "-h" ]] || [ $# -eq 0 ]; then
@@ -13,112 +42,61 @@ if [ $# -eq 1 ] && [[ "$1" == "--help" || "$1" == "-h" ]] || [ $# -eq 0 ]; then
 
 elif [[ $# -eq 3 && "$1" == "new-world" ]]; then
 
-    if [ -d "worlds/$2/" ]; then
-        echo "Error: A world named $2 already exists"
-        exit 1
-    elif [ ! -d "res/sample_worlds/$3/" ]; then
-        echo "Error: Could not find sample world named $3"
-        exit 1
-    else
-        ConfigureNewWorld $2 $3
-    fi
+    WORLD_PATH=$2
+    SAMPLE_WORLD_NAME=$3
 
-elif [[ $# -eq 2 && "$1" == "generate-and-render" ]]; then
+    [ -d "$WORLD_PATH" ] && echo "Error: A world already exists at $WORLD_PATH" && exit 1
+    [ ! -d "$NARGEN_PATH/res/sample_worlds/$SAMPLE_WORLD_NAME/" ] && echo "Error: Could not find sample world named $SAMPLE_WORLD_NAME" && exit 1
 
-    nargen generate $2 && nargen render $2
+    ConfigureNewWorld $WORLD_PATH $SAMPLE_WORLD_NAME
 
 elif [[ $# -eq 2 && "$1" == "generate" ]]; then
 
-    if [ $# -lt 2 ]; then
-        echo "Invalid arguments: No config file specified"
-        cat res/help_page.txt
-    elif [ -d "worlds/$2/" ]; then
-        nargen empty-world $2
-        if [ $# -ge 3 ]; then
-            if [ $3 == "--no-rendering" ]; then
-                node main.js generate $2 0
-            else
-                echo "Invalid arguments: Cannot recognise option $3"
-                cat res/help_page.txt
-            fi
-        else
-            node main.js generate $2 1
-        fi
+    WORLD_PATH=$2
 
-    else
-        echo "Error: Cannot find world named $2"
-        exit 1
-    fi
+    AssureWorldExists $WORLD_PATH
 
-elif [[ $# -ge 1 && "$1" == "empty-world" ]]; then
+    DeleteTerrain $WORLD_PATH
 
-    if [ $# -lt 2 ]; then
-        echo "Invalid arguments: No world name specified"
-        cat res/help_page.txt
-    elif [ -d "worlds/$2/" ]; then
-        rm -rf worlds/$2/GENERATED/*
-        mkdir worlds/$2/GENERATED/chunks/ worlds/$2/GENERATED/images/
-        echo "Emptied world $2"
-    else
-        echo "Error: Cannot find world named $2"
-        exit 1
-    fi
+    node main.js generate $WORLD_PATH 1
 
-elif [[ $# -ge 1 && "$1" == "delete-world" ]]; then
+elif [[ $# -eq 2 && "$1" == "delete-terrain" ]]; then
 
-    if [ $# -lt 2 ]; then
-        echo "Invalid arguments: No world name specified"
-        cat res/help_page.txt
-    elif [ -d "worlds/$2/" ]; then
-        rm -rf worlds/$2/
-        echo "Deleted world $2"
-    else
-        echo "Error: Cannot find world named $2"
-        exit 1
-    fi
+    WORLD_PATH=$2
 
-elif [[ $# -eq 2 && "$1" == "build" ]]; then
+    AssureWorldExists $WORLD_PATH
 
-    nargen generate $2 && nargen render $2
+    DeleteTerrain $WORLD_PATH
+
+    echo "Emptied world at $WORLD_PATH"
 
 elif [[ $# -eq 2 && "$1" == "render" ]]; then
 
-    if [ -d "worlds/$2/" ]; then
-        if [ -f "worlds/$2/GENERATED/WORLD_INFO.json" ]; then
-            python3 main.py render $2
-            viewnior worlds/$2/GENERATED/images/game.png > /dev/null 2>&1
-        else
-            echo "Error: A world named $2 is found but is not fully rendered. Execute 'nargen generate $2' to generate the world."
-        fi
+    WORLD_PATH=$2
+
+    AssureWorldExists $WORLD_PATH
+
+    if [ -f "$WORLD_PATH/GENERATED/WORLD_INFO.json" ]; then
+        Render $WORLD_PATH
     else
-        echo "Error: Cannot find world named $2. Execute 'nargen generate $2' to generate the world."
-        exit 1
+        echo "Error: A world at $WORLD_PATH is found but is not fully rendered. Execute 'nargen generate $WORLD_PATH' to generate the world."
     fi
 
 elif [[ $# -eq 2 && "$1" == "view" ]]; then
 
-    if [ -d "worlds/$2/" ]; then
-        viewnior worlds/$2/GENERATED/images/ > /dev/null 2>&1
-    else
-        echo "Error: Cannot find world named $2."
-        exit 1
-    fi
+    WORLD_PATH=$2
 
-elif [[ $# -eq 1 && "$1" == "list" ]]; then
+    AssureWorldExists $WORLD_PATH
 
-    ls worlds/
+    ViewWorld $WORLD_PATH
 
 elif [[ $# -eq 1 && "$1" == "list-sample-worlds" ]]; then
 
-    ls res/sample_worlds/
-
-elif [[ $# -eq 1 && "$1" == "install" ]]; then
-
-    mkdir worlds/
+    ls $NARGEN_PATH/res/sample_worlds/
 
 else
 
     echo "Invalid arguments"
-    cat res/help_page.txt
+    cat $NARGEN_PATH/res/help_page.txt
 
 fi
