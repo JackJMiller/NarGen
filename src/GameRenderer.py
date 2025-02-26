@@ -9,10 +9,14 @@ from src.constants import CHUNK_SIZE, SPRITES
 
 class GameRenderer:
 
-    def __init__(self, world_name):
+    def __init__(self, world_path):
 
-        self.world_name = world_name
-        self.world_config = load_json(os.path.join("worlds", world_name, "GENERATED", "WORLD_INFO.json"))
+        print(world_path)
+        self.world_path = os.path.normpath(world_path)
+        self.world_name = os.path.basename(self.world_path)
+        print(self.world_name)
+
+        self.world_config = load_json(os.path.join(self.world_path, "GENERATED", "WORLD_INFO.json"))
 
         self.image_width = self.world_config["width"] * CHUNK_SIZE * 20
         self.image_height = self.world_config["height"] * CHUNK_SIZE * 20
@@ -22,12 +26,12 @@ class GameRenderer:
         for r in range(self.world_config["height"]):
             self.chunks = []
             for q in range(self.world_config["width"]):
-                filepath = Chunk.get_filepath(self.world_name, q, r)
+                filepath = Chunk.get_filepath(self.world_path, q, r)
                 chunk = load_json(filepath)
                 self.chunks.append(chunk)
             self.draw_chunk_row(r)
 
-        self.image.save(os.path.join("worlds", self.world_name, "GENERATED", "images", "game.png"), format = "png")
+        self.image.save(os.path.join(self.world_path, "GENERATED", "images", "game.png"), format = "png")
 
 
     def draw_chunk_row(self, r):

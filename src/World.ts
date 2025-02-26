@@ -4,11 +4,12 @@ import Chunk from "./Chunk";
 import Grid from "./Grid";
 import Rangerray from "./Rangerray";
 import SubBiome from "./SubBiome";
-import { BASE_BIOME_SIZE, CHUNK_SIZE, NARGEN_FILEPATH } from "./constants";
+import { BASE_BIOME_SIZE, CHUNK_SIZE, NARGEN_PATH } from "./constants";
 import { exitWithError, flattenNoiseDistribution, leftJustify, objectFromEntries, pointAtPortionBetween, raiseWarning, saveJson } from "./functions";
 
 class World {
 
+    public filepath: string;
     public name: string;
     public config: WorldConfig;
     public renderWorld: boolean;
@@ -35,14 +36,17 @@ class World {
     public biomeColours: { [index: string]: Colour };
     public worldInfo: WorldInfo;
 
-    public constructor(name: string, config: WorldConfig, renderWorld: boolean) {
+    public constructor(filepath: string, renderWorld: boolean) {
 
-        this.name = name;
-        this.config = config;
+        this.filepath = filepath;
+        this.name = path.parse(this.filepath).name;
+        let configFilePath = path.join(this.filepath, "CONFIG.json");
+        this.config = require(configFilePath) as WorldConfig;
+
         this.renderWorld = renderWorld;
-        this.seed = config["seed"];
-        this.widthInChunks = config["width"];
-        this.heightInChunks = config["height"];
+        this.seed = this.config["seed"];
+        this.widthInChunks = this.config["width"];
+        this.heightInChunks = this.config["height"];
         this.widthInTiles = this.widthInChunks * CHUNK_SIZE;
         this.heightInTiles = this.heightInChunks * CHUNK_SIZE;
         this.totalAreaInTiles = this.widthInTiles * this.heightInTiles;
@@ -76,7 +80,7 @@ class World {
 
         this.generateChunks();
 
-        saveJson(this.worldInfo, path.join(NARGEN_FILEPATH, "worlds", this.name, "GENERATED", "WORLD_INFO.json"));
+        saveJson(this.worldInfo, path.join(this.filepath, "GENERATED", "WORLD_INFO.json"));
 
         this.summarise()
 
@@ -84,12 +88,10 @@ class World {
 
 
     public createSaveFiles() {
-        console.log("SAVING");
-        let filepath = path.join(NARGEN_FILEPATH, "worlds", this.name);
-        if (!fs.existsSync(filepath)) {
-            fs.mkdirSync(filepath);
-            fs.mkdirSync(path.join(filepath, "GENERATED", "images"));
-            fs.mkdirSync(path.join(filepath, "GENERATED", "chunks"));
+        if (!fs.existsSync(this.filepath)) {
+            fs.mkdirSync(this.filepath);
+            fs.mkdirSync(path.join(this.filepath, "GENERATED", "images"));
+            fs.mkdirSync(path.join(this.filepath, "GENERATED", "chunks"));
         }
     }
 
@@ -125,7 +127,8 @@ class World {
 
     public createBiome(biomeName: string, biomeNoiseLower: number, biomeNoiseUpper: number): Rangerray<SubBiome> {
         let rangerray = new Rangerray<SubBiome>(biomeName);
-        let biomeConfigPath = path.join(NARGEN_FILEPATH, "worlds", this.name, "biomes", biomeName + ".json");
+        let biomeConfigPath = path.join(this.filepath, "biomes", biomeName + ".json");
+        if (!fs.existsSync(biomeConfigPath)) exitWithError("Undefined biome", `An undefined biome named '${biomeName}' is referenced in your CONFIG.json file.`);
         let biomeConfig = require(biomeConfigPath) as BiomeConfig;
         let noiseLower = 0;
         let noiseUpper = 0;
@@ -144,7 +147,7 @@ class World {
             noiseUpper = subBiome[0];
             let subBiomeName = subBiome[1];
             if (!Object.keys(biomeConfig).includes(subBiomeName)) {
-                exitWithError("Undefined sub-biome", `An undefined sub-biome named ${subBiomeName} is referenced inside ranges attribute of biome ${biomeName}.`);
+                exitWithError("Undefined sub-biome", `An undefined sub-biome named '${subBiomeName}' is referenced inside ranges attribute of biome '${biomeName}'.`);
             }
             noiseUpper = flattenNoiseDistribution(noiseUpper);
             let obj = new SubBiome(this, biomeName, subBiomeName, biomeConfig, noiseLower, noiseUpper);

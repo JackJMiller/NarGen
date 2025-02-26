@@ -4,9 +4,9 @@ from PIL import Image, ImageEnhance
 
 def load_sprites():
     SPRITES = dict()
-    for filename in os.listdir("res/sprites"):
+    for filename in os.listdir(os.path.join(NARGEN_PATH, "res", "sprites")):
         name = os.path.splitext(filename)[0]
-        SPRITES[name] = Image.open(os.path.join("res", "sprites", filename), "r").convert("RGBA")
+        SPRITES[name] = Image.open(os.path.join(NARGEN_PATH, "res", "sprites", filename), "r").convert("RGBA")
     SPRITE_NAMES = SPRITES.keys()
     return SPRITES, SPRITE_NAMES
 
@@ -14,6 +14,8 @@ def set_default_root_blocks(root_blocks):
     for sprite_name in SPRITE_NAMES:
         if sprite_name not in root_blocks.keys():
             root_blocks[sprite_name] = ["short_grass", "medium_grass", "long_grass"]
+
+NARGEN_PATH = "/home/jack/Development/NarGen"
 
 SURFACES = {
     "water": { "colour": (80, 180, 255) },

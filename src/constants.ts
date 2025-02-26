@@ -10,6 +10,8 @@ function set_default_root_blocks(root_blocks: any) {
     }
 }
 
+export const NARGEN_PATH = "/home/jack/Development/NarGen";
+
 export const SURFACES: { [index: string]: Colour } = {
     water: [80, 180, 255],
     short_grass: [108, 210, 26],
@@ -23,7 +25,7 @@ export const SURFACES: { [index: string]: Colour } = {
     coal: [0, 0, 0]
 };
 
-export const SPRITE_NAMES = fs.readdirSync("res/sprites").map((filepath: string) => path.parse(filepath).name);
+export const SPRITE_NAMES = fs.readdirSync(path.join(NARGEN_PATH, "res", "sprites")).map((filepath: string) => path.parse(filepath).name);
 
 export const AVAILABLE_BLOCKS = ["grass", "lava", "sand", "snow", "stone", "water"];
 
@@ -43,10 +45,12 @@ export const SAVE_IMAGE_OVERLAYED = true;
 
 export const COLOUR_NONE = "\x1b[0m";
 export const COLOUR_RED = "\x1b[0;31m";
+export const COLOUR_RED_BOLD = "\x1b[1;31m";
 export const COLOUR_GREEN = "\x1b[0;32m";
 export const COLOUR_YELLOW = "\x1b[2;33m";
 export const COLOUR_BLUE = "\x1b[0;34m";
 export const COLOUR_MAGENTA = "\x1b[0;35m";
+export const COLOUR_MAGENTA_BOLD = "\x1b[1;35m";
 export const COLOUR_CYAN = "\x1b[0;36m";
 
 export const RECOGNISED_SUB_BIOME_ATTRIBUTES = [
@@ -60,7 +64,5 @@ export const RECOGNISED_SUB_BIOME_ATTRIBUTES = [
     "upperHeightMultiplier",
     "ornaments"
 ];
-
-export const NARGEN_FILEPATH = "/home/jack/Development/NarGen";
 
 export const PRNG = mkAlea("jack");

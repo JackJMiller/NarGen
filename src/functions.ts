@@ -1,6 +1,6 @@
 import fs from "fs";
 import { AleaPRNG } from "./lib/alea";
-import { COLOUR_RED, COLOUR_MAGENTA, COLOUR_NONE, PRNG } from "./constants";
+import { COLOUR_RED, COLOUR_RED_BOLD, COLOUR_MAGENTA, COLOUR_MAGENTA_BOLD, COLOUR_NONE, PRNG } from "./constants";
 
 export function clamp(value: number, maximum: number): number {
     if (value < 0) return 0;
@@ -57,12 +57,12 @@ export function intMedian(arrays: number[][]): number[] {
 }
 
 export function exitWithError(errorType: string, message: string): void {
-    console.log(`NarGen: ${COLOUR_RED}ERROR${COLOUR_NONE}: ${errorType}: ${message}`);
+    console.log(`NarGen: ${COLOUR_RED_BOLD}ERROR: ${COLOUR_RED}${errorType}: ${message}`);
     process.exit(1);
 }
 
 export function raiseWarning(warningType: string, message: string): void {
-    console.log(`NarGen: ${COLOUR_MAGENTA}WARNING${COLOUR_NONE}: ${warningType}: ${message}`);
+    console.log(`NarGen: ${COLOUR_MAGENTA_BOLD}WARNING: ${COLOUR_MAGENTA}${warningType}: ${message}`);
 }
 
 export function random(prng: AleaPRNG = PRNG): number {

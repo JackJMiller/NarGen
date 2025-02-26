@@ -12,10 +12,7 @@ ConfigureNewWorld() {
 
 AssureWorldExists() {
     WORLD_PATH=$1
-    if [ ! -d "$WORLD_PATH" ]; then
-        echo "Error: Cannot find world at $WORLD_PATH"
-        exit 1
-    fi
+    [ ! -d "$WORLD_PATH" ] && ThrowError "Cannot find world at $WORLD_PATH" && exit 1
 }
 
 DeleteTerrain() {
@@ -25,9 +22,13 @@ DeleteTerrain() {
 }
 
 Render() {
-    WORLD_PATH=$1
-    python3 main.py render $WORLD_PATH
+    WORLD_PATH=`realpath $1`
+    python3 $NARGEN_PATH/main.py render $WORLD_PATH
     ViewWorld $WORLD_PATH
+}
+
+ThrowError() {
+    echo -e "NarGen: ${COLOUR_RED_BOLD}ERROR: ${COLOUR_RED}$@${COLOUR_NONE}"
 }
 
 ViewWorld() {
@@ -35,30 +36,34 @@ ViewWorld() {
     xdg-open $WORLD_PATH/GENERATED/images/* > /dev/null 2>&1
 }
 
+COLOUR_RED='\033[0;31m'
+COLOUR_RED_BOLD='\033[1;31m'
+COLOUR_NONE='\033[0;0m'
+
 if [ $# -eq 1 ] && [[ "$1" == "--help" || "$1" == "-h" ]] || [ $# -eq 0 ]; then
 
-    cat res/ascii_art.txt
-    cat res/help_page.txt
+    cat $NARGEN_PATH/res/ascii_art.txt
+    cat $NARGEN_PATH/res/help_page.txt
 
 elif [[ $# -eq 3 && "$1" == "new-world" ]]; then
 
     WORLD_PATH=$2
     SAMPLE_WORLD_NAME=$3
 
-    [ -d "$WORLD_PATH" ] && echo "Error: A world already exists at $WORLD_PATH" && exit 1
-    [ ! -d "$NARGEN_PATH/res/sample_worlds/$SAMPLE_WORLD_NAME/" ] && echo "Error: Could not find sample world named $SAMPLE_WORLD_NAME" && exit 1
+    [ -d "$WORLD_PATH" ] && ThrowError "A world already exists at $WORLD_PATH" && exit 1
+    [ ! -d "$NARGEN_PATH/res/sample_worlds/$SAMPLE_WORLD_NAME/" ] && ThrowError "Could not find sample world named $SAMPLE_WORLD_NAME" && exit 1
 
     ConfigureNewWorld $WORLD_PATH $SAMPLE_WORLD_NAME
 
 elif [[ $# -eq 2 && "$1" == "generate" ]]; then
 
-    WORLD_PATH=$2
+    WORLD_PATH=`realpath $2`
 
     AssureWorldExists $WORLD_PATH
 
     DeleteTerrain $WORLD_PATH
 
-    node main.js generate $WORLD_PATH 1
+    node $NARGEN_PATH/main.js generate $WORLD_PATH 1
 
 elif [[ $# -eq 2 && "$1" == "delete-terrain" ]]; then
 
@@ -79,7 +84,7 @@ elif [[ $# -eq 2 && "$1" == "render" ]]; then
     if [ -f "$WORLD_PATH/GENERATED/WORLD_INFO.json" ]; then
         Render $WORLD_PATH
     else
-        echo "Error: A world at $WORLD_PATH is found but is not fully rendered. Execute 'nargen generate $WORLD_PATH' to generate the world."
+        ThrowError "A world at $WORLD_PATH is found but is not fully rendered. Execute 'nargen generate $WORLD_PATH' to generate the world."
     fi
 
 elif [[ $# -eq 2 && "$1" == "view" ]]; then

@@ -189,8 +189,8 @@ class Chunk:
             self.surface_map_image.save_RGBs(filepath, self.parent_world.name)
 
     @staticmethod
-    def get_filepath(world_name, q, r):
-        return os.path.join("worlds", world_name, "GENERATED", "chunks", str(q) + "x" + str(r) + ".json")
+    def get_filepath(world_path, q, r):
+        return os.path.join(world_path, "GENERATED", "chunks", str(q) + "x" + str(r) + ".json")
 
     def create_biome_map(self, perlin_grid):
         self.biome_map = perlin_grid.copy()

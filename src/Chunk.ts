@@ -252,15 +252,15 @@ class Chunk {
         }
 
         if (SAVE_IMAGE_SURFACE_MAP) {
-            let filepath = Chunk.getFilepath(this.parentWorld.name, this.q, this.r);
+            let filepath = Chunk.getFilepath(this.parentWorld.filepath, this.q, this.r);
             this.surfaceMapImage.saveRGBs(filepath, this.parentWorld.name)
         }
 
         return { surfaceMap: this.surfaceMap, surfaceMapImage: this.surfaceMapImage };
     }
 
-    public static getFilepath(worldName: string, q: number, r: number): string {
-        return path.join("worlds", worldName, "GENERATED", "chunks", `${q}x${r}.json`);
+    public static getFilepath(worldFilepath: string, q: number, r: number): string {
+        return path.join(worldFilepath, "GENERATED", "chunks", `${q}x${r}.json`);
     }
 
     public createBiomeMap(perlinGrid: Grid<number>): { biomeMap: Grid<BiomeBalance>, biomeMapImage: Grid<number[]>, subBiomeMapImage: Grid<number[]> } {
@@ -293,7 +293,7 @@ class Chunk {
 
     public exportSaveFile(): void {
         let saveFileObject = this.createSaveObject();
-        let filepath = Chunk.getFilepath(this.parentWorld.name, this.q, this.r);
+        let filepath = Chunk.getFilepath(this.parentWorld.filepath, this.q, this.r);
         saveJson(saveFileObject, filepath);
     }
 
