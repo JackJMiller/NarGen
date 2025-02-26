@@ -35,7 +35,7 @@ nargen generate Mundo
 We now have a terrain world stored in `worlds/Mundo/`. A top-down image of the world can now be created.
 
 ```
-nargen render-game Mundo
+nargen render Mundo
 ```
 
 The image will be opened once created and you can view your world.

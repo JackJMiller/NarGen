@@ -24,7 +24,7 @@ elif [[ $# -eq 3 && "$1" == "new-world" ]]; then
 
 elif [[ $# -eq 2 && "$1" == "generate-and-render" ]]; then
 
-    nargen generate $2 && nargen render-game $2
+    nargen generate $2 && nargen render $2
 
 elif [[ $# -eq 2 && "$1" == "generate" ]]; then
 
@@ -63,30 +63,15 @@ elif [[ $# -ge 1 && "$1" == "delete-world" ]]; then
         exit 1
     fi
 
+elif [[ $# -eq 2 && "$1" == "build" ]]; then
+
+    nargen generate $2 && nargen render $2
+
 elif [[ $# -eq 2 && "$1" == "render" ]]; then
 
     if [ -d "worlds/$2/" ]; then
         if [ -f "worlds/$2/WORLD_INFO.json" ]; then
             python3 main.py render $2
-        else
-            echo "Error: A world named $2 is found but is not fully rendered. Execute 'nargen generate $2' to generate the world."
-            exit 1
-        fi
-    else
-        echo "Error: No world named $2 has been generated. Execute 'nargen generate $2' to generate the world."
-        exit 1
-    fi
-
-elif [[ $# -eq 2 && "$1" == "build" ]]; then
-
-    nargen generate $2 && nargen render-game $2
-
-elif [[ $# -eq 2 && "$1" == "render-game" ]]; then
-
-
-    if [ -d "worlds/$2/" ]; then
-        if [ -f "worlds/$2/WORLD_INFO.json" ]; then
-            python3 main.py render-game $2
             viewnior worlds/$2/images/game.png > /dev/null 2>&1
         else
             echo "Error: A world named $2 is found but is not fully rendered. Execute 'nargen generate $2' to generate the world."
