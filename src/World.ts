@@ -1,11 +1,11 @@
 import fs from "fs";
-import path from "path";
 import Chunk from "./Chunk";
 import Grid from "./Grid";
 import Rangerray from "./Rangerray";
 import SubBiome from "./SubBiome";
-import { BASE_BIOME_SIZE, CHUNK_SIZE, NARGEN_PATH } from "./constants";
-import { exitWithError, flattenNoiseDistribution, leftJustify, objectFromEntries, pointAtPortionBetween, raiseWarning, saveJson } from "./functions";
+import { BASE_BIOME_SIZE, CHUNK_SIZE } from "./constants";
+import { exitWithError, flattenNoiseDistribution, leftJustify, objectFromEntries } from "./functions";
+import { loadConfig } from "./terminal_script";
 
 class World {
 
@@ -36,12 +36,12 @@ class World {
     public biomeColours: { [index: string]: Colour };
     public worldInfo: WorldInfo;
 
-    public constructor(filepath: string, renderWorld: boolean) {
+    public constructor(name: string, filepath: string, renderWorld: boolean) {
 
         this.filepath = filepath;
-        this.name = path.parse(this.filepath).name;
-        let configFilePath = path.join(this.filepath, "CONFIG.json");
-        this.config = require(configFilePath) as WorldConfig;
+        this.name = name;
+        let configFilePath = [this.filepath, "CONFIG.json"].join("/");
+        this.config = loadConfig(configFilePath) as WorldConfig;
 
         this.renderWorld = renderWorld;
         this.seed = this.config["seed"];
@@ -80,9 +80,7 @@ class World {
 
         this.generateChunks();
 
-        saveJson(this.worldInfo, path.join(this.filepath, "GENERATED", "WORLD_INFO.json"));
-
-        this.summarise()
+        fs.writeFileSync([this.filepath, "GENERATED", "WORLD_INFO.json"].join("/"), JSON.stringify(this.worldInfo));
 
     }
 
@@ -90,8 +88,8 @@ class World {
     public createSaveFiles() {
         if (!fs.existsSync(this.filepath)) {
             fs.mkdirSync(this.filepath);
-            fs.mkdirSync(path.join(this.filepath, "GENERATED", "images"));
-            fs.mkdirSync(path.join(this.filepath, "GENERATED", "chunks"));
+            fs.mkdirSync([this.filepath, "GENERATED", "images"].join("/"));
+            fs.mkdirSync([this.filepath, "GENERATED", "chunks"].join("/"));
         }
     }
 
@@ -127,9 +125,9 @@ class World {
 
     public createBiome(biomeName: string, biomeNoiseLower: number, biomeNoiseUpper: number): Rangerray<SubBiome> {
         let rangerray = new Rangerray<SubBiome>(biomeName);
-        let biomeConfigPath = path.join(this.filepath, "biomes", biomeName + ".json");
+        let biomeConfigPath = [this.filepath, "biomes", biomeName + ".json"].join("/");
         if (!fs.existsSync(biomeConfigPath)) exitWithError("Undefined biome", `An undefined biome named '${biomeName}' is referenced in your CONFIG.json file.`);
-        let biomeConfig = require(biomeConfigPath) as BiomeConfig;
+        let biomeConfig = loadConfig(biomeConfigPath) as BiomeConfig;
         let noiseLower = 0;
         let noiseUpper = 0;
 
@@ -164,7 +162,6 @@ class World {
 
         let mapImageNames: MapImageName[] = (this.renderWorld) ? ["surfaceMapImage", "biomeMapImage", "subBiomeMapImage", "perlinImage"] : [];
 
-        let grids: Grid<number>[] = mapImageNames.map((imageName: string) => new Grid<number>(this.widthInTiles, this.heightInTiles, 0));
         let mapImages: { [index: string]: Grid<number[]> } = {};
         for (let mapImageName of mapImageNames) {
             mapImages[mapImageName] = new Grid<number[]>(this.widthInTiles, this.heightInTiles, [0, 0, 0]);

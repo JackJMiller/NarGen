@@ -1,4 +1,5 @@
 type Colour = [number, number, number];
+type Config = WorldConfig | BiomeConfig;
 type TileSaveObject = [string, number, string, string];
 type MapImageName = "surfaceMapImage" | "biomeMapImage" | "subBiomeMapImage" | "perlinImage";
 type OrnamentDefinition = [string, number, number, number];

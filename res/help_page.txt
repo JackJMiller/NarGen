@@ -6,4 +6,5 @@ Usage:
   view WORLD_PATH                       view images of a world
   delete-terrain WORLD_PATH             delete generated terrain of a world
   list-sample-worlds                    list all sample world configurations
+  build-browser-script                  build browser script
   -h, --help                            show this page

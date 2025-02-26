@@ -1,6 +1,5 @@
-import fs from "fs";
 import { AleaPRNG } from "./lib/alea";
-import { COLOUR_RED, COLOUR_RED_BOLD, COLOUR_MAGENTA, COLOUR_MAGENTA_BOLD, COLOUR_NONE, PRNG } from "./constants";
+import { COLOUR_RED, COLOUR_RED_BOLD, COLOUR_MAGENTA, COLOUR_MAGENTA_BOLD, GLOBAL_PRNG } from "./constants";
 
 export function clamp(value: number, maximum: number): number {
     if (value < 0) return 0;
@@ -34,26 +33,8 @@ export function portionAtPointBetween(a: number, b: number, point: number): numb
     return point / b;
 }
 
-export function saveJson(data: object, filepath: string): void {
-    fs.writeFileSync(filepath, JSON.stringify(data));
-}
-
 export function getBrightnessAtHeight(height: number, maxHeight: number): number {
     return 1 - clamp(height, maxHeight) / maxHeight;
-}
-
-export function intMedian(arrays: number[][]): number[] {
-    let result = [];
-    let len = arrays[0].length;
-    for (let index = 0; index < len; index++) {
-        let acc = 0;
-        for (let array of arrays) {
-            acc += array[index];
-        }
-        let median = Math.floor(acc / len);
-        result.push(median);
-    }
-    return result;
 }
 
 export function exitWithError(errorType: string, message: string): void {
@@ -65,21 +46,16 @@ export function raiseWarning(warningType: string, message: string): void {
     console.log(`NarGen: ${COLOUR_MAGENTA_BOLD}WARNING: ${COLOUR_MAGENTA}${warningType}: ${message}`);
 }
 
-export function random(prng: AleaPRNG = PRNG): number {
-    return prng.random();
+export function randint(min: number, max: number, prng: AleaPRNG = GLOBAL_PRNG): number {
+    return Math.floor(prng.random() * (max + 1 - min)) + min;
 }
 
-export function randint(min: number, max: number, prng: AleaPRNG = PRNG): number {
-    return Math.floor(random(prng) * (max + 1 - min)) + min;
-}
-
-export function randomElement<T>(array: T[], prng: AleaPRNG = PRNG): T {
+export function randomElement<T>(array: T[], prng: AleaPRNG = GLOBAL_PRNG): T {
     let index = randint(0, array.length - 1, prng);
     return array[index];
 }
 
 export function flattenNoiseDistribution(noiseValue: number): number {
-    let originalValue = noiseValue;
     let FLATTENR = -0.15;
     let mean = 0.53;
     let r = FLATTENR;

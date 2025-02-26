@@ -99,6 +99,10 @@ elif [[ $# -eq 1 && "$1" == "list-sample-worlds" ]]; then
 
     ls $NARGEN_PATH/res/sample_worlds/
 
+elif [[ $# -eq 1 && "$1" == "build-browser-script" ]]; then
+
+    $NARGEN_PATH/bash/build-browser-script
+
 else
 
     echo "Invalid arguments"

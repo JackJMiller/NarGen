@@ -1,7 +1,7 @@
 import Rangerray from "./Rangerray";
 import World from "./World";
 import { OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES } from "./constants";
-import { colourAverage, exitWithError, intMedian, pointAtPortionBetween, portionAtPointBetween, raiseWarning } from "./functions";
+import { colourAverage, exitWithError, pointAtPortionBetween, portionAtPointBetween, raiseWarning } from "./functions";
 import { validateOrnaments } from "./validation";
 
 class SubBiome {

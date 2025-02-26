@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# This script bundles NarGen into a script for use in a browser
+
+> nargen_web.ts
+
+cat src/types.ts >> nargen_web.ts
+
+cat src/lib/alea.ts >> nargen_web.ts
+
+cat src/BrowserRenderer.ts >> nargen_web.ts
+cat src/Chunk.ts >> nargen_web.ts
+cat src/Grid.ts >> nargen_web.ts
+cat src/FileSystem.ts >> nargen_web.ts
+cat src/Perlin.ts >> nargen_web.ts
+cat src/Rangerray.ts >> nargen_web.ts
+cat src/SubBiome.ts >> nargen_web.ts
+cat src/World.ts >> nargen_web.ts
+
+cat src/constants.ts >> nargen_web.ts
+cat src/browser_script.ts >> nargen_web.ts
+cat src/functions.ts >> nargen_web.ts
+cat src/validation.ts >> nargen_web.ts
+
+sed -i '/^import .* from .*;/d' nargen_web.ts
+sed -i '/^export = .*;/d' nargen_web.ts
+
+tsc nargen_web.ts
+
+rm nargen_web.ts

@@ -1,11 +1,11 @@
-import path from "path";
+import fs from "fs";
 import Grid from "./Grid";
 import Perlin from "./Perlin";
 import Rangerray from "./Rangerray";
 import SubBiome from "./SubBiome";
 import World from "./World";
-import { CHUNK_SIZE, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_OCTAVE, SAVE_IMAGE_OVERLAYED, SAVE_IMAGE_SURFACE_MAP, SURFACES, ORNAMENTATION_ROOT_BLOCKS } from "./constants";
-import { clamp, getBrightnessAtHeight, pointAtPortionBetween, portionAtPointBetween, raiseWarning, randint, random, randomElement, saveJson } from "./functions";
+import { CHUNK_SIZE, GLOBAL_PRNG, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_SURFACE_MAP, SURFACES, ORNAMENTATION_ROOT_BLOCKS } from "./constants";
+import { clamp, getBrightnessAtHeight, portionAtPointBetween, raiseWarning, randint } from "./functions";
 import { mkAlea } from "./lib/alea";
 
 type BiomeBalance = { biome: SubBiome, influence: number }[];
@@ -155,7 +155,7 @@ class Chunk {
         if (altitude <= 0) return "";
 
         let biome = this.getBiomeAt(x, y)
-        if (random() > biome.ornamentOccurrenceRate) return "";
+        if (GLOBAL_PRNG.random() > biome.ornamentOccurrenceRate) return "";
         let groundTileName = this.surfaceMap.valueAt(x, y)
         let acc = 0;
         let candidates = new Rangerray<string>();
@@ -170,7 +170,7 @@ class Chunk {
             }
         }
         if (candidates.length() > 0) {
-            let randomNumber = Math.round(random() * acc);
+            let randomNumber = Math.round(GLOBAL_PRNG.random() * acc);
             return candidates.selectValue(randomNumber);
         }
         else {
@@ -260,7 +260,7 @@ class Chunk {
     }
 
     public static getFilepath(worldFilepath: string, q: number, r: number): string {
-        return path.join(worldFilepath, "GENERATED", "chunks", `${q}x${r}.json`);
+        return [worldFilepath, "GENERATED", "chunks", `${q}x${r}.json`].join("/");
     }
 
     public createBiomeMap(perlinGrid: Grid<number>): { biomeMap: Grid<BiomeBalance>, biomeMapImage: Grid<number[]>, subBiomeMapImage: Grid<number[]> } {
@@ -268,8 +268,6 @@ class Chunk {
         let biomeMap = new Grid<BiomeBalance>(perlinGrid.width, perlinGrid.height, []);
         this.biomeMapImage = new Grid<number[]>(perlinGrid.width, perlinGrid.height, []);
         this.subBiomeMapImage = new Grid<number[]>(perlinGrid.width, perlinGrid.height, []);
-        let minNoise = 1;
-        let maxNoise = 0;
 
         for (let x = 0; x < perlinGrid.width; x++) {
             for (let y = 0; y < perlinGrid.height; y++) {
@@ -294,7 +292,7 @@ class Chunk {
     public exportSaveFile(): void {
         let saveFileObject = this.createSaveObject();
         let filepath = Chunk.getFilepath(this.parentWorld.filepath, this.q, this.r);
-        saveJson(saveFileObject, filepath);
+        fs.writeFileSync(filepath, JSON.stringify(saveFileObject));
     }
 
     private createSaveObject(): ChunkSaveObject {

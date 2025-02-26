@@ -7,3 +7,5 @@ worlds/*
 notes.txt
 *.js
 configs/
+nargen_web.ts
+nargen_web.js

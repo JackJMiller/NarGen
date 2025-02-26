@@ -11,10 +11,8 @@ class GameRenderer:
 
     def __init__(self, world_path):
 
-        print(world_path)
         self.world_path = os.path.normpath(world_path)
         self.world_name = os.path.basename(self.world_path)
-        print(self.world_name)
 
         self.world_config = load_json(os.path.join(self.world_path, "GENERATED", "WORLD_INFO.json"))
 
