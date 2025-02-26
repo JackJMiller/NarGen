@@ -32,7 +32,6 @@ elif [[ $# -eq 2 && "$1" == "generate" ]]; then
         echo "Invalid arguments: No config file specified"
         cat res/help_page.txt
     elif [ -d "configs/$2/" ]; then
-        cat configs/$2/CONFIG.json
         rm -r -f worlds/$2/
         if [ $# -ge 3 ]; then
             if [ $3 == "--no-rendering" ]; then

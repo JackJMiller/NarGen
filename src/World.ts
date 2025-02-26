@@ -128,7 +128,7 @@ class World {
     public createBiome(biomeName: string, biomeNoiseLower: number, biomeNoiseUpper: number): Rangerray<SubBiome> {
         let rangerray = new Rangerray<SubBiome>(biomeName);
         let biomeConfigPath = path.join(NARGEN_FILEPATH, "configs", this.name, "biomes", biomeName + ".json");
-        let biomeConfig = require(biomeConfigPath);
+        let biomeConfig = require(biomeConfigPath) as BiomeConfig;
         let noiseLower = 0;
         let noiseUpper = 0;
 

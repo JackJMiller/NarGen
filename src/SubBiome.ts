@@ -25,7 +25,7 @@ class SubBiome {
     public parentColour: number[];
     public colour: number[];
 
-    constructor(parentWorld: World, parentBiomeName: string, name: string, config: any, noiseLower: number, noiseUpper: number) {
+    constructor(parentWorld: World, parentBiomeName: string, name: string, config: BiomeConfig, noiseLower: number, noiseUpper: number) {
         this.parentWorld = parentWorld;
         this.parentBiomeName = parentBiomeName;
         this.name = name;
@@ -33,7 +33,7 @@ class SubBiome {
         this.noiseLower = noiseLower;
         this.noiseUpper = noiseUpper;
 
-        this.config = config[this.name] as SubBiomeConfig;
+        this.config = config[this.name as string] as SubBiomeConfig;
         this.configKeys = Object.keys(this.config);
         for (let key of this.configKeys) {
             if (!RECOGNISED_SUB_BIOME_ATTRIBUTES.includes(key)) {

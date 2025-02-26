@@ -13,8 +13,14 @@ interface ChunkSaveObject {
     tileMap: TileSaveObject[][] 
 }
 
+interface BiomeConfig {
+    "colour": Colour,
+    "ranges": [number, string][],
+    [biomeNames: string]: unknown
+}
+
 interface SubBiomeConfig {
-    "colour": [number, number, number],
+    "colour": Colour,
     "altitudeSurfaces": [number, string][],
     "ornaments": OrnamentDefinition[],
     "amplitudes": number[],
