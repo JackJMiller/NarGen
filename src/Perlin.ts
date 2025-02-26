@@ -104,10 +104,7 @@ class Perlin {
         a *= this.CCC
         let r = a * (3.14159265 / (~(~0 >> 1) | 1));
         
-        let v = {
-            "x": Math.cos(r),
-            "y": Math.sin(r)
-        };
+        let v = { x: Math.cos(r), y: Math.sin(r) };
 
         return v;
     }

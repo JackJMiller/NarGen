@@ -14,43 +14,43 @@ interface ChunkSaveObject {
 }
 
 interface BiomeConfig {
-    "colour": Colour,
-    "ranges": [number, string][],
+    colour: Colour,
+    ranges: [number, string][],
     [biomeNames: string]: unknown
 }
 
 interface SubBiomeConfig {
-    "colour": Colour,
-    "altitudeSurfaces": [number, string][],
-    "ornaments": OrnamentDefinition[],
-    "amplitudes": number[],
-    "persistence": number,
-    "heightMultiplier": number
-    "heightDisplacement": number,
-    "lowerHeightMultiplier": number,
-    "upperHeightMultiplier": number
+    colour: Colour,
+    altitudeSurfaces: [number, string][],
+    ornaments: OrnamentDefinition[],
+    amplitudes: number[],
+    persistence: number,
+    heightMultiplier: number
+    heightDisplacement: number,
+    lowerHeightMultiplier: number,
+    upperHeightMultiplier: number
 }
 
 interface WarningRecord {
-    "maxHeight": string[],
-    "matchingBiomeColours": string[]
+    maxHeight: string[],
+    matchingBiomeColours: string[]
 }
 
 interface WorldConfig {
-    "seed": number,
-    "maxHeight": number,
-    "width": number,
-    "height": number,
-    "biomeSize": number,
-    "biomes": [number, string][]
+    seed: number,
+    maxHeight: number,
+    width: number,
+    height: number,
+    biomeSize: number,
+    biomes: [number, string][]
 }
 
 interface WorldInfo {
-    "seed": number,
-    "width": number,
-    "height": number,
-    "maxHeight": number,
-    "totalHeight": number
+    seed: number,
+    width: number,
+    height: number,
+    maxHeight: number,
+    totalHeight: number
 }
 
 interface Vector2 {

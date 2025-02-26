@@ -21,10 +21,10 @@ class Rangerray<T> {
             let upperPoint = item[0];
             if (v < upperPoint) {
                 return {
-                    "value": item[1],
-                    "lowerPoint": lowerPoint,
-                    "upperPoint": item[0],
-                    "index": index
+                    value: item[1],
+                    lowerPoint: lowerPoint,
+                    upperPoint: item[0],
+                    index: index
                 }
             }
             lowerPoint = upperPoint;
@@ -35,10 +35,10 @@ class Rangerray<T> {
         lowerPoint = (this.items.length > 1) ? this.items[this.items.length - 2][0] : 0;
 
         return {
-            "value": item[1],
-            "lowerPoint": lowerPoint,
-            "upperPoint": item[0],
-            "index": this.items.length - 1
+            value: item[1],
+            lowerPoint: lowerPoint,
+            upperPoint: item[0],
+            index: this.items.length - 1
         }
     }
 
@@ -46,10 +46,10 @@ class Rangerray<T> {
         let lowerPoint = (index === 0) ? 0 : this.items[index - 1][0];
         let item = this.items[index];
         return {
-            "value": item[1],
-            "lowerPoint": lowerPoint,
-            "upperPoint": item[0],
-            "index": index
+            value: item[1],
+            lowerPoint: lowerPoint,
+            upperPoint: item[0],
+            index: index
         };
     }
 

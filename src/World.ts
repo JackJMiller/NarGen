@@ -48,10 +48,7 @@ class World {
         this.totalAreaInTiles = this.widthInTiles * this.heightInTiles;
         this.createSaveFiles();
 
-        this.warningRecord = {
-            "maxHeight": [],
-            "matchingBiomeColours": []
-        }
+        this.warningRecord = { maxHeight: [], matchingBiomeColours: [] };
         this.biomeColours = {};
 
         this.maxHeight = Math.floor(this.config["maxHeight"])
@@ -70,11 +67,11 @@ class World {
         this.noiseCount = 0;
 
         this.worldInfo = {
-            "seed": this.seed,
-            "width": this.widthInChunks,
-            "height": this.heightInChunks,
-            "maxHeight": this.maxHeight,
-            "totalHeight": this.totalHeight
+            seed: this.seed,
+            width: this.widthInChunks,
+            height: this.heightInChunks,
+            maxHeight: this.maxHeight,
+            totalHeight: this.totalHeight
         };
 
         this.generateChunks();
