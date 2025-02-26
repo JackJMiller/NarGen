@@ -42,7 +42,7 @@ class Grid:
                 rgb = Grid.get_height_colour(v)
                 pixels[x, y] = rgb
 
-        img.save(os.path.join("worlds", WORLD_NAME, "images", filename + ".png"))
+        img.save(os.path.join("worlds", WORLD_NAME, "GENERATED", "images", filename + ".png"))
 
     def save_RGBs(self, filename, WORLD_NAME):
         img = Image.new("RGB", (self.width, self.height), "black")
@@ -53,7 +53,7 @@ class Grid:
             for y in range(self.height):
                 pixels[x, y] = self.grid[x][y]
 
-        img.save(os.path.join("worlds", WORLD_NAME, "images", filename + ".png"))
+        img.save(os.path.join("worlds", WORLD_NAME, "GENERATED", "images", filename + ".png"))
 
     def copy(self):
         grid = Grid(self.width, self.height, 0)

@@ -1,9 +1,9 @@
 {
     "seed": 875,
-    "max_height": 120,
+    "maxHeight": 120,
     "width": 10,
     "height": 10,
-    "biome_size": 5,
+    "biomeSize": 5,
     "biomes": [
         [1, "rainvalley"]
     ]

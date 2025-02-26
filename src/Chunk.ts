@@ -260,7 +260,7 @@ class Chunk {
     }
 
     public static getFilepath(worldName: string, q: number, r: number): string {
-        return path.join("worlds", worldName, "chunks", `${q}x${r}.json`);
+        return path.join("worlds", worldName, "GENERATED", "chunks", `${q}x${r}.json`);
     }
 
     public createBiomeMap(perlinGrid: Grid<number>): { biomeMap: Grid<BiomeBalance>, biomeMapImage: Grid<number[]>, subBiomeMapImage: Grid<number[]> } {

@@ -76,7 +76,7 @@ class World {
 
         this.generateChunks();
 
-        saveJson(this.worldInfo, path.join(NARGEN_FILEPATH, "worlds", this.name, "WORLD_INFO.json"));
+        saveJson(this.worldInfo, path.join(NARGEN_FILEPATH, "worlds", this.name, "GENERATED", "WORLD_INFO.json"));
 
         this.summarise()
 
@@ -84,11 +84,12 @@ class World {
 
 
     public createSaveFiles() {
+        console.log("SAVING");
         let filepath = path.join(NARGEN_FILEPATH, "worlds", this.name);
         if (!fs.existsSync(filepath)) {
             fs.mkdirSync(filepath);
-            fs.mkdirSync(path.join(filepath, "images"));
-            fs.mkdirSync(path.join(filepath, "chunks"));
+            fs.mkdirSync(path.join(filepath, "GENERATED", "images"));
+            fs.mkdirSync(path.join(filepath, "GENERATED", "chunks"));
         }
     }
 
@@ -124,7 +125,7 @@ class World {
 
     public createBiome(biomeName: string, biomeNoiseLower: number, biomeNoiseUpper: number): Rangerray<SubBiome> {
         let rangerray = new Rangerray<SubBiome>(biomeName);
-        let biomeConfigPath = path.join(NARGEN_FILEPATH, "configs", this.name, "biomes", biomeName + ".json");
+        let biomeConfigPath = path.join(NARGEN_FILEPATH, "worlds", this.name, "biomes", biomeName + ".json");
         let biomeConfig = require(biomeConfigPath) as BiomeConfig;
         let noiseLower = 0;
         let noiseUpper = 0;

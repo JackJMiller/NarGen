@@ -126,7 +126,7 @@ class Perlin:
         return (v, v, v)
 
     def save_image(self, filename, WORLD_NAME):
-        Perlin.save(self.grid, os.path.join("worlds", WORLD_NAME, "images", filename + ".png"))
+        Perlin.save(self.grid, os.path.join("worlds", WORLD_NAME, "GENERATED", "images", filename + ".png"))
 
     @staticmethod
     def create_image(grid):

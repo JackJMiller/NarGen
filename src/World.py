@@ -49,7 +49,7 @@ class World:
 
         self.generate_chunks()
 
-        save_json(self.world_info, os.path.join("worlds", self.name, "WORLD_INFO.json"))
+        save_json(self.world_info, os.path.join("worlds", self.name, "GENERATED", "WORLD_INFO.json"))
 
         self.summarise()
 
@@ -87,7 +87,7 @@ class World:
 
     def create_biome(self, biome_name, biome_noise_lower, biome_noise_upper):
         rangerray = Rangerray(biome_name)
-        biome_config_path = os.path.join("configs", self.name, "biomes", biome_name + ".json")
+        biome_config_path = os.path.join("configs", self.name, "GENERATED", "biomes", biome_name + ".json")
         file = open(biome_config_path, "r")
         biome_config = json.load(file)
         noise_lower, noise_upper = 0, 0
