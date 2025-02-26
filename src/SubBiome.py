@@ -24,7 +24,7 @@ class SubBiome:
 
         self.configure_values()
 
-        self.height_displacement = int(self.config["height_displacement"])
+        self.heightDisplacement = int(self.config["heightDisplacement"])
 
         if "height_multiplier" in self.config_keys:
             self.lower_height_multiplier = self.config["height_multiplier"]

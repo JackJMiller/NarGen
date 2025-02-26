@@ -50,14 +50,14 @@ export const COLOUR_MAGENTA = "\x1b[0;35m";
 export const COLOUR_CYAN = "\x1b[0;36m";
 
 export const RECOGNISED_SUB_BIOME_ATTRIBUTES = [
-    "altitude_surfaces",
+    "altitudeSurfaces",
     "amplitudes",
     "colour",
-    "height_displacement",
-    "height_multiplier",
-    "lower_height_multiplier",
+    "heightDisplacement",
+    "heightMultiplier",
+    "lowerHeightMultiplier",
     "persistence",
-    "upper_height_multiplier",
+    "upperHeightMultiplier",
     "ornaments"
 ];
 

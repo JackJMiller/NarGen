@@ -59,7 +59,7 @@ RECOGNISED_SUB_BIOME_ATTRIBUTES = [
     "altitude_surfaces",
     "amplitudes",
     "colour",
-    "height_displacement",
+    "heightDisplacement",
     "height_multiplier",
     "lower_height_multiplier",
     "persistence",

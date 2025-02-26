@@ -1,97 +1,97 @@
 import Rangerray from "./Rangerray";
 import World from "./World";
 import { OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES } from "./constants";
-import { colour_average, exit_with_error, int_median, point_at_portion_between, portion_at_point_between, raise_warning } from "./functions";
+import { colourAverage, exitWithError, intMedian, pointAtPortionBetween, portionAtPointBetween, raiseWarning } from "./functions";
 import { validateOrnaments } from "./validation";
 
 class SubBiome {
 
-    public parent_world: World;
+    public parentWorld: World;
     public amplitudes: number[] = [];
-    public parent_biome_name: string;
+    public parentBiomeName: string;
     public name: string;
-    public full_name: string;
-    public noise_lower: number;
-    public noise_upper: number;
-    public noise_scale: number = 1;
-    public altitude_surfaces: Rangerray<string>;
-    public height_displacement: number;
-    public lower_height_multiplier: number;
-    public upper_height_multiplier: number;
+    public fullName: string;
+    public noiseLower: number;
+    public noiseUpper: number;
+    public noiseScale: number = 1;
+    public altitudeSurfaces: Rangerray<string>;
+    public heightDisplacement: number;
+    public lowerHeightMultiplier: number;
+    public upperHeightMultiplier: number;
     public ornaments: OrnamentDefinition[] = [];
-    public ornament_occurrence_rate: number = 0;
+    public ornamentOccurrenceRate: number = 0;
     public config: SubBiomeConfig;
-    public config_keys: string[];
-    public parent_colour: number[];
+    public configKeys: string[];
+    public parentColour: number[];
     public colour: number[];
 
-    constructor(parent_world: World, parent_biome_name: string, name: string, config: any, noise_lower: number, noise_upper: number) {
-        this.parent_world = parent_world;
-        this.parent_biome_name = parent_biome_name;
+    constructor(parentWorld: World, parentBiomeName: string, name: string, config: any, noiseLower: number, noiseUpper: number) {
+        this.parentWorld = parentWorld;
+        this.parentBiomeName = parentBiomeName;
         this.name = name;
-        this.full_name = this.parent_biome_name + "." + this.name;
-        this.noise_lower = noise_lower;
-        this.noise_upper = noise_upper;
+        this.fullName = this.parentBiomeName + "." + this.name;
+        this.noiseLower = noiseLower;
+        this.noiseUpper = noiseUpper;
 
         this.config = config[this.name] as SubBiomeConfig;
-        this.config_keys = Object.keys(this.config);
-        for (let key of this.config_keys) {
+        this.configKeys = Object.keys(this.config);
+        for (let key of this.configKeys) {
             if (!RECOGNISED_SUB_BIOME_ATTRIBUTES.includes(key)) {
-                exit_with_error("Unrecognised attribute", "Cannot recognise attribute " + key + " in configuration for " + this.full_name + ".");
+                exitWithError("Unrecognised attribute", "Cannot recognise attribute " + key + " in configuration for " + this.fullName + ".");
             }
         }
-        this.parent_colour = config["colour"];
-        this.colour = colour_average(this.config["colour"], config["colour"]);
+        this.parentColour = config["colour"];
+        this.colour = colourAverage(this.config["colour"], config["colour"]);
 
-        this.configure_values();
+        this.configureValues();
 
-        this.height_displacement = Math.floor(this.config["height_displacement"]);
+        this.heightDisplacement = Math.floor(this.config["heightDisplacement"]);
 
-        if (this.config_keys.includes("height_multiplier")) {
-            this.lower_height_multiplier = this.config["height_multiplier"];
-            this.upper_height_multiplier = this.config["height_multiplier"];
+        if (this.configKeys.includes("heightMultiplier")) {
+            this.lowerHeightMultiplier = this.config["heightMultiplier"];
+            this.upperHeightMultiplier = this.config["heightMultiplier"];
         }
         else {
-            if (!this.config_keys.includes("lower_height_multiplier") || !this.config_keys.includes("upper_height_multiplier")) {
-                exit_with_error("Missing attribute", "Please specify height_multiplier configuration value for " + this.full_name + ".");
+            if (!this.configKeys.includes("lowerHeightMultiplier") || !this.configKeys.includes("upperHeightMultiplier")) {
+                exitWithError("Missing attribute", "Please specify heightMultiplier configuration value for " + this.fullName + ".");
             }
-            this.lower_height_multiplier = this.config["lower_height_multiplier"];
-            this.upper_height_multiplier = this.config["upper_height_multiplier"];
+            this.lowerHeightMultiplier = this.config["lowerHeightMultiplier"];
+            this.upperHeightMultiplier = this.config["upperHeightMultiplier"];
         }
 
-        this.altitude_surfaces = new Rangerray<string>(this.full_name, this.config["altitude_surfaces"]);
+        this.altitudeSurfaces = new Rangerray<string>(this.fullName, this.config["altitudeSurfaces"]);
 
-        this.configure_ornaments();
+        this.configureOrnaments();
     }
     
-    public configure_ornaments() {
+    public configureOrnaments() {
         this.ornaments = [];
-        this.ornament_occurrence_rate = 0;
+        this.ornamentOccurrenceRate = 0;
         let keys = Object.keys(this.config);
         if (keys.includes("ornaments")) {
-            validateOrnaments(this.config["ornaments"], this.full_name);
+            validateOrnaments(this.config["ornaments"], this.fullName);
             for (let value of this.config["ornaments"]) {
                 if (value[0] !== "OCCURRENCE") {
                     this.ornaments.push(value);
                 }
                 else {
-                    this.ornament_occurrence_rate = value[1];
+                    this.ornamentOccurrenceRate = value[1];
                 }
             }
         }
     }
 
-    public configure_values() {
-        if (this.config_keys.includes("amplitudes")) {
+    public configureValues() {
+        if (this.configKeys.includes("amplitudes")) {
             this.amplitudes = this.config["amplitudes"];
             if (this.amplitudes.length !== OCTAVE_COUNT) {
-                exit_with_error("Invalid config value", `Length of amplitudes in configuration for ${this.full_name} is equal to ${this.amplitudes.length}. Length should be ${OCTAVE_COUNT}.`);
+                exitWithError("Invalid config value", `Length of amplitudes in configuration for ${this.fullName} is equal to ${this.amplitudes.length}. Length should be ${OCTAVE_COUNT}.`);
             }
-            if (this.config_keys.includes("persistence")) {
-                raise_warning("Redundant attribute", "Both persistence and amplitudes are attributes specified in configuration for " + this.full_name + ". Program is defaulting to ampltides attributes.");
+            if (this.configKeys.includes("persistence")) {
+                raiseWarning("Redundant attribute", "Both persistence and amplitudes are attributes specified in configuration for " + this.fullName + ". Program is defaulting to ampltides attributes.");
             }
         }
-        else if (this.config_keys.includes("persistence")) {
+        else if (this.configKeys.includes("persistence")) {
             let persistence = this.config["persistence"];
             this.amplitudes = [];
             let amplitude = 1;
@@ -101,29 +101,29 @@ class SubBiome {
             }
         }
         else {
-            exit_with_error("Missing attribute", `Please specify persistence or amplitudes configuration value for ${this.full_name}.`);
+            exitWithError("Missing attribute", `Please specify persistence or amplitudes configuration value for ${this.fullName}.`);
         }
 
-        this.noise_scale = 0;
+        this.noiseScale = 0;
         for (let amplitude of this.amplitudes) {
-            this.noise_scale += amplitude;
+            this.noiseScale += amplitude;
         }
     }
 
 
-    public get_height_multiplier(noise_value: number) {
-        let portion = portion_at_point_between(this.noise_lower, this.noise_upper, noise_value);
-        let multiplier = point_at_portion_between(this.lower_height_multiplier, this.upper_height_multiplier, portion);
+    public getHeightMultiplier(noiseValue: number) {
+        let portion = portionAtPointBetween(this.noiseLower, this.noiseUpper, noiseValue);
+        let multiplier = pointAtPortionBetween(this.lowerHeightMultiplier, this.upperHeightMultiplier, portion);
         return multiplier;
     }
 
-    public get_amplitude(index: number): number {
+    public getAmplitude(index: number): number {
         return this.amplitudes[index];
     }
 
-    // TODO: replace __str__ calls
+    // TODO: replace _Str_ calls
     public toString() {
-        return this.parent_biome_name + "." + this.name;
+        return this.parentBiomeName + "." + this.name;
     }
 
 }

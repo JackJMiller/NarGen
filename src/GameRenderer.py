@@ -60,7 +60,7 @@ class GameRenderer:
     def draw_tile(self, tile_name, canvas_x, canvas_y, z):
         sprite = SPRITES[tile_name]
         enhancer = ImageEnhance.Brightness(sprite)
-        brightness = get_brightness_at_height(z, self.world_config["max_height"])
+        brightness = get_brightness_at_height(z, self.world_config["maxHeight"])
         block_image = enhancer.enhance(brightness)
         self.image.paste(block_image, (canvas_x, canvas_y), mask = block_image)
 

@@ -147,13 +147,13 @@ class Chunk:
                 displacement = 0
                 for balance in self.biome_map.value_at(x, y):
                     biome, biome_influence = balance[0], balance[1]
-                    displacement += biome.height_displacement * biome_influence
+                    displacement += biome.heightDisplacement * biome_influence
                 original = self.ground_map.value_at(x, y)
                 new_value = int(original + displacement)
-                if new_value > self.parent_world.max_height and biome.full_name not in self.parent_world.warnings_raised["max_height"]:
-                    new_value = clamp(new_value, self.parent_world.max_height)
-                    raise_warning("Extreme terrain", "Ground map value inside " + biome.full_name + " has exceeded the maximum world height. Value has been capped at " + str(self.parent_world.max_height) + ".")
-                    self.parent_world.warnings_raised["max_height"].append(biome.full_name)
+                if new_value > self.parent_world.maxHeight and biome.full_name not in self.parent_world.warnings_raised["maxHeight"]:
+                    new_value = clamp(new_value, self.parent_world.maxHeight)
+                    raise_warning("Extreme terrain", "Ground map value inside " + biome.full_name + " has exceeded the maximum world height. Value has been capped at " + str(self.parent_world.maxHeight) + ".")
+                    self.parent_world.warnings_raised["maxHeight"].append(biome.full_name)
                 self.ground_map.set_value_at(x, y, new_value)
 
     def get_ground_octave_value(self, x, y, octave, octave_no):
@@ -181,7 +181,7 @@ class Chunk:
                 biome = self.get_biome_at(x, y)
                 v = self.determine_surface(height, biome)
                 self.surface_map.set_value_at(x, y, v)
-                colour = self.get_surface_colour(v, height, biome.height_displacement)
+                colour = self.get_surface_colour(v, height, biome.heightDisplacement)
                 self.surface_map_image.set_value_at(x, y, colour)
 
         if SAVE_IMAGE_SURFACE_MAP:
@@ -290,11 +290,11 @@ class Chunk:
         else:
             return biome.altitude_surfaces.select_value(height)
 
-    def get_surface_colour(self, surface_name, height, height_displacement):
+    def get_surface_colour(self, surface_name, height, heightDisplacement):
         if height < 0:
             height *= -1
 
-        brightness = get_brightness_at_height(height, self.parent_world.max_height)
+        brightness = get_brightness_at_height(height, self.parent_world.maxHeight)
 
         colour = SURFACES[surface_name]["colour"]
 

@@ -23,26 +23,26 @@ export function objectFromEntries(keys: string[], values: any) {
     return Object.fromEntries(keys.map((key: any, index: number) => [key, values[index]]));
 }
 
-export function point_at_portion_between(a: number, b: number, portion: number): number {
+export function pointAtPortionBetween(a: number, b: number, portion: number): number {
     let r = b - a;
     return a + portion * r;
 }
 
-export function portion_at_point_between(a: number, b: number, point: number): number {
+export function portionAtPointBetween(a: number, b: number, point: number): number {
     b = b - a;
     point = point - a;
     return point / b;
 }
 
-export function save_json(data: object, filepath: string): void {
+export function saveJson(data: object, filepath: string): void {
     fs.writeFileSync(filepath, JSON.stringify(data));
 }
 
-export function get_brightness_at_height(height: number, max_height: number): number {
-    return 1 - clamp(height, max_height) / max_height;
+export function getBrightnessAtHeight(height: number, maxHeight: number): number {
+    return 1 - clamp(height, maxHeight) / maxHeight;
 }
 
-export function int_median(arrays: number[][]): number[] {
+export function intMedian(arrays: number[][]): number[] {
     let result = [];
     let len = arrays[0].length;
     for (let index = 0; index < len; index++) {
@@ -56,13 +56,13 @@ export function int_median(arrays: number[][]): number[] {
     return result;
 }
 
-export function exit_with_error(error_type: string, message: string): void {
-    console.log(`NarGen: ${COLOUR_RED}ERROR${COLOUR_NONE}: ${error_type}: ${message}`);
+export function exitWithError(errorType: string, message: string): void {
+    console.log(`NarGen: ${COLOUR_RED}ERROR${COLOUR_NONE}: ${errorType}: ${message}`);
     process.exit(1);
 }
 
-export function raise_warning(warning_type: string, message: string): void {
-    console.log(`NarGen: ${COLOUR_MAGENTA}WARNING${COLOUR_NONE}: ${warning_type}: ${message}`);
+export function raiseWarning(warningType: string, message: string): void {
+    console.log(`NarGen: ${COLOUR_MAGENTA}WARNING${COLOUR_NONE}: ${warningType}: ${message}`);
 }
 
 export function random(prng: AleaPRNG = PRNG): number {
@@ -73,25 +73,25 @@ export function randint(min: number, max: number, prng: AleaPRNG = PRNG): number
     return Math.floor(random(prng) * (max + 1 - min)) + min;
 }
 
-export function random_element<T>(array: T[], prng: AleaPRNG = PRNG): T {
+export function randomElement<T>(array: T[], prng: AleaPRNG = PRNG): T {
     let index = randint(0, array.length - 1, prng);
     return array[index];
 }
 
-export function flatten_noise_distribution(noise_value: number): number {
-    let original_value = noise_value;
-    let FLATTEN_R = -0.15;
+export function flattenNoiseDistribution(noiseValue: number): number {
+    let originalValue = noiseValue;
+    let FLATTENR = -0.15;
     let mean = 0.53;
-    let r = FLATTEN_R;
-    let sine = (noise_value < mean) ? -1 : 1;
-    noise_value = Math.abs(noise_value - mean);
-    noise_value = 1 - Math.exp(noise_value * r)
-    noise_value = mean + sine * noise_value
-    noise_value = limit(noise_value, 0, 1)
-    return noise_value;
+    let r = FLATTENR;
+    let sine = (noiseValue < mean) ? -1 : 1;
+    noiseValue = Math.abs(noiseValue - mean);
+    noiseValue = 1 - Math.exp(noiseValue * r)
+    noiseValue = mean + sine * noiseValue
+    noiseValue = limit(noiseValue, 0, 1)
+    return noiseValue;
 }
 
-export function colour_average(c1: number[], c2: number[]): number[] {
+export function colourAverage(c1: number[], c2: number[]): number[] {
     return [
         mean(c1[0], c2[0]),
         mean(c1[1], c2[1]),

@@ -24,13 +24,13 @@ class World:
         self.create_save_files()
 
         self.warnings_raised = {
-            "max_height": [],
+            "maxHeight": [],
             "matching_biome_colours": []
         }
         self.biome_colours = dict()
 
-        self.max_height = int(self.config["max_height"])
-        self.total_height = 2 * self.max_height
+        self.maxHeight = int(self.config["maxHeight"])
+        self.total_height = 2 * self.maxHeight
         self.temp_acc, self.temp_count = 0, 0
 
         self.configure_biomes()
@@ -43,7 +43,7 @@ class World:
             "seed": self.seed,
             "width": self.width_in_chunks,
             "height": self.height_in_chunks,
-            "max_height": self.max_height,
+            "maxHeight": self.maxHeight,
             "total_height": self.total_height
         }
 
