@@ -1,4 +1,5 @@
 import fs from "fs";
+import Biome from "./Biome.js";
 import Grid from "./Grid.js";
 import Perlin from "./Perlin.js";
 import Rangerray from "./Rangerray.js";
@@ -18,7 +19,7 @@ class Chunk {
     public seed: number;
     public q: number;
     public r: number;
-    public biomesRangerray: Rangerray<Rangerray<SubBiome>>;
+    public biomesRangerray: Rangerray<Biome>;
     public cornerX: number;
     public cornerY: number;
     public lacunarity: number;

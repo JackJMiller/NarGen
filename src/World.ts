@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import Biome from "./Biome.js";
 import Chunk from "./Chunk.js";
 import Grid from "./Grid.js";
 import Rangerray from "./Rangerray.js";
@@ -30,7 +31,7 @@ class World {
     public noiseAcc: number;
     public noiseCount: number;
     public warningRecord: WarningRecord;
-    public biomesRangerray: Rangerray<Rangerray<SubBiome>>;
+    public biomesRangerray: Rangerray<Biome>;
     public biomeSize: number = 1;
     public biomeSuperMapTileSize: number = 1;
     public biomeSizes!: { [index: string]: number };
@@ -112,12 +113,12 @@ class World {
 
         Rangerray.fracrrayToRangerray(this.config["biomes"]);
 
-        for (let biome of this.config["biomes"]) {
-            let upperPoint = biome[0];
-            let biomeName = biome[1];
+        for (let biomeEntry of this.config["biomes"]) {
+            let upperPoint = biomeEntry[0];
+            let biomeName = biomeEntry[1];
             upperPoint = flattenNoiseDistribution(upperPoint);
-            let rangerray = this.createBiome(biomeName, lowerPoint, upperPoint);
-            this.biomesRangerray.insert(upperPoint, rangerray);
+            let biome = this.createBiome(biomeName, lowerPoint, upperPoint);
+            this.biomesRangerray.insert(upperPoint, biome);
             lowerPoint = upperPoint;
         }
 
@@ -125,8 +126,8 @@ class World {
 
     }
 
-    public createBiome(biomeName: string, biomeNoiseLower: number, biomeNoiseUpper: number): Rangerray<SubBiome> {
-        let rangerray = new Rangerray<SubBiome>(biomeName);
+    public createBiome(biomeName: string, biomeNoiseLower: number, biomeNoiseUpper: number): Biome {
+        let biome = new Biome(biomeName);
         let biomeConfigPath = [this.filepath, "biomes", biomeName + ".json"].join("/");
         if (!fs.existsSync(biomeConfigPath)) exitWithError("Undefined biome", `An undefined biome named '${biomeName}' is referenced in your CONFIG.json file.`);
         let biomeConfig = loadJSON(biomeConfigPath) as BiomeConfig;
@@ -151,11 +152,11 @@ class World {
             }
             noiseUpper = flattenNoiseDistribution(noiseUpper);
             let obj = new SubBiome(this, biomeName, subBiomeName, biomeConfig, noiseLower, noiseUpper);
-            rangerray.insert(noiseUpper, obj);
+            biome.insert(noiseUpper, obj);
             noiseLower = noiseUpper;
         }
 
-        return rangerray;
+        return biome;
 
     }
 
