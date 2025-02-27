@@ -44,37 +44,6 @@ class Grid<T> {
         return [v, v, v];
     }
 
-    //public saveImage(filename, WORLDNAME) {
-    //    img = Image.new("RGB", (this.width, this.height), "black")
-    //
-    //    pixels = img.load()
-    //
-    //    for x in range(this.width) {
-    //        for y in range(this.height) {
-    //            v = this.grid[x][y]
-    //            rgb = Grid.getHeightColour(v)
-    //            pixels[x, y] = rgb
-    //        }
-    //    }
-    //
-    //    img.save(os.path.join("worlds", WORLDNAME, "images", filename + ".png"))
-    //
-    //}
-
-    public saveRGBs(filename: string, WORLDNAME: string): void {
-        //img = Image.new("RGB", (this.width, this.height), "black")
-        //
-        //pixels = img.load()
-        //
-        //for x in range(this.width) {
-        //    for y in range(this.height) {
-        //        pixels[x, y] = this.grid[x][y]
-        //    }
-        //}
-        //
-        //img.save(os.path.join("worlds", WORLDNAME, "images", filename + ".png"))
-    }
-
     public copy(): Grid<T> {
         let grid = new Grid<T>(this.width, this.height, this.fillValue);
         for (let x = 0; x < this.width; x++) {
@@ -99,4 +68,4 @@ class Grid<T> {
 
 }
 
-export = Grid;
+export default Grid;

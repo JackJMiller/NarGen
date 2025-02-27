@@ -1,5 +1,9 @@
-import { mkAlea } from "./lib/alea";
-import Renderer from "./Renderer";
+import { mkAlea } from "./lib/alea.js";
+import Renderer from "./Renderer.js";
+import { Colour } from "./types.js";
+
+// TODO: remove this duplicate
+const SPRITE_NAMES = ["archers_tree", "baby_archers_tree", "bruce_tree", "daisy_poppy_bed", "fat_bruce_tree", "glim_rock", "long_grass_block", "medium_grass_block", "medium_moonflower", "moonflower", "niamh_tree", "plank_tree", "ploon_tree", "poppy_bed_1", "poppy_bed_2", "sand_block", "short_grass_block", "snow_block", "stone_block", "water_block"];
 
 function set_default_root_blocks(root_blocks: any) {
     for (let sprite_name of SPRITE_NAMES) {
@@ -16,18 +20,22 @@ export const SURFACES: { [index: string]: Colour } = {
     short_grass: [108, 210, 26],
     medium_grass: [108, 210, 26],
     long_grass: [108, 210, 26],
-    grass: [108, 210, 26],
     sand: [255, 240, 130],
     stone: [80, 80, 80],
-    dirt: [90, 60, 30],
-    snow: [255, 255, 255],
-    lava: [240, 30, 0],
-    coal: [0, 0, 0]
+    snow: [255, 255, 255]
 };
 
-export const SPRITE_NAMES = ["archers_tree", "baby_archers_tree", "bruce_tree", "daisy_poppy_bed", "fat_bruce_tree", "glim_rock", "long_grass_block", "medium_grass_block", "medium_moonflower", "moonflower", "niamh_tree", "plank_tree", "ploon_tree", "poppy_bed_1", "poppy_bed_2", "sand_block", "short_grass_block", "snow_block", "stone_block", "water_block"];
+export const SURFACE_COLOURS: { [index: string]: Colour } = {
+    water_block: [80, 180, 255],
+    short_grass_block: [108, 210, 26],
+    medium_grass_block: [108, 210, 26],
+    long_grass_block: [108, 210, 26],
+    sand_block: [255, 240, 130],
+    stone_block: [80, 80, 80],
+    snow_block: [255, 255, 255]
+};
 
-export const AVAILABLE_BLOCKS = ["grass", "lava", "sand", "snow", "stone", "water"];
+export const AVAILABLE_BLOCKS = ["grass", "sand", "snow", "stone", "water"];
 
 export const ORNAMENTATION_ROOT_BLOCKS: any = {};
 

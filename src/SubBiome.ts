@@ -1,8 +1,9 @@
-import Rangerray from "./Rangerray";
-import World from "./World";
-import { OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES } from "./constants";
-import { colourAverage, exitWithError, pointAtPortionBetween, portionAtPointBetween, raiseWarning } from "./functions";
-import { validateOrnaments } from "./validation";
+import Rangerray from "./Rangerray.js";
+import World from "./World.js";
+import { OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES } from "./constants.js";
+import { colourAverage, exitWithError, pointAtPortionBetween, portionAtPointBetween, raiseWarning } from "./functions.js";
+import { BiomeConfig, OrnamentDefinition, SubBiomeConfig } from "./types.js";
+import { validateOrnaments } from "./validation.js";
 
 class SubBiome {
 
@@ -128,4 +129,4 @@ class SubBiome {
 
 }
 
-export = SubBiome;
+export default SubBiome;

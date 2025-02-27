@@ -1,4 +1,4 @@
-class VirtualFileSystem {
+export class VirtualFileSystem {
 
     constructor() {
         // TODO
@@ -19,10 +19,11 @@ class VirtualFileSystem {
 
 }
 
-function loadJSON(filepath: string): any {
+export function loadJSON(filepath: string): any {
     // TODO
     // @ts-ignore
     return {};
 }
 
-let fs = new VirtualFileSystem();
+export const SPRITE_IMAGES = [];
+export const fs = new VirtualFileSystem();

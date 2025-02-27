@@ -1,10 +1,11 @@
 import fs from "fs";
 import path from "path";
 import { Canvas, CanvasRenderingContext2D, createCanvas } from "canvas";
-import { CHUNK_SIZE, SURFACES, TILE_DEFINITION } from "./constants";
-import { loadJSON } from "./terminal_script";
-import Chunk from "./Chunk";
-import Grid from "./Grid";
+import Chunk from "./Chunk.js";
+import Grid from "./Grid.js";
+import { CHUNK_SIZE, TILE_DEFINITION } from "./constants.js";
+import { loadJSON, SPRITE_IMAGES } from "./terminal_script.js";
+import { ChunkSaveObject } from "./types.js";
 
 class Renderer {
 
@@ -76,7 +77,7 @@ class Renderer {
         }
     }
 
-    // TODO
+    // TODO: add brightness to communicate height
     public drawBlocksAt(q: number, _x: number, r: number, _y: number, row: ChunkSaveObject[], ctx: CanvasRenderingContext2D): void {
         let x = q * CHUNK_SIZE + _x;
         let y = r * CHUNK_SIZE + _y;
@@ -84,39 +85,28 @@ class Renderer {
         let canvasY = y * TILE_DEFINITION;
         let tile = row[q].tileMap[_x][_y];
         let height = tile[1];
-        let tileName = tile[2];
-        //let areaObjectName = tile[3];
+        let surfaceName = tile[2];
+        let areaObjectName = tile[3];
 
-        let keys = Object.keys(SURFACES);
         for (let z = 0; z < height; z++) {
-            if (!keys.includes(tileName)) {
-                tileName = "grass";
-            }
-            this.drawTile(tileName, canvasX, canvasY, z, ctx);
+            this.drawTile(surfaceName + "_block", canvasX, canvasY, z, ctx);
             canvasY -= 14;
         }
 
         if (height <= 0) {
             height = Math.abs(height);
-            this.drawTile("water", canvasX, canvasY, height, ctx);
+            this.drawTile("water_block", canvasX, canvasY, height, ctx);
         }
 
-        //if (areaObjectName !== "") {
-        //    let colour = SURFACES[tileName];
-        //    this.drawTile(tileName, canvasX, canvasY, height)
-        //    ctx.fillStyle = `rgb(${colour[0]}, ${colour[1]}, ${colour[2]})`;
-        //    ctx.fillRect(canvasX, canvasY, TILE_DEFINITION, TILE_DEFINITION);
-        //}
+        if (areaObjectName !== "") {
+            this.drawTile(areaObjectName, canvasX, canvasY, height, ctx);
+        }
     }
 
-    // TODO
     private drawTile(tileName: string, canvasX: number, canvasY: number, height: number, ctx: CanvasRenderingContext2D): void {
-        let colour = SURFACES[tileName];
-        let b = (120 - height) / 120;
-        ctx.fillStyle = `rgb(${colour[0] * b}, ${colour[1] * b}, ${colour[2] * b})`;
-        ctx.fillRect(canvasX, canvasY, TILE_DEFINITION, TILE_DEFINITION);
+        ctx.drawImage(SPRITE_IMAGES[tileName], canvasX, canvasY);
     }
 
 }
 
-export = Renderer;
+export default Renderer;

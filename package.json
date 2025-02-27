@@ -12,7 +12,7 @@
   },
   "license": "MIT",
   "author": "Jack J. Miller",
-  "type": "commonjs",
+  "type": "module",
   "main": "main.js",
   "scripts": {},
   "dependencies": {

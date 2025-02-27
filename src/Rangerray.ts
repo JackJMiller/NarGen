@@ -115,4 +115,4 @@ class Rangerray<T> {
 
 }
 
-export = Rangerray;
+export default Rangerray;

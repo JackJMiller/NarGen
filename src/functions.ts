@@ -1,5 +1,5 @@
-import { AleaPRNG } from "./lib/alea";
-import { COLOUR_RED, COLOUR_RED_BOLD, COLOUR_MAGENTA, COLOUR_MAGENTA_BOLD, GLOBAL_PRNG } from "./constants";
+import { AleaPRNG } from "./lib/alea.js";
+import { COLOUR_RED, COLOUR_RED_BOLD, COLOUR_MAGENTA, COLOUR_MAGENTA_BOLD, GLOBAL_PRNG } from "./constants.js";
 
 export function clamp(value: number, maximum: number): number {
     if (value < 0) return 0;

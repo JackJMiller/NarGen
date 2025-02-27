@@ -1,12 +1,13 @@
 import fs from "fs";
 import path from "path";
-import Chunk from "./Chunk";
-import Grid from "./Grid";
-import Rangerray from "./Rangerray";
-import SubBiome from "./SubBiome";
-import { BASE_BIOME_SIZE, CHUNK_SIZE, RENDERER } from "./constants";
-import { exitWithError, flattenNoiseDistribution, leftJustify, objectFromEntries } from "./functions";
-import { loadJSON } from "./terminal_script";
+import Chunk from "./Chunk.js";
+import Grid from "./Grid.js";
+import Rangerray from "./Rangerray.js";
+import SubBiome from "./SubBiome.js";
+import { BASE_BIOME_SIZE, CHUNK_SIZE, RENDERER } from "./constants.js";
+import { exitWithError, flattenNoiseDistribution, leftJustify, objectFromEntries } from "./functions.js";
+import { loadJSON } from "./terminal_script.js";
+import { BiomeConfig, Colour, MapImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
 
 class World {
 
@@ -196,4 +197,4 @@ class World {
 
 }
 
-export = World;
+export default World;

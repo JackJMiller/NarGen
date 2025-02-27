@@ -1,4 +1,5 @@
-import { exitWithError } from "./functions";
+import { exitWithError } from "./functions.js";
+import { OrnamentDefinition } from "./types.js";
 
 export function validateOrnaments(value: OrnamentDefinition[], subBiomeName: string): void {
     let keys = value.map((entry: OrnamentDefinition) => entry[0]);

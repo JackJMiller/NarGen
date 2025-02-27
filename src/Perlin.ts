@@ -1,4 +1,5 @@
-import Grid from "./Grid";
+import Grid from "./Grid.js";
+import { Vector2 } from "./types.js";
 
 class Perlin {
 
@@ -198,4 +199,4 @@ class Perlin {
     }
 }
 
-export = Perlin;
+export default Perlin;

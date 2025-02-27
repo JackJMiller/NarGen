@@ -1,6 +1,6 @@
 import path from "path";
-import { RENDERER } from "./src/constants";
-import World from "./src/World";
+import { RENDERER } from "./src/constants.js";
+import World from "./src/World.js";
 
 const ARGS = process.argv.slice(1);
 

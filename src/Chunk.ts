@@ -1,12 +1,13 @@
 import fs from "fs";
-import Grid from "./Grid";
-import Perlin from "./Perlin";
-import Rangerray from "./Rangerray";
-import SubBiome from "./SubBiome";
-import World from "./World";
-import { CHUNK_SIZE, GLOBAL_PRNG, OCTAVE_COUNT, SAVE_IMAGE_BIOME_MAP, SAVE_IMAGE_SURFACE_MAP, SURFACES, ORNAMENTATION_ROOT_BLOCKS } from "./constants";
-import { clamp, getBrightnessAtHeight, portionAtPointBetween, raiseWarning, randint } from "./functions";
-import { mkAlea } from "./lib/alea";
+import Grid from "./Grid.js";
+import Perlin from "./Perlin.js";
+import Rangerray from "./Rangerray.js";
+import SubBiome from "./SubBiome.js";
+import World from "./World.js";
+import { CHUNK_SIZE, GLOBAL_PRNG, OCTAVE_COUNT, SURFACES, ORNAMENTATION_ROOT_BLOCKS } from "./constants.js";
+import { clamp, getBrightnessAtHeight, portionAtPointBetween, raiseWarning, randint } from "./functions.js";
+import { mkAlea } from "./lib/alea.js";
+import { ChunkSaveObject, MapImageName, TileSaveObject, WorldConfig } from "./types.js";
 
 type BiomeBalance = { biome: SubBiome, influence: number }[];
 
@@ -251,11 +252,6 @@ class Chunk {
             }
         }
 
-        if (SAVE_IMAGE_SURFACE_MAP) {
-            let filepath = Chunk.getFilepath(this.parentWorld.filepath, this.q, this.r);
-            this.surfaceMapImage.saveRGBs(filepath, this.parentWorld.name)
-        }
-
         return { surfaceMap: this.surfaceMap, surfaceMapImage: this.surfaceMapImage };
     }
 
@@ -279,10 +275,6 @@ class Chunk {
                 this.biomeMapImage.setValueAt(x, y, biome.parentColour)
                 this.subBiomeMapImage.setValueAt(x, y, biome.colour)
             }
-        }
-
-        if (SAVE_IMAGE_BIOME_MAP) {
-            this.biomeMapImage.saveRGBs(this.parentWorld.name + "_biomeMap", this.parentWorld.name)
         }
 
         return { biomeMap: biomeMap, biomeMapImage: this.biomeMapImage, subBiomeMapImage: this.subBiomeMapImage };
@@ -447,10 +439,12 @@ class Chunk {
                 return this.subBiomeMapImage;
             case "perlinImage":
                 return this.perlinImage;
+            default:
+                return this.perlinImage;
         }
 
     }
 
 }
 
-export = Chunk;
+export default Chunk;

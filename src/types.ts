@@ -1,26 +1,26 @@
-type Colour = [number, number, number];
-type Config = WorldConfig | BiomeConfig;
-type TileSaveObject = [string, number, string, string];
-type MapImageName = "surfaceMapImage" | "biomeMapImage" | "subBiomeMapImage" | "perlinImage";
-type OrnamentDefinition = [string, number, number, number];
+export type Colour = [number, number, number];
+export type Config = WorldConfig | BiomeConfig;
+export type TileSaveObject = [string, number, string, string];
+export type MapImageName = "surfaceMapImage" | "biomeMapImage" | "subBiomeMapImage" | "perlinImage";
+export type OrnamentDefinition = [string, number, number, number];
 
-interface PRNG {
+export interface PRNG {
     random: () => number
 }
 
-interface ChunkSaveObject {
+export interface ChunkSaveObject {
     q: number,
     r: number,
     tileMap: TileSaveObject[][] 
 }
 
-interface BiomeConfig {
+export interface BiomeConfig {
     colour: Colour,
     ranges: [number, string][],
     [biomeNames: string]: unknown
 }
 
-interface SubBiomeConfig {
+export interface SubBiomeConfig {
     colour: Colour,
     altitudeSurfaces: [number, string][],
     ornaments: OrnamentDefinition[],
@@ -32,12 +32,12 @@ interface SubBiomeConfig {
     upperHeightMultiplier: number
 }
 
-interface WarningRecord {
+export interface WarningRecord {
     maxHeight: string[],
     matchingBiomeColours: string[]
 }
 
-interface WorldConfig {
+export interface WorldConfig {
     seed: number,
     maxHeight: number,
     width: number,
@@ -46,7 +46,7 @@ interface WorldConfig {
     biomes: [number, string][]
 }
 
-interface WorldInfo {
+export interface WorldInfo {
     seed: number,
     width: number,
     height: number,
@@ -54,7 +54,7 @@ interface WorldInfo {
     totalHeight: number
 }
 
-interface Vector2 {
+export interface Vector2 {
     x: number,
     y: number
 }
