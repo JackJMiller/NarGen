@@ -1,11 +1,12 @@
 import fs from "fs";
+import path from "path";
 import Chunk from "./Chunk";
 import Grid from "./Grid";
 import Rangerray from "./Rangerray";
 import SubBiome from "./SubBiome";
-import { BASE_BIOME_SIZE, CHUNK_SIZE } from "./constants";
+import { BASE_BIOME_SIZE, CHUNK_SIZE, RENDERER } from "./constants";
 import { exitWithError, flattenNoiseDistribution, leftJustify, objectFromEntries } from "./functions";
-import { loadConfig } from "./terminal_script";
+import { loadJSON } from "./terminal_script";
 
 class World {
 
@@ -41,7 +42,7 @@ class World {
         this.filepath = filepath;
         this.name = name;
         let configFilePath = [this.filepath, "CONFIG.json"].join("/");
-        this.config = loadConfig(configFilePath) as WorldConfig;
+        this.config = loadJSON(configFilePath) as WorldConfig;
 
         this.renderWorld = renderWorld;
         this.seed = this.config["seed"];
@@ -127,7 +128,7 @@ class World {
         let rangerray = new Rangerray<SubBiome>(biomeName);
         let biomeConfigPath = [this.filepath, "biomes", biomeName + ".json"].join("/");
         if (!fs.existsSync(biomeConfigPath)) exitWithError("Undefined biome", `An undefined biome named '${biomeName}' is referenced in your CONFIG.json file.`);
-        let biomeConfig = loadConfig(biomeConfigPath) as BiomeConfig;
+        let biomeConfig = loadJSON(biomeConfigPath) as BiomeConfig;
         let noiseLower = 0;
         let noiseUpper = 0;
 
@@ -179,7 +180,7 @@ class World {
         }
 
         for (let mapImageName of mapImageNames) {
-            mapImages[mapImageName].saveRGBs(this.name + "_" + mapImageName, this.name);
+            RENDERER.renderColourGrid(mapImages[mapImageName], path.join(this.filepath, "GENERATED", "images", `${mapImageName}.png`));
         }
 
     }

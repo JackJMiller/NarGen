@@ -19,7 +19,7 @@ class VirtualFileSystem {
 
 }
 
-function loadConfig(filepath: string): Config {
+function loadJSON(filepath: string): any {
     // TODO
     // @ts-ignore
     return {};

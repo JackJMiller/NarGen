@@ -1,3 +1,3 @@
-export function loadConfig(filepath: string): Config {
+export function loadJSON(filepath: string): any {
     return require(filepath);
 }

@@ -1,4 +1,5 @@
 import { mkAlea } from "./lib/alea";
+import Renderer from "./Renderer";
 
 function set_default_root_blocks(root_blocks: any) {
     for (let sprite_name of SPRITE_NAMES) {
@@ -15,6 +16,7 @@ export const SURFACES: { [index: string]: Colour } = {
     short_grass: [108, 210, 26],
     medium_grass: [108, 210, 26],
     long_grass: [108, 210, 26],
+    grass: [108, 210, 26],
     sand: [255, 240, 130],
     stone: [80, 80, 80],
     dirt: [90, 60, 30],
@@ -32,6 +34,7 @@ export const ORNAMENTATION_ROOT_BLOCKS: any = {};
 set_default_root_blocks(ORNAMENTATION_ROOT_BLOCKS);
 
 export const CHUNK_SIZE = 20;
+export const TILE_DEFINITION = 20;
 export const BASE_BIOME_SIZE = 400;
 
 export const OCTAVE_COUNT = 5;
@@ -64,3 +67,5 @@ export const RECOGNISED_SUB_BIOME_ATTRIBUTES = [
 ];
 
 export const GLOBAL_PRNG = mkAlea("jack");
+
+export const RENDERER = new Renderer();

@@ -1,4 +1,24 @@
 {
+  "name": "nargen",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/JackJMiller/NarGen#readme",
+  "bugs": {
+    "url": "https://github.com/JackJMiller/NarGen/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JackJMiller/NarGen.git"
+  },
+  "license": "MIT",
+  "author": "Jack J. Miller",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {},
+  "dependencies": {
+    "canvas": "^3.1.0",
+    "undici-types": "^6.20.0"
+  },
   "devDependencies": {
     "@types/node": "^22.13.5"
   }

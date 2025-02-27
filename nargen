@@ -23,7 +23,8 @@ DeleteTerrain() {
 
 Render() {
     WORLD_PATH=`realpath $1`
-    python3 $NARGEN_PATH/main.py render $WORLD_PATH
+    # python3 $NARGEN_PATH/main.py render $WORLD_PATH
+    node $NARGEN_PATH/main.js render $WORLD_PATH
     ViewWorld $WORLD_PATH
 }
 
@@ -33,7 +34,7 @@ ThrowError() {
 
 ViewWorld() {
     WORLD_PATH=$1
-    xdg-open $WORLD_PATH/GENERATED/images/* > /dev/null 2>&1
+    viewnior $WORLD_PATH/GENERATED/images/* > /dev/null 2>&1
 }
 
 COLOUR_RED='\033[0;31m'
@@ -64,6 +65,8 @@ elif [[ $# -eq 2 && "$1" == "generate" ]]; then
     DeleteTerrain $WORLD_PATH
 
     node $NARGEN_PATH/main.js generate $WORLD_PATH 1
+
+    ViewWorld $WORLD_PATH
 
 elif [[ $# -eq 2 && "$1" == "delete-terrain" ]]; then
 
