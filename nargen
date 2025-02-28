@@ -66,8 +66,6 @@ elif [[ $# -eq 2 && "$1" == "generate" ]]; then
 
     node $NARGEN_PATH/main.js generate $WORLD_PATH 1
 
-    ViewWorld $WORLD_PATH
-
 elif [[ $# -eq 2 && "$1" == "delete-terrain" ]]; then
 
     WORLD_PATH=$2

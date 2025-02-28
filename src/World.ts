@@ -20,7 +20,7 @@ class World {
     public heightInTiles: number;
     public widthInChunks: number;
     public heightInChunks: number;
-    public seed: number;
+    public seed: string;
     public minNoise: number;
     public maxNoise: number;
     public totalHeight: number;
@@ -45,6 +45,8 @@ class World {
         this.name = name;
         let configFilePath = [this.filepath, "CONFIG.json"].join("/");
         this.config = loadJSON(configFilePath) as WorldConfig;
+
+        this.fillConfig();
 
         this.renderWorld = renderWorld;
         this.seed = this.config["seed"];
@@ -77,6 +79,8 @@ class World {
             seed: this.seed,
             width: this.widthInChunks,
             height: this.heightInChunks,
+            q: this.config.q,
+            r: this.config.r,
             maxHeight: this.maxHeight,
             totalHeight: this.totalHeight
         };
@@ -85,6 +89,11 @@ class World {
 
         fs.writeFileSync([this.filepath, "GENERATED", "WORLD_INFO.json"].join("/"), JSON.stringify(this.worldInfo));
 
+    }
+
+    private fillConfig(): void {
+        if (this.config.q === undefined) this.config.q = 0;
+        if (this.config.r === undefined) this.config.r = 0;
     }
 
 
@@ -170,11 +179,11 @@ class World {
             mapImages[mapImageName] = new Grid<number[]>(this.widthInTiles, this.heightInTiles, [0, 0, 0]);
         }
 
-        for (let q = 0; q < this.widthInChunks; q++) {
-            for (let r = 0; r < this.heightInChunks; r++) {
-                let chunk = new Chunk(this, q, r);
-                let cornerX = q * CHUNK_SIZE;
-                let cornerY = r * CHUNK_SIZE;
+        for (let _q = 0; _q < this.widthInChunks; _q++) {
+            for (let _r = 0; _r < this.heightInChunks; _r++) {
+                let chunk = new Chunk(this, this.config.q + _q, this.config.r + _r);
+                let cornerX = _q * CHUNK_SIZE;
+                let cornerY = _r * CHUNK_SIZE;
                 for (let mapImageName of mapImageNames) {
                     mapImages[mapImageName].overlay(chunk.getMapImage(mapImageName), cornerX, cornerY);
                 }

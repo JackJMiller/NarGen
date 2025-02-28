@@ -38,18 +38,22 @@ export interface WarningRecord {
 }
 
 export interface WorldConfig {
-    seed: number,
+    seed: string,
     maxHeight: number,
     width: number,
     height: number,
+    q: number,
+    r: number,
     biomeSize: number,
     biomes: [number, string][]
 }
 
 export interface WorldInfo {
-    seed: number,
+    seed: string,
     width: number,
     height: number,
+    q: number,
+    r: number,
     maxHeight: number,
     totalHeight: number
 }

@@ -53,17 +53,17 @@ class Renderer {
         let canvas = createCanvas(imageWidth, imageHeight);
         let ctx = canvas.getContext("2d")
 
-        for (let r = 0; r < config["height"]; r++) {
+        for (let r = config.r; r < config.r + config.height; r++) {
             let chunks: ChunkSaveObject[] = [];
-            for (let q = 0; q < config["width"]; q++) {
+            for (let q = config.q; q < config.q + config.width; q++) {
                 let filepath = Chunk.getFilepath(worldPath, q, r)
                 let chunk = loadJSON(filepath) as ChunkSaveObject;
                 chunks.push(chunk);
             }
-            this.drawChunkRow(r, chunks, ctx);
+            this.drawChunkRow(r - config.r, chunks, ctx);
         }
 
-        this.saveImage(canvas, path.join(worldPath, "GENERATED", "images", "game.png"));
+        this.saveImage(canvas, path.join(worldPath, "GENERATED", "images", `${worldName}_${config.q}_${config.r}.png`));
         
     }
 

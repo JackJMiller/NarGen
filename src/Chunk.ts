@@ -16,7 +16,7 @@ class Chunk {
 
     public parentWorld: World;
     public config: WorldConfig;
-    public seed: number;
+    public seed: string;
     public q: number;
     public r: number;
     public biomesRangerray: Rangerray<Biome>;
@@ -91,7 +91,7 @@ class Chunk {
         this.groundMap = this.createGroundMap(octaves);
 
         // create the surface map
-        this.abcGen(randint(1, 100))
+        this.abcGen(randint(1, 100).toString())
         let surface = this.createSurfaceMap();
         this.surfaceMap = surface.surfaceMap;
         this.surfaceMapImage = surface.surfaceMapImage;
@@ -118,7 +118,7 @@ class Chunk {
         let octaves = [];
         for (let octaveNo = 0; octaveNo < tileSizes.length; octaveNo++) {
             let noiseTileSize = tileSizes[octaveNo];
-            this.abcGen(this.AAA);
+            this.abcGen(this.AAA.toString());
             let perlin = new Perlin(
                 this.cornerX,
                 this.cornerY,
@@ -355,8 +355,8 @@ class Chunk {
         }
     }
 
-    public abcGen(seed: number): void {
-        let prng = mkAlea(seed.toString());
+    public abcGen(seed: string): void {
+        let prng = mkAlea(seed);
         this.AAA = randint(1111111111, 9999999999, prng);
         this.BBB = randint(1111111111, 9999999999, prng);
         this.CCC = randint(1111111111, 9999999999, prng);
