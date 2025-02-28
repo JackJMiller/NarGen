@@ -42,7 +42,8 @@ export const ORNAMENTATION_ROOT_BLOCKS: any = {};
 set_default_root_blocks(ORNAMENTATION_ROOT_BLOCKS);
 
 export const CHUNK_SIZE = 20;
-export const TILE_DEFINITION = 20;
+export const TILE_WIDTH = 20;
+export const TILE_HEIGHT = 14;
 export const BASE_BIOME_SIZE = 400;
 
 export const OCTAVE_COUNT = 5;

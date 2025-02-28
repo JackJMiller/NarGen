@@ -3,7 +3,7 @@ import path from "path";
 import { Canvas, CanvasRenderingContext2D, createCanvas } from "canvas";
 import Chunk from "./Chunk.js";
 import Grid from "./Grid.js";
-import { CHUNK_SIZE, TILE_DEFINITION } from "./constants.js";
+import { CHUNK_SIZE, TILE_HEIGHT, TILE_WIDTH } from "./constants.js";
 import { loadJSON, SPRITE_IMAGES } from "./terminal_script.js";
 import { ChunkSaveObject, WorldInfo } from "./types.js";
 
@@ -58,8 +58,8 @@ class Renderer {
     }
 
     public renderChunk(chunk: ChunkSaveObject, worldInfo: WorldInfo, worldPath: string): void {
-        let imageWidth = CHUNK_SIZE * TILE_DEFINITION;
-        let imageHeight = (CHUNK_SIZE + worldInfo.maxHeightReached) * TILE_DEFINITION;
+        let imageWidth = CHUNK_SIZE * TILE_WIDTH;
+        let imageHeight = (CHUNK_SIZE + worldInfo.maxHeightReached) * TILE_HEIGHT;
         let canvas = createCanvas(imageWidth, imageHeight);
         let ctx = canvas.getContext("2d")
         for (let x = 0; x < CHUNK_SIZE; x++) {
@@ -72,8 +72,8 @@ class Renderer {
 
     // TODO: add brightness to communicate height
     public drawBlocksAt(chunk: ChunkSaveObject, worldInfo: WorldInfo, x: number, y: number, ctx: CanvasRenderingContext2D): void {
-        let canvasX = x * TILE_DEFINITION;
-        let canvasY = (y + worldInfo.maxHeightReached) * TILE_DEFINITION;
+        let canvasX = x * TILE_WIDTH;
+        let canvasY = (y + worldInfo.maxHeightReached) * TILE_HEIGHT;
         let tile = chunk.tileMap[x][y];
         let height = tile[1];
         let surfaceName = tile[2];
@@ -81,7 +81,7 @@ class Renderer {
 
         for (let z = 0; z < height; z++) {
             this.drawTile(surfaceName + "_block", canvasX, canvasY, z, ctx);
-            canvasY -= 14;
+            canvasY -= TILE_HEIGHT;
         }
 
         if (height <= 0) {
