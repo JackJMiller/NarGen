@@ -206,10 +206,13 @@ class Chunk {
                 }
                 let original = this.groundMap.valueAt(x, y)
                 let newValue = Math.floor(original + displacement)
-                if (newValue > this.parentWorld.maxHeight && !this.parentWorld.warningRecord["maxHeight"].includes(biome.fullName)) {
+                if (newValue > this.parentWorld.worldInfo.maxHeightReached) {
+                    this.parentWorld.worldInfo.maxHeightReached = newValue;
+                }
+                if (newValue > this.parentWorld.maxHeight && !this.parentWorld.warningRecord.maxHeight.includes(biome.fullName)) {
                     newValue = clamp(newValue, this.parentWorld.maxHeight);
                     raiseWarning("Extreme terrain", "Ground map value inside " + biome.fullName + " has exceeded the maximum world height. Value has been capped at " + this.parentWorld.maxHeight.toString() + ".");
-                    this.parentWorld.warningRecord["maxHeight"].push(biome.fullName);
+                    this.parentWorld.warningRecord.maxHeight.push(biome.fullName);
                 }
                 this.groundMap.setValueAt(x, y, newValue);
             }
@@ -375,7 +378,7 @@ class Chunk {
 
     public determineSurface(height: number, biome: SubBiome): string {
         // sea level is at altitude 0
-        if (height <= 0) return "water";
+        if (height < 0) return "water";
         else return biome.altitudeSurfaces.selectValue(height);
     }
 

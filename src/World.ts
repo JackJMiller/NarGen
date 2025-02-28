@@ -49,9 +49,9 @@ class World {
         this.fillConfig();
 
         this.renderWorld = renderWorld;
-        this.seed = this.config["seed"];
-        this.widthInChunks = this.config["width"];
-        this.heightInChunks = this.config["height"];
+        this.seed = this.config.seed;
+        this.widthInChunks = this.config.width;
+        this.heightInChunks = this.config.height;
         this.widthInTiles = this.widthInChunks * CHUNK_SIZE;
         this.heightInTiles = this.heightInChunks * CHUNK_SIZE;
         this.totalAreaInTiles = this.widthInTiles * this.heightInTiles;
@@ -60,7 +60,7 @@ class World {
         this.warningRecord = { maxHeight: [], matchingBiomeColours: [] };
         this.biomeColours = {};
 
-        this.maxHeight = Math.floor(this.config["maxHeight"])
+        this.maxHeight = Math.floor(this.config.maxHeight);
         this.totalHeight = 2 * this.maxHeight
         this.tempAcc = 0;
         this.tempCount = 0;
@@ -82,6 +82,7 @@ class World {
             q: this.config.q,
             r: this.config.r,
             maxHeight: this.maxHeight,
+            maxHeightReached: 0,
             totalHeight: this.totalHeight
         };
 

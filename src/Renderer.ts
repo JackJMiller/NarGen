@@ -5,7 +5,7 @@ import Chunk from "./Chunk.js";
 import Grid from "./Grid.js";
 import { CHUNK_SIZE, TILE_DEFINITION } from "./constants.js";
 import { loadJSON, SPRITE_IMAGES } from "./terminal_script.js";
-import { ChunkSaveObject } from "./types.js";
+import { ChunkSaveObject, WorldInfo } from "./types.js";
 
 class Renderer {
 
@@ -45,45 +45,36 @@ class Renderer {
 
     public renderWorld(worldName: string, worldPath: string): void {
 
-        let config = loadJSON(path.join(worldPath, "GENERATED", "WORLD_INFO.json"));
+        let worldInfo = loadJSON(path.join(worldPath, "GENERATED", "WORLD_INFO.json"));
 
-        let imageWidth = config["width"] * CHUNK_SIZE * TILE_DEFINITION;
-        let imageHeight = config["height"] * CHUNK_SIZE * TILE_DEFINITION;
-
-        let canvas = createCanvas(imageWidth, imageHeight);
-        let ctx = canvas.getContext("2d")
-
-        for (let r = config.r; r < config.r + config.height; r++) {
-            let chunks: ChunkSaveObject[] = [];
-            for (let q = config.q; q < config.q + config.width; q++) {
+        for (let r = worldInfo.r; r < worldInfo.r + worldInfo.height; r++) {
+            for (let q = worldInfo.q; q < worldInfo.q + worldInfo.width; q++) {
                 let filepath = Chunk.getFilepath(worldPath, q, r)
                 let chunk = loadJSON(filepath) as ChunkSaveObject;
-                chunks.push(chunk);
+                this.renderChunk(chunk, worldInfo, worldPath);
             }
-            this.drawChunkRow(r - config.r, chunks, ctx);
         }
-
-        this.saveImage(canvas, path.join(worldPath, "GENERATED", "images", `${worldName}_${config.q}_${config.r}.png`));
         
     }
 
-    public drawChunkRow(r: number, row: ChunkSaveObject[], ctx: CanvasRenderingContext2D): void {
-        for (let q = 0; q < row.length; q++) {
-            for (let _y = 0; _y < CHUNK_SIZE; _y++) {
-                for (let _x = 0; _x < CHUNK_SIZE; _x++) {
-                    this.drawBlocksAt(q, _x, r, _y, row, ctx);
-                }
+    public renderChunk(chunk: ChunkSaveObject, worldInfo: WorldInfo, worldPath: string): void {
+        let imageWidth = CHUNK_SIZE * TILE_DEFINITION;
+        let imageHeight = (CHUNK_SIZE + worldInfo.maxHeightReached) * TILE_DEFINITION;
+        let canvas = createCanvas(imageWidth, imageHeight);
+        let ctx = canvas.getContext("2d")
+        for (let x = 0; x < CHUNK_SIZE; x++) {
+            for (let y = 0; y < CHUNK_SIZE; y++) {
+                this.drawBlocksAt(chunk, worldInfo, x, y, ctx);
             }
         }
+        this.saveImage(canvas, path.join(worldPath, "GENERATED", "images", `chunk_${chunk.q}_${chunk.r}.png`));
     }
 
     // TODO: add brightness to communicate height
-    public drawBlocksAt(q: number, _x: number, r: number, _y: number, row: ChunkSaveObject[], ctx: CanvasRenderingContext2D): void {
-        let x = q * CHUNK_SIZE + _x;
-        let y = r * CHUNK_SIZE + _y;
+    public drawBlocksAt(chunk: ChunkSaveObject, worldInfo: WorldInfo, x: number, y: number, ctx: CanvasRenderingContext2D): void {
         let canvasX = x * TILE_DEFINITION;
-        let canvasY = y * TILE_DEFINITION;
-        let tile = row[q].tileMap[_x][_y];
+        let canvasY = (y + worldInfo.maxHeightReached) * TILE_DEFINITION;
+        let tile = chunk.tileMap[x][y];
         let height = tile[1];
         let surfaceName = tile[2];
         let areaObjectName = tile[3];
