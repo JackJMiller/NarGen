@@ -4,7 +4,7 @@ import { Canvas, CanvasRenderingContext2D, createCanvas } from "canvas";
 import Chunk from "./Chunk.js";
 import Grid from "./Grid.js";
 import { CHUNK_SIZE, TILE_HEIGHT, TILE_WIDTH } from "./constants.js";
-import { loadJSON, SPRITE_IMAGES } from "./terminal_script.js";
+import { loadJSON, SPRITE_IMAGES } from "./system_script.js";
 import { ChunkSaveObject, WorldInfo } from "./types.js";
 
 abstract class Renderer {

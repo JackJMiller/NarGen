@@ -1,6 +1,6 @@
 import path from "path";
 import { RENDERER } from "./src/constants.js";
-import { loadJSON } from "./src/terminal_script.js";
+import { loadJSON } from "./src/system_script.js";
 import World from "./src/World.js";
 import { WorldInfo } from "./src/types.js";
 

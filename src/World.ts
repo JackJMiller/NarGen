@@ -7,7 +7,7 @@ import Rangerray from "./Rangerray.js";
 import SubBiome from "./SubBiome.js";
 import { BASE_BIOME_SIZE, CHUNK_SIZE, RENDERER } from "./constants.js";
 import { exitWithError, flattenNoiseDistribution, leftJustify, objectFromEntries } from "./functions.js";
-import { loadJSON } from "./terminal_script.js";
+import { loadJSON } from "./system_script.js";
 import { BiomeConfig, Colour, MapImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
 
 class World {
