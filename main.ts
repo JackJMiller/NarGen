@@ -1,6 +1,8 @@
 import path from "path";
 import { RENDERER } from "./src/constants.js";
+import { loadJSON } from "./src/terminal_script.js";
 import World from "./src/World.js";
+import { WorldInfo } from "./src/types.js";
 
 const ARGS = process.argv.slice(1);
 
@@ -24,7 +26,11 @@ if (ARGS[1] == "render") {
     let worldName = path.parse(filepath).name;
 
     // generate terrain world according to configuration
+    RENDERER.renderChunks(worldName, filepath);
 
-    RENDERER.renderWorld(worldName, filepath);
+    let worldInfoFilePath = [filepath, "GENERATED", "WORLD_INFO.json"].join("/");
+    let worldInfo = loadJSON(worldInfoFilePath) as WorldInfo;
+
+    RENDERER.renderWorld(filepath, worldInfo);
 
 }

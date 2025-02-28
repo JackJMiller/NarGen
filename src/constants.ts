@@ -1,5 +1,5 @@
 import { mkAlea } from "./lib/alea.js";
-import Renderer from "./Renderer.js";
+import TerminalRenderer from "./TerminalRenderer.js";
 import { Colour } from "./types.js";
 
 // TODO: remove this duplicate
@@ -77,4 +77,4 @@ export const RECOGNISED_SUB_BIOME_ATTRIBUTES = [
 
 export const GLOBAL_PRNG = mkAlea("jack");
 
-export const RENDERER = new Renderer();
+export const RENDERER = new SystemRenderer();

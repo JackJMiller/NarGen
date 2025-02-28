@@ -378,7 +378,7 @@ class Chunk {
 
     public determineSurface(height: number, biome: SubBiome): string {
         // sea level is at altitude 0
-        if (height < 0) return "water";
+        if (height <= 0) return "water";
         else return biome.altitudeSurfaces.selectValue(height);
     }
 
