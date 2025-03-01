@@ -1,5 +1,5 @@
 import { mkAlea } from "./lib/alea.js";
-import TerminalRenderer from "./TerminalRenderer.js";
+import SystemRenderer from "./SystemRenderer.js";
 import { Colour } from "./types.js";
 
 // TODO: remove this duplicate
@@ -12,8 +12,6 @@ function set_default_root_blocks(root_blocks: any) {
         }
     }
 }
-
-export const NARGEN_PATH = "/home/jack/Development/NarGen";
 
 export const SURFACES: { [index: string]: Colour } = {
     water: [80, 180, 255],

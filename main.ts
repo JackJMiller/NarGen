@@ -11,10 +11,9 @@ if (ARGS[1] == "generate") {
     // locate world configuration
     let filepath = ARGS[2];
     let worldName = path.parse(filepath).name;
-    let mustRenderWorld = (ARGS[3] === "1");
 
     // generate terrain world according to configuration
-    let world = new World(worldName, filepath, mustRenderWorld);
+    let world = new World(worldName, filepath);
 
     world.summarise();
 
@@ -29,7 +28,7 @@ if (ARGS[1] == "render") {
     RENDERER.renderChunks(worldName, filepath);
 
     let worldInfoFilePath = [filepath, "GENERATED", "WORLD_INFO.json"].join("/");
-    let worldInfo = loadJSON(worldInfoFilePath) as WorldInfo;
+    let worldInfo = loadJSON<WorldInfo>(worldInfoFilePath);
 
     RENDERER.renderWorld(filepath, worldInfo);
 

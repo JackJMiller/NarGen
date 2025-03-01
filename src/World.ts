@@ -15,7 +15,7 @@ class World {
     public filepath: string;
     public name: string;
     public config: WorldConfig;
-    public renderWorld: boolean;
+    public renderWorld: boolean = true;
     public widthInTiles: number;
     public heightInTiles: number;
     public widthInChunks: number;
@@ -39,16 +39,15 @@ class World {
     public biomeColours: { [index: string]: Colour };
     public worldInfo: WorldInfo;
 
-    public constructor(name: string, filepath: string, renderWorld: boolean) {
+    public constructor(name: string, filepath: string) {
 
         this.filepath = filepath;
         this.name = name;
         let configFilePath = [this.filepath, "CONFIG.json"].join("/");
-        this.config = loadJSON(configFilePath) as WorldConfig;
+        this.config = loadJSON<WorldConfig>(configFilePath);
 
         this.fillConfig();
 
-        this.renderWorld = renderWorld;
         this.seed = this.config.seed;
         this.widthInChunks = this.config.width;
         this.heightInChunks = this.config.height;
@@ -140,7 +139,7 @@ class World {
         let biome = new Biome(biomeName);
         let biomeConfigPath = [this.filepath, "biomes", biomeName + ".json"].join("/");
         if (!fs.existsSync(biomeConfigPath)) exitWithError("Undefined biome", `An undefined biome named '${biomeName}' is referenced in your CONFIG.json file.`);
-        let biomeConfig = loadJSON(biomeConfigPath) as BiomeConfig;
+        let biomeConfig = loadJSON<BiomeConfig>(biomeConfigPath);
         let noiseLower = 0;
         let noiseUpper = 0;
 

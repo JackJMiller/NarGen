@@ -3,7 +3,7 @@ import { CHUNK_SIZE, TILE_WIDTH } from "./constants.js";
 import Renderer from "./Renderer.js";
 import { WorldInfo } from "./types.js";
 
-class TerminalRenderer extends Renderer {
+class SystemRenderer extends Renderer {
 
     constructor() {
 
@@ -19,7 +19,7 @@ class TerminalRenderer extends Renderer {
             let canvasY = imageWidth * (r - worldInfo.r);
             for (let q = worldInfo.q; q < worldInfo.q + worldInfo.width; q++) {
                 let canvasX = imageWidth * (q - worldInfo.q);
-                chunks.push(`\\( -page +${canvasX}+${canvasY} ${filepath}/GENERATED/images/chunk_${q}_${r}.png \\)`);
+                chunks.push(`\\( -page +${canvasX}+${canvasY} ${filepath}/GENERATED/images/chunks/${q}_${r}.png \\)`);
             }
         }
         let command = `magick ${chunks.join(" ")} -background none -layers merge +repage ${filepath}/GENERATED/images/world.png`;
@@ -28,4 +28,4 @@ class TerminalRenderer extends Renderer {
 
 }
 
-export default TerminalRenderer;
+export default SystemRenderer;
