@@ -82,11 +82,11 @@ class Perlin {
     }
 
     public interpolate(a0: number, a1: number, w: number): number {
-        // if (0.0 > w) return a0
-        // if (1.0 < w) return a1
+        // if (0.0 > w) return a0;
+        // if (1.0 < w) return a1;
 
         // default
-        // return (a1 - a0) * w + a0
+        // return (a1 - a0) * w + a0;
 
         // smoothstep
         return (a1 - a0) * (3.0 - w * 2.0) * w * w + a0;
@@ -197,6 +197,15 @@ class Perlin {
     public getGrid(): Grid<number> {
         return this.grid
     }
+
+    public static determineTileSizes(tileSizes: number[], noiseTileSize: number, octaveCount: number, lacunarity: number): void {
+        let tileSize = noiseTileSize;
+        for (let i = 0; i < octaveCount; i++) {
+            tileSizes.push(tileSize);
+            tileSize = Math.ceil(tileSize * lacunarity!);
+        }
+    }
+
 }
 
 export default Perlin;
