@@ -1,4 +1,5 @@
 import { mkAlea } from "./lib/alea.js";
+import Ornamenter from "./Ornamenter.js";
 import SystemRenderer from "./SystemRenderer.js";
 import { Colour } from "./types.js";
 
@@ -75,4 +76,5 @@ export const RECOGNISED_SUB_BIOME_ATTRIBUTES = [
 
 export const GLOBAL_PRNG = mkAlea("jack");
 
+export const ORNAMENTER = new Ornamenter();
 export const RENDERER = new SystemRenderer();

@@ -5,7 +5,7 @@ import Perlin from "./Perlin.js";
 import Rangerray from "./Rangerray.js";
 import SubBiome from "./SubBiome.js";
 import World from "./World.js";
-import { CHUNK_SIZE, GLOBAL_PRNG, OCTAVE_COUNT, SURFACES, ORNAMENTATION_ROOT_BLOCKS } from "./constants.js";
+import { CHUNK_SIZE, OCTAVE_COUNT, ORNAMENTER, SURFACES } from "./constants.js";
 import { clamp, getBrightnessAtHeight, portionAtPointBetween, raiseWarning, randint } from "./functions.js";
 import { mkAlea } from "./lib/alea.js";
 import { ChunkSaveObject, MapImageName, TileSaveObject, WorldConfig } from "./types.js";
@@ -45,28 +45,28 @@ class Chunk {
 
     constructor(parentWorld: World, q: number, r: number) {
 
-        this.parentWorld = parentWorld
-        this.config = this.parentWorld.config
-        this.seed = parentWorld.seed
-        this.q = q
-        this.r = r
-        this.biomesRangerray = this.parentWorld.biomesRangerray
-        this.cornerX = this.q * CHUNK_SIZE
-        this.cornerY = this.r * CHUNK_SIZE
-        this.lacunarity = 0.5
-        this.MINWORLDHEIGHT = -100
-        this.MAXWORLDHEIGHT = 200
-        this.TOTALWORLDHEIGHT = this.MAXWORLDHEIGHT - this.MINWORLDHEIGHT
+        this.parentWorld = parentWorld;
+        this.config = this.parentWorld.config;
+        this.seed = parentWorld.seed;
+        this.q = q;
+        this.r = r;
+        this.biomesRangerray = this.parentWorld.biomesRangerray;
+        this.cornerX = this.q * CHUNK_SIZE;
+        this.cornerY = this.r * CHUNK_SIZE;
+        this.lacunarity = 0.5;
+        this.MINWORLDHEIGHT = -100;
+        this.MAXWORLDHEIGHT = 200;
+        this.TOTALWORLDHEIGHT = this.MAXWORLDHEIGHT - this.MINWORLDHEIGHT;
 
-        this.abcGen(this.seed)
+        this.abcGen(this.seed);
 
-        let initialNoiseTileSize = 10 * CHUNK_SIZE
-        this.octaveCount = OCTAVE_COUNT
+        let initialNoiseTileSize = 10 * CHUNK_SIZE;
+        this.octaveCount = OCTAVE_COUNT;
 
-        this.widthInTiles = CHUNK_SIZE
-        this.heightInTiles = CHUNK_SIZE
+        this.widthInTiles = CHUNK_SIZE;
+        this.heightInTiles = CHUNK_SIZE;
 
-        this.abcGen(this.seed)
+        this.abcGen(this.seed);
 
         let octaves = this.produceOctaves(this.octaveCount, initialNoiseTileSize, "biomeMap", [], 0.5);
         this.overlayed = this.overlayOctaves(octaves, 0.5);
@@ -74,18 +74,18 @@ class Chunk {
         let biomeSuperMapOctaves = this.produceOctaves(3, this.parentWorld.biomeSuperMapTileSize, "biomeSuperMap", [this.parentWorld.biomeSuperMapTileSize, 50, 20]);
         this.biomeSuperMap = this.overlayOctaves(biomeSuperMapOctaves, 0.1);
 
-        this.parentWorld.tempAcc += this.biomeSuperMap.calculateAverage()
-        this.parentWorld.tempCount += 1
+        this.parentWorld.tempAcc += this.biomeSuperMap.calculateAverage();
+        this.parentWorld.tempCount += 1;
 
         // create the biome map
         this.biomeMap = this.createMap<BiomeBalance>(this.determineBiome.bind(this), []);
         this.biomeMapImage = this.createMap<number[]>(this.determineBiomeColour.bind(this), [0, 0, 0]);
         this.subBiomeMapImage = this.createMap<number[]>(this.determineSubBiomeColour.bind(this), [0, 0, 0]);
 
-        this.perlinImage = Perlin.createGridImage(this.biomeSuperMap)
+        this.perlinImage = Perlin.createGridImage(this.biomeSuperMap);
 
         // create the ground map
-        this.abcGen(this.seed)
+        this.abcGen(this.seed);
         this.groundMap = this.createGroundMap(octaves);
 
         // create the surface map
@@ -94,9 +94,10 @@ class Chunk {
         this.surfaceMapImage = this.createMap<number[]>(this.determineSurfaceColour.bind(this), [0, 0, 0]);
 
         // create the area map to include ornamentation
+        // TODO: create ornamenter for each sub-biome
         this.areaMap = this.createMap<string>(this.determineArea.bind(this), "");
 
-        this.exportSaveFile()
+        this.exportSaveFile();
 
     }
 
@@ -159,35 +160,10 @@ class Chunk {
         return perlin.getGrid();
     }
 
-    // TODO: clean
     public determineArea(x: number, y: number): string {
 
-        let altitude = this.groundMap.valueAt(x, y)
+        return ORNAMENTER.determineArea(x, y, this);
 
-        if (altitude <= 0) return "";
-
-        let biome = this.getBiomeAt(x, y)
-        if (GLOBAL_PRNG.random() > biome.ornamentOccurrenceRate) return "";
-        let groundTileName = this.surfaceMap.valueAt(x, y)
-        let acc = 0;
-        let candidates = new Rangerray<string>();
-        for (let veg of biome.ornaments) {
-            let vegName = veg[0];
-            let minAltitude = veg[1];
-            let maxAltitude = veg[2];
-            let vegOccurrenceChance = veg[3];
-            if (minAltitude <= altitude && altitude <= maxAltitude && ORNAMENTATION_ROOT_BLOCKS[vegName as string].includes(groundTileName)) {
-                acc += vegOccurrenceChance;
-                candidates.insert(acc, vegName);
-            }
-        }
-        if (candidates.length() > 0) {
-            let randomNumber = Math.round(GLOBAL_PRNG.random() * acc);
-            return candidates.selectValue(randomNumber);
-        }
-        else {
-            return "";
-        }
     }
 
     public createGroundMap(octaves: Grid<number>[]): Grid<number> {
