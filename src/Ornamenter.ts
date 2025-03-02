@@ -1,5 +1,5 @@
 import Chunk from "./Chunk.js";
-import { GLOBAL_PRNG, ORNAMENTATION_ROOT_BLOCKS } from "./constants.js";
+import { ORNAMENTATION_ROOT_BLOCKS } from "./constants.js";
 import Rangerray from "./Rangerray.js";
 
 class Ornamenter {
@@ -15,7 +15,7 @@ class Ornamenter {
         if (altitude <= 0) return "";
 
         let biome = chunk.getBiomeAt(x, y)
-        if (GLOBAL_PRNG.random() > biome.ornamentOccurrenceRate) return "";
+        if (chunk.prng.random() > biome.ornamentOccurrenceRate) return "";
         let groundTileName = chunk.surfaceMap.valueAt(x, y)
         let acc = 0;
         let candidates = new Rangerray<string>();
@@ -30,7 +30,7 @@ class Ornamenter {
             }
         }
         if (candidates.length() > 0) {
-            let randomNumber = Math.round(GLOBAL_PRNG.random() * acc);
+            let randomNumber = Math.round(chunk.prng.random() * acc);
             return candidates.selectValue(randomNumber);
         }
         else {

@@ -1,5 +1,5 @@
 import { AleaPRNG } from "./lib/alea.js";
-import { COLOUR_RED, COLOUR_RED_BOLD, COLOUR_MAGENTA, COLOUR_MAGENTA_BOLD, GLOBAL_PRNG } from "./constants.js";
+import { COLOUR_RED, COLOUR_RED_BOLD, COLOUR_MAGENTA, COLOUR_MAGENTA_BOLD } from "./constants.js";
 
 export function clamp(value: number, maximum: number): number {
     if (value < 0) return 0;
@@ -46,11 +46,11 @@ export function raiseWarning(warningType: string, message: string): void {
     console.log(`NarGen: ${COLOUR_MAGENTA_BOLD}WARNING: ${COLOUR_MAGENTA}${warningType}: ${message}`);
 }
 
-export function randint(min: number, max: number, prng: AleaPRNG = GLOBAL_PRNG): number {
+export function randint(min: number, max: number, prng: AleaPRNG): number {
     return Math.floor(prng.random() * (max + 1 - min)) + min;
 }
 
-export function randomElement<T>(array: T[], prng: AleaPRNG = GLOBAL_PRNG): T {
+export function randomElement<T>(array: T[], prng: AleaPRNG): T {
     let index = randint(0, array.length - 1, prng);
     return array[index];
 }

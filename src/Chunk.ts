@@ -7,7 +7,7 @@ import SubBiome from "./SubBiome.js";
 import World from "./World.js";
 import { CHUNK_SIZE, OCTAVE_COUNT, ORNAMENTER, SURFACES } from "./constants.js";
 import { clamp, getBrightnessAtHeight, portionAtPointBetween, raiseWarning, randint } from "./functions.js";
-import { mkAlea } from "./lib/alea.js";
+import { AleaPRNG, mkAlea } from "./lib/alea.js";
 import { ChunkSaveObject, MapImageName, TileSaveObject, WorldConfig } from "./types.js";
 
 type BiomeBalance = { biome: SubBiome, influence: number }[];
@@ -16,16 +16,13 @@ class Chunk {
 
     public parentWorld: World;
     public config: WorldConfig;
-    public seed: string;
     public q: number;
     public r: number;
+    public prng: AleaPRNG;
     public biomesRangerray: Rangerray<Biome>;
     public cornerX: number;
     public cornerY: number;
     public lacunarity: number;
-    public MINWORLDHEIGHT: number;
-    public MAXWORLDHEIGHT: number;
-    public TOTALWORLDHEIGHT: number;
     public octaveCount: number;
     public widthInTiles: number;
     public heightInTiles: number;
@@ -47,18 +44,15 @@ class Chunk {
 
         this.parentWorld = parentWorld;
         this.config = this.parentWorld.config;
-        this.seed = parentWorld.seed;
         this.q = q;
         this.r = r;
+        this.prng = mkAlea(`${this.q}x${this.r}`);
         this.biomesRangerray = this.parentWorld.biomesRangerray;
         this.cornerX = this.q * CHUNK_SIZE;
         this.cornerY = this.r * CHUNK_SIZE;
         this.lacunarity = 0.5;
-        this.MINWORLDHEIGHT = -100;
-        this.MAXWORLDHEIGHT = 200;
-        this.TOTALWORLDHEIGHT = this.MAXWORLDHEIGHT - this.MINWORLDHEIGHT;
 
-        this.abcGen(this.seed);
+        this.abcGen(this.parentWorld.seed);
 
         let initialNoiseTileSize = 10 * CHUNK_SIZE;
         this.octaveCount = OCTAVE_COUNT;
@@ -66,7 +60,7 @@ class Chunk {
         this.widthInTiles = CHUNK_SIZE;
         this.heightInTiles = CHUNK_SIZE;
 
-        this.abcGen(this.seed);
+        this.abcGen(this.parentWorld.seed);
 
         let octaves = this.produceOctaves(this.octaveCount, initialNoiseTileSize, "biomeMap", [], 0.5);
         this.overlayed = this.overlayOctaves(octaves, 0.5);
@@ -85,11 +79,11 @@ class Chunk {
         this.perlinImage = Perlin.createGridImage(this.biomeSuperMap);
 
         // create the ground map
-        this.abcGen(this.seed);
+        this.abcGen(this.parentWorld.seed);
         this.groundMap = this.createGroundMap(octaves);
 
         // create the surface map
-        this.abcGen(randint(1, 100).toString());
+        this.abcGen(this.parentWorld.seed);
         this.surfaceMap = this.createMap<string>(this.determineSurface.bind(this), "");
         this.surfaceMapImage = this.createMap<number[]>(this.determineSurfaceColour.bind(this), [0, 0, 0]);
 
