@@ -55,15 +55,14 @@ class Grid<T> {
         return grid;
     }
 
-    // TODO: move out of class
-    public calculateAverage(): number {
+    public static calculateAverage(grid: Grid<number>): number {
         let acc = 0
-        for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
-                acc += this.valueAt(x, y) as number;
+        for (let x = 0; x < grid.width; x++) {
+            for (let y = 0; y < grid.height; y++) {
+                acc += grid.valueAt(x, y) as number;
             }
         }
-        return acc / (this.width * this.height);
+        return acc / (grid.width * grid.height);
     }
 
 }

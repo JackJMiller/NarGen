@@ -56,7 +56,6 @@ class Rangerray<T> {
     }
 
 
-    // TODO: replace all instances of len(rangerray) with rangerray.length();
     public length() {
         return this.items.length;
     }
@@ -99,7 +98,6 @@ class Rangerray<T> {
         return values;
     }
 
-    // TODO: replace all instances of str(rangerray) with rangerray.toString();
     public toString(): string {
         return `<Rangerray name="${this.name}">`;
     }

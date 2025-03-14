@@ -122,7 +122,6 @@ class SubBiome {
         return this.amplitudes[index];
     }
 
-    // TODO: replace _Str_ calls
     public toString() {
         return this.parentBiomeName + "." + this.name;
     }

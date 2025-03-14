@@ -68,7 +68,7 @@ class Chunk {
         let biomeSuperMapOctaves = this.produceOctaves(3, this.parentWorld.biomeSuperMapTileSize, "biomeSuperMap", [this.parentWorld.biomeSuperMapTileSize, 50, 20]);
         this.biomeSuperMap = this.overlayOctaves(biomeSuperMapOctaves, 0.1);
 
-        this.parentWorld.tempAcc += this.biomeSuperMap.calculateAverage();
+        this.parentWorld.tempAcc += Grid.calculateAverage(this.biomeSuperMap);
         this.parentWorld.tempCount += 1;
 
         // create the biome map
