@@ -15,10 +15,15 @@ AssureWorldExists() {
     [ ! -d "$WORLD_PATH" ] && ThrowError "Cannot find world at $WORLD_PATH" && exit 1
 }
 
-DeleteTerrain() {
+Stash() {
     WORLD_PATH=$1
     rm -rf $WORLD_PATH/GENERATED/*
     mkdir -p $WORLD_PATH/GENERATED/chunks/ $WORLD_PATH/GENERATED/images/chunks/
+}
+
+Generate() {
+    WORLD_PATH=$1
+    node $NARGEN_PATH/main.js generate $WORLD_PATH
 }
 
 Render() {
@@ -62,17 +67,27 @@ elif [[ $# -eq 2 && "$1" == "generate" ]]; then
 
     AssureWorldExists $WORLD_PATH
 
-    DeleteTerrain $WORLD_PATH
+    Stash $WORLD_PATH
 
-    node $NARGEN_PATH/main.js generate $WORLD_PATH
+    Generate $WORLD_PATH
 
-elif [[ $# -eq 2 && "$1" == "delete-terrain" ]]; then
+elif [[ $# -eq 2 && "$1" == "generate-and-render" ]]; then
+
+    WORLD_PATH=`realpath $2`
+
+    AssureWorldExists $WORLD_PATH
+
+    Stash $WORLD_PATH
+
+    Generate $WORLD_PATH && Render $WORLD_PATH
+
+elif [[ $# -eq 2 && "$1" == "stash" ]]; then
 
     WORLD_PATH=$2
 
     AssureWorldExists $WORLD_PATH
 
-    DeleteTerrain $WORLD_PATH
+    Stash $WORLD_PATH
 
     echo "Emptied world at $WORLD_PATH"
 

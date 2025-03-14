@@ -1,11 +1,13 @@
 class Rangerray<T> {
 
     public name: string;
+    public maxValue: number;
     public items: [number, T][];
 
     public constructor(name: string = "", items: [number, T][] = []) {
         this.name = name
         this.items = items;
+        this.maxValue = (items.length === 0) ? 0 : items[items.length - 1][0];
     }
 
     public selectValue(v: number): T {
@@ -73,6 +75,7 @@ class Rangerray<T> {
         else {
             this.items.splice(index, 0, [itemIndex, itemValue]);
         }
+        if (itemIndex > this.maxValue) this.maxValue = itemIndex;
     }
 
     public print() {
