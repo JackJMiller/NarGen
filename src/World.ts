@@ -6,9 +6,9 @@ import Grid from "./Grid.js";
 import Rangerray from "./Rangerray.js";
 import SubBiome from "./SubBiome.js";
 import { BASE_BIOME_SIZE, CHUNK_SIZE, RENDERER } from "./constants.js";
-import { exitWithError, flattenNoiseDistribution, leftJustify, objectFromEntries } from "./functions.js";
+import { exitWithError, flattenNoiseDistribution, leftJustify, objectFromEntries, raiseWarning } from "./functions.js";
 import { loadJSON } from "./system_script.js";
-import { BiomeConfig, Colour, MapImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
+import { BiomeConfig, MapImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
 
 class World {
 
@@ -36,7 +36,7 @@ class World {
     public biomeSuperMapTileSize: number = 1;
     public biomeSizes!: { [index: string]: number };
     public biomeNames: string[] = [];
-    public biomeColours: { [index: string]: Colour };
+    public biomeColours: { [index: string]: string };
     public worldInfo: WorldInfo;
 
     public constructor(name: string, filepath: string) {
@@ -143,13 +143,12 @@ class World {
         let noiseLower = 0;
         let noiseUpper = 0;
 
-        // TODO
-        // if tuple(biomeConfig["colour"]) in this.biomeColours.values() {
-        //     raiseWarning("Matching biome colours", "The biome " + biomeName + " is using a colour already in use.")
-        //     this.parentWorld.warningRecord["matchingBiomeColours"].push(biomeName);
-        // }
+        if (Object.values(this.biomeColours).includes(biomeConfig["colour"].join(","))) {
+            raiseWarning("Matching biome colours", `The biome '${biomeName}' is using a colour already in use.`);
+            this.warningRecord.matchingBiomeColours.push(biomeName);
+        }
 
-        this.biomeColours[biomeName] = biomeConfig["colour"];
+        this.biomeColours[biomeName] = biomeConfig["colour"].join(",");
 
         Rangerray.fracrrayToRangerray(biomeConfig["ranges"])
 
