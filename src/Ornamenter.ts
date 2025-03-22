@@ -11,7 +11,7 @@ class Ornamenter {
 
     public determineArea(x: number, y: number, chunk: Chunk): string {
 
-        let altitude = chunk.groundMap.valueAt(x, y)
+        let altitude = chunk.groundGrid.valueAt(x, y)
 
         if (altitude <= 0) return "";
 
@@ -32,7 +32,7 @@ class Ornamenter {
     }
 
     public createRangerray(x: number, y: number, biome: SubBiome, altitude: number, chunk: Chunk): Rangerray<string> {
-        let groundTileName = chunk.surfaceMap.valueAt(x, y)
+        let groundTileName = chunk.surfaceGrid.valueAt(x, y)
         let acc = 0;
         let rangerray = new Rangerray<string>();
         for (let ornament of biome.ornaments) {

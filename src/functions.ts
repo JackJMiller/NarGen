@@ -1,5 +1,5 @@
 import { AleaPRNG } from "./lib/alea.js";
-import { COLOUR_RED, COLOUR_RED_BOLD, COLOUR_MAGENTA, COLOUR_MAGENTA_BOLD } from "./constants.js";
+import { COLOUR_RED, COLOUR_RED_BOLD, COLOUR_MAGENTA, COLOUR_MAGENTA_BOLD, COLOUR_NONE } from "./constants.js";
 
 export function clamp(value: number, maximum: number): number {
     if (value < 0) return 0;
@@ -38,12 +38,12 @@ export function getBrightnessAtHeight(height: number, maxHeight: number): number
 }
 
 export function exitWithError(errorType: string, message: string): void {
-    console.log(`NarGen: ${COLOUR_RED_BOLD}ERROR: ${COLOUR_RED}${errorType}: ${message}`);
+    console.log(`NarGen: ${COLOUR_RED_BOLD}ERROR: ${COLOUR_RED}${errorType}: ${message}${COLOUR_NONE}`);
     process.exit(1);
 }
 
 export function raiseWarning(warningType: string, message: string): void {
-    console.log(`NarGen: ${COLOUR_MAGENTA_BOLD}WARNING: ${COLOUR_MAGENTA}${warningType}: ${message}`);
+    console.log(`NarGen: ${COLOUR_MAGENTA_BOLD}WARNING: ${COLOUR_MAGENTA}${warningType}: ${message}${COLOUR_NONE}`);
 }
 
 export function randint(min: number, max: number, prng: AleaPRNG): number {

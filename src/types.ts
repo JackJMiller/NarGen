@@ -1,7 +1,7 @@
 export type Colour = [number, number, number];
 export type Config = WorldConfig | BiomeConfig;
 export type TileSaveObject = [string, number, string, string];
-export type MapImageName = "surfaceMapImage" | "biomeMapImage" | "subBiomeMapImage" | "perlinImage";
+export type GridImageName = "surfaceGridImage" | "biomeGridImage" | "subBiomeGridImage" | "perlinImage";
 export type OrnamentDefinition = [string, number, number, number];
 
 export interface PRNG {
@@ -11,7 +11,7 @@ export interface PRNG {
 export interface ChunkSaveObject {
     q: number,
     r: number,
-    tileMap: TileSaveObject[][] 
+    tileGrid: TileSaveObject[][] 
 }
 
 export interface BiomeConfig {

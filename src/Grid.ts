@@ -14,6 +14,16 @@ class Grid<T> {
 
     }
 
+    public static createGrid<T>(width: number, height: number, transformer: (x: number, y: number) => T, fill: T): Grid<T> {
+        let output = new Grid<T>(width, height, fill);
+        for (let x = 0; x < width; x++) {
+            for (let y = 0; y < height; y++) {
+                output.setValueAt(x, y, transformer(x, y));
+            }
+        }
+        return output;
+    }
+
     public valueAt(x: number, y: number): T {
         return this.grid[x][y];
     }

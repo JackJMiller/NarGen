@@ -74,7 +74,7 @@ abstract class Renderer {
     public drawBlocksAt(chunk: ChunkSaveObject, worldInfo: WorldInfo, x: number, y: number, ctx: CanvasRenderingContext2D): void {
         let canvasX = x * TILE_WIDTH;
         let canvasY = y * TILE_WIDTH + worldInfo.maxHeightReached * TILE_HEIGHT;
-        let tile = chunk.tileMap[x][y];
+        let tile = chunk.tileGrid[x][y];
         let height = tile[1];
         let surfaceName = tile[2];
         let areaObjectName = tile[3];

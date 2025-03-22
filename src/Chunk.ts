@@ -8,7 +8,7 @@ import World from "./World.js";
 import { CHUNK_SIZE, OCTAVE_COUNT, ORNAMENTER, SURFACES } from "./constants.js";
 import { clamp, getBrightnessAtHeight, portionAtPointBetween, raiseWarning, randint } from "./functions.js";
 import { AleaPRNG, mkAlea } from "./lib/alea.js";
-import { ChunkSaveObject, MapImageName, TileSaveObject, WorldConfig } from "./types.js";
+import { ChunkSaveObject, GridImageName, TileSaveObject, WorldConfig } from "./types.js";
 
 type BiomeBalance = { biome: SubBiome, influence: number }[];
 
@@ -26,19 +26,19 @@ class Chunk {
     public octaveCount: number;
     public widthInTiles: number;
     public heightInTiles: number;
-    public surfaceMapImage: Grid<number[]>;
-    public biomeMapImage: Grid<number[]>;
-    public subBiomeMapImage: Grid<number[]>;
+    public surfaceGridImage: Grid<number[]>;
+    public biomeGridImage: Grid<number[]>;
+    public subBiomeGridImage: Grid<number[]>;
     public perlinImage: Grid<number[]>;
     public AAA: number = 0;
     public BBB: number = 0;
     public CCC: number = 0;
-    public biomeMap: Grid<BiomeBalance>;
-    public groundMap: Grid<number>;
-    public surfaceMap: Grid<string>;
-    public areaMap: Grid<string>;
+    public biomeGrid: Grid<BiomeBalance>;
+    public groundGrid: Grid<number>;
+    public surfaceGrid: Grid<string>;
+    public areaGrid: Grid<string>;
     public overlayed: Grid<number>;
-    public biomeSuperMap: Grid<number>;
+    public biomeSuperGrid: Grid<number>;
 
     constructor(parentWorld: World, q: number, r: number) {
 
@@ -62,69 +62,69 @@ class Chunk {
 
         this.abcGen(this.parentWorld.seed);
 
-        let octaves = this.produceOctaves(this.octaveCount, initialNoiseTileSize, "biomeMap", [], 0.5);
+        let octaves = this.produceOctaves(this.octaveCount, initialNoiseTileSize, "biomeGrid", [], 0.5);
         this.overlayed = this.overlayOctaves(octaves, 0.5);
 
-        let biomeSuperMapOctaves = this.produceOctaves(3, this.parentWorld.biomeSuperMapTileSize, "biomeSuperMap", [this.parentWorld.biomeSuperMapTileSize, 50, 20]);
-        this.biomeSuperMap = this.overlayOctaves(biomeSuperMapOctaves, 0.1);
+        let biomeSuperGridOctaves = this.produceOctaves(3, this.parentWorld.biomeSuperGridTileSize, "biomeSuperGrid", [this.parentWorld.biomeSuperGridTileSize, 50, 20]);
+        this.biomeSuperGrid = this.overlayOctaves(biomeSuperGridOctaves, 0.1);
 
-        this.parentWorld.tempAcc += Grid.calculateAverage(this.biomeSuperMap);
+        this.parentWorld.tempAcc += Grid.calculateAverage(this.biomeSuperGrid);
         this.parentWorld.tempCount += 1;
 
         // create the biome map
-        this.biomeMap = this.createMap<BiomeBalance>(this.determineBiome.bind(this), []);
-        this.biomeMapImage = this.createMap<number[]>(this.determineBiomeColour.bind(this), [0, 0, 0]);
-        this.subBiomeMapImage = this.createMap<number[]>(this.determineSubBiomeColour.bind(this), [0, 0, 0]);
+        this.biomeGrid = Grid.createGrid<BiomeBalance>(this.widthInTiles, this.heightInTiles, this.determineBiome.bind(this), []);
+        this.biomeGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, this.determineBiomeColour.bind(this), [0, 0, 0]);
+        this.subBiomeGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, this.determineSubBiomeColour.bind(this), [0, 0, 0]);
 
-        this.perlinImage = Perlin.createGridImage(this.biomeSuperMap);
+        this.perlinImage = Perlin.createGridImage(this.biomeSuperGrid);
 
         // create the ground map
         this.abcGen(this.parentWorld.seed);
-        this.groundMap = this.createGroundMap(octaves);
+        this.groundGrid = this.createGroundGrid(octaves);
 
         // create the surface map
         this.abcGen(this.parentWorld.seed);
-        this.surfaceMap = this.createMap<string>(this.determineSurface.bind(this), "");
-        this.surfaceMapImage = this.createMap<number[]>(this.determineSurfaceColour.bind(this), [0, 0, 0]);
+        this.surfaceGrid = Grid.createGrid<string>(this.widthInTiles, this.heightInTiles, this.determineSurface.bind(this), "");
+        this.surfaceGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, this.determineSurfaceColour.bind(this), [0, 0, 0]);
 
         // create the area map to include ornamentation
         // TODO: create ornamenter for each sub-biome
-        this.areaMap = this.createMap<string>(this.determineArea.bind(this), "");
+        this.areaGrid = Grid.createGrid<string>(this.widthInTiles, this.heightInTiles, this.determineArea.bind(this), "");
 
         this.exportSaveFile();
 
     }
 
     public determineSurface(x: number, y: number): string {
-        let height = this.groundMap.valueAt(x, y);
+        let height = this.groundGrid.valueAt(x, y);
         let biome = this.getBiomeAt(x, y);
         if (height <= 0) return "water";
         else return biome.altitudeSurfaces.selectValue(height);
     }
 
     public determineSurfaceColour(x: number, y: number): number[] {
-        let height = this.groundMap.valueAt(x, y);
+        let height = this.groundGrid.valueAt(x, y);
         let biome = this.getBiomeAt(x, y);
-        let v = this.surfaceMap.valueAt(x, y);
+        let v = this.surfaceGrid.valueAt(x, y);
         let colour = this.getSurfaceColour(v, height, biome.heightDisplacement);
         return colour;
     }
 
     public determineBiome(x: number, y: number): BiomeBalance {
-        let height1 = this.biomeSuperMap.valueAt(x, y);
+        let height1 = this.biomeSuperGrid.valueAt(x, y);
         let height2 = this.overlayed.valueAt(x, y);
         let biomeBalance = this.determineBiomeByHeight(height1, height2);
         return biomeBalance;
     }
 
     public determineBiomeColour(x: number, y: number): number[] {
-        let biomeBalance = this.biomeMap.valueAt(x, y);
+        let biomeBalance = this.biomeGrid.valueAt(x, y);
         let biome = biomeBalance[0].biome;
         return biome.parentColour;
     }
 
     public determineSubBiomeColour(x: number, y: number): number[] {
-        let biomeBalance = this.biomeMap.valueAt(x, y);
+        let biomeBalance = this.biomeGrid.valueAt(x, y);
         let biome = biomeBalance[0].biome;
         return biome.colour;
     }
@@ -160,17 +160,17 @@ class Chunk {
 
     }
 
-    public createGroundMap(octaves: Grid<number>[]): Grid<number> {
+    public createGroundGrid(octaves: Grid<number>[]): Grid<number> {
 
-        this.groundMap = new Grid<number>(this.widthInTiles, this.heightInTiles, 0);
+        this.groundGrid = new Grid<number>(this.widthInTiles, this.heightInTiles, 0);
 
         for (let octaveNo = 0; octaveNo < octaves.length; octaveNo++) {
             let octave = octaves[octaveNo];
             for (let x = 0; x < this.widthInTiles; x++) {
                 for (let y = 0; y < this.heightInTiles; y++) {
-                    let original = this.groundMap.valueAt(x, y)
+                    let original = this.groundGrid.valueAt(x, y)
                     let v = this.getGroundOctaveValue(x, y, octave, octaveNo);
-                    this.groundMap.setValueAt(x, y, original + v);
+                    this.groundGrid.setValueAt(x, y, original + v);
                 }
             }
         }
@@ -178,13 +178,13 @@ class Chunk {
         for (let x = 0; x < this.widthInTiles; x++) {
             for (let y = 0; y < this.heightInTiles; y++) {
                 let displacement = 0;
-                let biome: SubBiome = this.biomeMap.valueAt(x, y)[0].biome; // ADDED
-                for (let balance of this.biomeMap.valueAt(x, y)) {
+                let biome: SubBiome = this.biomeGrid.valueAt(x, y)[0].biome; // ADDED
+                for (let balance of this.biomeGrid.valueAt(x, y)) {
                     biome = balance.biome;
                     let biomeInfluence = balance.influence;
                     displacement += biome.heightDisplacement * biomeInfluence;
                 }
-                let original = this.groundMap.valueAt(x, y)
+                let original = this.groundGrid.valueAt(x, y)
                 let newValue = Math.floor(original + displacement)
                 if (newValue > this.parentWorld.worldInfo.maxHeightReached) {
                     this.parentWorld.worldInfo.maxHeightReached = newValue;
@@ -194,16 +194,16 @@ class Chunk {
                     raiseWarning("Extreme terrain", "Ground map value inside " + biome.fullName + " has exceeded the maximum world height. Value has been capped at " + this.parentWorld.maxHeight.toString() + ".");
                     this.parentWorld.warningRecord.maxHeight.push(biome.fullName);
                 }
-                this.groundMap.setValueAt(x, y, newValue);
+                this.groundGrid.setValueAt(x, y, newValue);
             }
         }
 
-        return this.groundMap;
+        return this.groundGrid;
 
     }
 
     public getGroundOctaveValue(x: number, y: number, octave: Grid<number>, octaveNo: number): number {
-        let biomeBalance = this.biomeMap.valueAt(x, y);
+        let biomeBalance = this.biomeGrid.valueAt(x, y);
         let V = 0;
         let biomeInfluenceSum = 0;
         for (let balance of biomeBalance) {
@@ -222,16 +222,6 @@ class Chunk {
         return V;
     }
 
-    public createMap<T>(transformer: (x: number, y: number) => T, fill: T): Grid<T> {
-        let output = new Grid<T>(this.widthInTiles, this.heightInTiles, fill);
-        for (let x = 0; x < this.widthInTiles; x++) {
-            for (let y = 0; y < this.heightInTiles; y++) {
-                output.setValueAt(x, y, transformer(x, y));
-            }
-        }
-        return output;
-    }
-
     public static getFilepath(worldFilepath: string, q: number, r: number): string {
         return [worldFilepath, "GENERATED", "chunks", `${q}x${r}.json`].join("/");
     }
@@ -243,21 +233,21 @@ class Chunk {
     }
 
     private createSaveObject(): ChunkSaveObject {
-        let saveFileObject: ChunkSaveObject = { q: this.q, r: this.r, tileMap: [] };
+        let saveFileObject: ChunkSaveObject = { q: this.q, r: this.r, tileGrid: [] };
         for (let x = 0; x < this.widthInTiles; x++) {
             let row: TileSaveObject[] = [];
             for (let y = 0; y < this.heightInTiles; y++) {
                 row.push(this.createTileSaveObject(x, y));
             }
-            saveFileObject.tileMap.push(row);
+            saveFileObject.tileGrid.push(row);
         }
         return saveFileObject;
     }
 
     private createTileSaveObject(x: number, y: number): TileSaveObject {
-        let altitude = this.groundMap.valueAt(x, y);
-        let groundTileName = this.surfaceMap.valueAt(x, y);
-        let areaObjectName = this.areaMap.valueAt(x, y);
+        let altitude = this.groundGrid.valueAt(x, y);
+        let groundTileName = this.surfaceGrid.valueAt(x, y);
+        let areaObjectName = this.areaGrid.valueAt(x, y);
         return [
             this.getBiomeAt(x, y).toString(),
             altitude,
@@ -267,7 +257,7 @@ class Chunk {
     }
 
     public getBiomeAt(x: number, y: number): SubBiome {
-        return this.biomeMap.valueAt(x, y)[0].biome as SubBiome;
+        return this.biomeGrid.valueAt(x, y)[0].biome as SubBiome;
     }
 
     public determineBiomeByHeight(height1: number, height2: number): BiomeBalance {
@@ -333,7 +323,7 @@ class Chunk {
     }
 
     public overlayOctaves(octaves: Grid<number>[], persistence: number): Grid<number> {
-        let heightMap = new Grid<number>(this.widthInTiles, this.heightInTiles, 0);
+        let heightGrid = new Grid<number>(this.widthInTiles, this.heightInTiles, 0);
 
         // if i were smart i would turn this into an equation
         // sadly i am not
@@ -349,14 +339,14 @@ class Chunk {
             let amplitude = persistence ** octaveNo;
             for (let x = 0; x < this.widthInTiles; x++) {
                 for (let y = 0; y < this.heightInTiles; y++) {
-                    let originalValue = heightMap.valueAt(x, y);
+                    let originalValue = heightGrid.valueAt(x, y);
                     let v = octave.valueAt(x, y) * amplitude * noiseScaleInverse;
-                    heightMap.setValueAt(x, y, originalValue + v);
+                    heightGrid.setValueAt(x, y, originalValue + v);
                 }
             }
         }
 
-        return heightMap;
+        return heightGrid;
 
     }
 
@@ -366,15 +356,15 @@ class Chunk {
         else return v;
     }
 
-    public getMapImage(imageName: MapImageName): Grid<number[]> {
+    public getGridImage(imageName: GridImageName): Grid<number[]> {
 
         switch (imageName) {
-            case "surfaceMapImage":
-                return this.surfaceMapImage;
-            case "biomeMapImage":
-                return this.biomeMapImage;
-            case "subBiomeMapImage":
-                return this.subBiomeMapImage;
+            case "surfaceGridImage":
+                return this.surfaceGridImage;
+            case "biomeGridImage":
+                return this.biomeGridImage;
+            case "subBiomeGridImage":
+                return this.subBiomeGridImage;
             case "perlinImage":
                 return this.perlinImage;
             default:

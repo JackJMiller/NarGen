@@ -8,7 +8,7 @@ import SubBiome from "./SubBiome.js";
 import { BASE_BIOME_SIZE, CHUNK_SIZE, RENDERER } from "./constants.js";
 import { exitWithError, flattenNoiseDistribution, leftJustify, objectFromEntries, raiseWarning } from "./functions.js";
 import { loadJSON } from "./system_script.js";
-import { BiomeConfig, MapImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
+import { BiomeConfig, GridImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
 
 class World {
 
@@ -33,7 +33,7 @@ class World {
     public warningRecord: WarningRecord;
     public biomesRangerray: Rangerray<Biome>;
     public biomeSize: number = 1;
-    public biomeSuperMapTileSize: number = 1;
+    public biomeSuperGridTileSize: number = 1;
     public biomeSizes!: { [index: string]: number };
     public biomeNames: string[] = [];
     public biomeColours: { [index: string]: string };
@@ -131,7 +131,7 @@ class World {
             lowerPoint = upperPoint;
         }
 
-        this.biomeSuperMapTileSize = this.config["biomes"].length * BASE_BIOME_SIZE * this.biomeSize;
+        this.biomeSuperGridTileSize = this.config["biomes"].length * BASE_BIOME_SIZE * this.biomeSize;
 
     }
 
@@ -171,11 +171,11 @@ class World {
 
     public generateChunks() {
 
-        let mapImageNames: MapImageName[] = (this.renderWorld) ? ["surfaceMapImage", "biomeMapImage", "subBiomeMapImage", "perlinImage"] : [];
+        let gridImageNames: GridImageName[] = (this.renderWorld) ? ["surfaceGridImage", "biomeGridImage", "subBiomeGridImage", "perlinImage"] : [];
 
-        let mapImages: { [index: string]: Grid<number[]> } = {};
-        for (let mapImageName of mapImageNames) {
-            mapImages[mapImageName] = new Grid<number[]>(this.widthInTiles, this.heightInTiles, [0, 0, 0]);
+        let gridImages: { [index: string]: Grid<number[]> } = {};
+        for (let gridImageName of gridImageNames) {
+            gridImages[gridImageName] = new Grid<number[]>(this.widthInTiles, this.heightInTiles, [0, 0, 0]);
         }
 
         for (let _q = 0; _q < this.widthInChunks; _q++) {
@@ -183,14 +183,14 @@ class World {
                 let chunk = new Chunk(this, this.config.q + _q, this.config.r + _r);
                 let cornerX = _q * CHUNK_SIZE;
                 let cornerY = _r * CHUNK_SIZE;
-                for (let mapImageName of mapImageNames) {
-                    mapImages[mapImageName].overlay(chunk.getMapImage(mapImageName), cornerX, cornerY);
+                for (let gridImageName of gridImageNames) {
+                    gridImages[gridImageName].overlay(chunk.getGridImage(gridImageName), cornerX, cornerY);
                 }
             }
         }
 
-        for (let mapImageName of mapImageNames) {
-            RENDERER.renderColourGrid(mapImages[mapImageName], path.join(this.filepath, "GENERATED", "images", `${mapImageName}.png`));
+        for (let gridImageName of gridImageNames) {
+            RENDERER.renderColourGrid(gridImages[gridImageName], path.join(this.filepath, "GENERATED", "images", `${gridImageName}.png`));
         }
 
     }
