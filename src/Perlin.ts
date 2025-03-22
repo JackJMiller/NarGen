@@ -153,26 +153,6 @@ class Perlin {
         return [v, v, v];
     }
 
-    //public saveImage(filename, WORLDNAME) {
-    //    Perlin.save(this.grid, os.path.join("worlds", WORLDNAME, "images", filename + ".png"))
-
-    //public static createImage(grid) {
-    //    img = Image.new("RGB", (grid.width, grid.height), "black")
-    //
-    //    pixels = img.load()
-    //
-    //    for x in range(grid.width) {
-    //        for y in range(grid.height) {
-    //            v = grid.valueAt(x, y)
-    //            v = 0.5 * (v + 1)
-    //            rgb = Perlin.getHeightColour(v)
-    //            pixels[x, y] = rgb
-    //        }
-    //    }
-    //
-    //    return img
-    //}
-
     public static createGridImage(grid: Grid<number>): Grid<number[]> {
         let image = new Grid<number[]>(grid.width, grid.height, [0, 0, 0]);
 
@@ -187,12 +167,6 @@ class Perlin {
         return image;
 
     }
-
-    //public static save(grid, path) {
-    //    img = Perlin.createImage(grid)
-    //
-    //    img.save(path)
-    //}
 
     public getGrid(): Grid<number> {
         return this.grid

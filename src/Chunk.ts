@@ -22,7 +22,6 @@ class Chunk {
     public biomesRangerray: Rangerray<Biome>;
     public cornerX: number;
     public cornerY: number;
-    public lacunarity: number;
     public octaveCount: number;
     public widthInTiles: number;
     public heightInTiles: number;
@@ -50,7 +49,6 @@ class Chunk {
         this.biomesRangerray = this.parentWorld.biomesRangerray;
         this.cornerX = this.q * CHUNK_SIZE;
         this.cornerY = this.r * CHUNK_SIZE;
-        this.lacunarity = 0.5;
 
         this.abcGen(this.parentWorld.seed);
 
