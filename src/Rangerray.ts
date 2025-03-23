@@ -85,7 +85,6 @@ class Rangerray<T> {
             console.log(`${item[0]}\t${item[1]}`);
         }
         console.log("--- end of rangerray ---");
-        console.log();
     }
 
     public values(): T[] {

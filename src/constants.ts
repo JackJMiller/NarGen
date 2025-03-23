@@ -42,7 +42,7 @@ set_default_root_blocks(ORNAMENTATION_ROOT_BLOCKS);
 export const CHUNK_SIZE = 20;
 export const TILE_WIDTH = 20;
 export const TILE_HEIGHT = 14;
-export const BASE_BIOME_SIZE = 400;
+export const BASE_BIOME_SIZE = 10;
 
 export const OCTAVE_COUNT = 5;
 
@@ -72,6 +72,13 @@ export const RECOGNISED_SUB_BIOME_ATTRIBUTES = [
     "upperHeightMultiplier",
     "ornaments"
 ];
+
+export const GRID_IMAGE_FILENAMES = {
+    "biomeGridImage": "biome.png",
+    "perlinImage": "perlin.png",
+    "subBiomeGridImage": "sub_biome.png",
+    "surfaceGridImage": "surface.png"
+};
 
 export const ORNAMENTER = new Ornamenter();
 export const RENDERER = new SystemRenderer();

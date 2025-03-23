@@ -10,7 +10,7 @@ cat src/lib/alea.ts >> nargen_web.ts
 
 cat src/Chunk.ts >> nargen_web.ts
 cat src/Grid.ts >> nargen_web.ts
-cat src/Perlin.ts >> nargen_web.ts
+cat src/Pattern.ts >> nargen_web.ts
 cat src/Rangerray.ts >> nargen_web.ts
 cat src/Renderer.ts >> nargen_web.ts
 cat src/SubBiome.ts >> nargen_web.ts

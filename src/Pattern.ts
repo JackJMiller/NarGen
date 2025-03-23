@@ -1,7 +1,7 @@
 import Grid from "./Grid.js";
 import { Vector2 } from "./types.js";
 
-class Perlin {
+class Pattern {
 
     public startX: number;
     public startY: number;
@@ -159,7 +159,7 @@ class Perlin {
         for (let x = 0; x < grid.width; x++) {
             for (let y = 0; y < grid.height; y++) {
                 let v = grid.valueAt(x, y);
-                let rgb = Perlin.getHeightColour(v);
+                let rgb = Pattern.getHeightColour(v);
                 image.setValueAt(x, y, rgb);
             }
         }
@@ -182,4 +182,4 @@ class Perlin {
 
 }
 
-export default Perlin;
+export default Pattern;

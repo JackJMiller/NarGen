@@ -1,7 +1,7 @@
 import fs from "fs";
 import Biome from "./Biome.js";
 import Grid from "./Grid.js";
-import Perlin from "./Perlin.js";
+import Pattern from "./Pattern.js";
 import Rangerray from "./Rangerray.js";
 import SubBiome from "./SubBiome.js";
 import World from "./World.js";
@@ -63,8 +63,10 @@ class Chunk {
         let octaves = this.produceOctaves(this.octaveCount, initialNoiseTileSize, "biomeGrid", [], 0.5);
         this.overlayed = this.overlayOctaves(octaves, 0.5);
 
-        let biomeSuperGridOctaves = this.produceOctaves(3, this.parentWorld.biomeSuperGridTileSize, "biomeSuperGrid", [this.parentWorld.biomeSuperGridTileSize, 50, 20]);
+        let biomeSuperGridOctaves = this.produceOctaves(1, this.parentWorld.biomeSuperGridTileSize, "biomeSuperGrid", [this.parentWorld.biomeSuperGridTileSize]);
         this.biomeSuperGrid = this.overlayOctaves(biomeSuperGridOctaves, 0.1);
+
+        //this.biomeSuperGrid.printAllValues();
 
         this.parentWorld.tempAcc += Grid.calculateAverage(this.biomeSuperGrid);
         this.parentWorld.tempCount += 1;
@@ -74,7 +76,7 @@ class Chunk {
         this.biomeGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, this.determineBiomeColour.bind(this), [0, 0, 0]);
         this.subBiomeGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, this.determineSubBiomeColour.bind(this), [0, 0, 0]);
 
-        this.perlinImage = Perlin.createGridImage(this.biomeSuperGrid);
+        this.perlinImage = Pattern.createGridImage(this.biomeSuperGrid);
 
         // create the ground map
         this.abcGen(this.parentWorld.seed);
@@ -131,7 +133,7 @@ class Chunk {
 
         // configure the noise tile sizes
         if (tileSizes.length === 0) {
-            Perlin.determineTileSizes(tileSizes, noiseTileSize, octaveCount, lacunarity!);
+            Pattern.determineTileSizes(tileSizes, noiseTileSize, octaveCount, lacunarity!);
         }
 
         // produce and return the octaves
@@ -141,7 +143,7 @@ class Chunk {
 
     public produceOctave(noiseTileSize: number): Grid<number> {
         this.abcGen(this.AAA.toString());
-        let perlin = new Perlin(
+        let perlin = new Pattern(
             this.cornerX,
             this.cornerY,
             this.widthInTiles,
