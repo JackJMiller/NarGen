@@ -1,7 +1,7 @@
 import Grid from "./Grid.js";
 import { Vector2 } from "./types.js";
 
-class Pattern {
+abstract class Pattern {
 
     public startX: number;
     public startY: number;

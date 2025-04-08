@@ -2,6 +2,7 @@ import fs from "fs";
 import Biome from "./Biome.js";
 import Grid from "./Grid.js";
 import Pattern from "./Pattern.js";
+import Perlin from "./Perlin.js";
 import Rangerray from "./Rangerray.js";
 import SubBiome from "./SubBiome.js";
 import World from "./World.js";
@@ -143,7 +144,7 @@ class Chunk {
 
     public produceOctave(noiseTileSize: number): Grid<number> {
         this.abcGen(this.AAA.toString());
-        let perlin = new Pattern(
+        let perlin = new Perlin(
             this.cornerX,
             this.cornerY,
             this.widthInTiles,
