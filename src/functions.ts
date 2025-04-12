@@ -55,10 +55,9 @@ export function randomElement<T>(array: T[], prng: AleaPRNG): T {
     return array[index];
 }
 
-export function flattenNoiseDistribution(noiseValue: number): number {
-    let FLATTENR = -0.15;
-    let mean = 0.53;
-    let r = FLATTENR;
+export function flattenPerlinDistribution(noiseValue: number): number {
+    let mean = 0.5;
+    let r = -0.2;
     let sine = (noiseValue < mean) ? -1 : 1;
     noiseValue = Math.abs(noiseValue - mean);
     noiseValue = 1 - Math.exp(noiseValue * r)

@@ -6,7 +6,7 @@ import Grid from "./Grid.js";
 import Rangerray from "./Rangerray.js";
 import SubBiome from "./SubBiome.js";
 import { BASE_BIOME_SIZE, CHUNK_SIZE, GRID_IMAGE_FILENAMES, RENDERER } from "./constants.js";
-import { exitWithError, flattenNoiseDistribution, leftJustify, objectFromEntries, raiseWarning } from "./functions.js";
+import { exitWithError, flattenPerlinDistribution, leftJustify, objectFromEntries, raiseWarning } from "./functions.js";
 import { loadJSON } from "./system_script.js";
 import { BiomeConfig, GridImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
 
@@ -124,7 +124,7 @@ class World {
         for (let biomeEntry of this.config["biomes"]) {
             let upperPoint = biomeEntry[0];
             let biomeName = biomeEntry[1];
-            //upperPoint = flattenNoiseDistribution(upperPoint);
+            upperPoint = flattenPerlinDistribution(upperPoint);
             let biome = this.createBiome(biomeName);
             this.biomesRangerray.insert(upperPoint, biome);
         }
@@ -160,7 +160,7 @@ class World {
             if (!Object.keys(biomeConfig).includes(subBiomeName)) {
                 exitWithError("Undefined sub-biome", `An undefined sub-biome named '${subBiomeName}' is referenced inside ranges attribute of biome '${biomeName}'.`);
             }
-            noiseUpper = flattenNoiseDistribution(noiseUpper);
+            noiseUpper = flattenPerlinDistribution(noiseUpper);
             let obj = new SubBiome(this, biomeName, subBiomeName, biomeConfig, noiseLower, noiseUpper);
             biome.insert(noiseUpper, obj);
             noiseLower = noiseUpper;

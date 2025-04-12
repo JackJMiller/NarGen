@@ -1,5 +1,5 @@
 import Grid from "./Grid.js";
-import { Vector2 } from "./types.js";
+import { Colour, Vector2 } from "./types.js";
 
 abstract class Pattern {
 
@@ -98,15 +98,12 @@ abstract class Pattern {
         return (a1 - a0) * (3.0 - w * 2.0) * w * w + a0;
     }
 
-    public static getHeightColour(height: number): number[] {
-        let v = height - 0.5;
-        v *= 5;
-        v += 0.5;
-        v = Math.floor((1 - v) * 255);
+    public static getHeightColour(height: number): Colour {
+        let v = Math.floor((1 - height) * 256);
         return [v, v, v];
     }
 
-    public static createGridImage(grid: Grid<number>): Grid<number[]> {
+    public static createGridImage(grid: Grid<number>, verbose: boolean = false): Grid<number[]> {
         let image = new Grid<number[]>(grid.width, grid.height, [0, 0, 0]);
 
         for (let x = 0; x < grid.width; x++) {
@@ -114,6 +111,7 @@ abstract class Pattern {
                 let v = grid.valueAt(x, y);
                 let rgb = Pattern.getHeightColour(v);
                 image.setValueAt(x, y, rgb);
+                if (verbose) console.log(`${v} -> (${rgb[0]}, ${rgb[1]}, ${rgb[2]})`);
             }
         }
 
