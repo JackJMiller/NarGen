@@ -1,4 +1,5 @@
 import Pattern from "./Pattern.js";
+import { limit } from "./functions.js";
 import { Vector2 } from "./types.js";
 
 class Perlin extends Pattern {
@@ -9,7 +10,7 @@ class Perlin extends Pattern {
 
     }
 
-    public noise(x: number, y: number): number {
+    public compute(x: number, y: number): number {
 
         let x0 = Math.floor(x);
         let x1 = x0 + 1;
@@ -62,6 +63,15 @@ class Perlin extends Pattern {
         return (dx*gradient["x"] + dy*gradient["y"]);
     }
 
+    public static flatten(noiseValue: number): number {
+        let r = -0.25;
+        let sine = (noiseValue < 0.5) ? -1 : 1;
+        noiseValue = Math.abs(noiseValue - 0.5);
+        noiseValue = 1 - Math.exp(noiseValue * r)
+        noiseValue = 0.5 + sine * noiseValue
+        noiseValue = limit(noiseValue, 0, 1)
+        return noiseValue;
+    }
 
 }
 

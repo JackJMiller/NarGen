@@ -55,17 +55,6 @@ export function randomElement<T>(array: T[], prng: AleaPRNG): T {
     return array[index];
 }
 
-export function flattenPerlinDistribution(noiseValue: number): number {
-    let mean = 0.5;
-    let r = -0.2;
-    let sine = (noiseValue < mean) ? -1 : 1;
-    noiseValue = Math.abs(noiseValue - mean);
-    noiseValue = 1 - Math.exp(noiseValue * r)
-    noiseValue = mean + sine * noiseValue
-    noiseValue = limit(noiseValue, 0, 1)
-    return noiseValue;
-}
-
 export function colourAverage(c1: number[], c2: number[]): number[] {
     return [
         mean(c1[0], c2[0]),

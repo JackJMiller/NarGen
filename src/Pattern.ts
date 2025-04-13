@@ -48,7 +48,7 @@ abstract class Pattern {
                 let _y = mapY % chunkSize;
                 let chunkX = Math.floor(mapX / chunkSize) + _x / this.chunkSize;
                 let chunkY = Math.floor(mapY / chunkSize) + _y / this.chunkSize;
-                let NOISE = this.noise(chunkX, chunkY);
+                let NOISE = this.compute(chunkX, chunkY);
                 if (NOISE > this.maxNoise) {
                     this.maxNoise = NOISE
                 }
@@ -65,7 +65,7 @@ abstract class Pattern {
 
     }
 
-    public abstract noise(x: number, y: number): number;
+    public abstract compute(x: number, y: number): number;
 
     public abstract randomGradient(ix: number, iy: number): Vector2;
 
