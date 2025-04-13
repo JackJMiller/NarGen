@@ -10,10 +10,10 @@ abstract class Pattern {
     public heightInTiles: number;
     public endX: number;
     public endY: number;
-    public minNoise: number;
-    public maxNoise: number;
-    public noiseAcc: number;
-    public noiseCount: number;
+    public minNoise: number = 1;
+    public maxNoise: number = 0;
+    public noiseAcc: number = 0;
+    public noiseCount: number = 0;
     public grid: Grid<number>;
     public average: number;
     public seed: number;
@@ -29,36 +29,40 @@ abstract class Pattern {
         this.endX = this.startX + this.widthInTiles;
         this.endY = this.startY + this.heightInTiles;
 
-        this.minNoise = 1;
-        this.maxNoise = 0;
-        this.noiseAcc = 0;
-        this.noiseCount = 0;
-
         this.grid = new Grid<number>(this.widthInTiles, this.heightInTiles, 0);
 
-        for (let x = 0; x < this.widthInTiles; x++) {
-            for (let y = 0; y < this.heightInTiles; y++) {
-                let mapX = this.startX + x;
-                let mapY = this.startY + y;
-                let _x = mapX % chunkSize;
-                let _y = mapY % chunkSize;
-                let chunkX = Math.floor(mapX / chunkSize) + _x / this.chunkSize;
-                let chunkY = Math.floor(mapY / chunkSize) + _y / this.chunkSize;
-                let NOISE = this.compute(chunkX, chunkY);
-                if (NOISE > this.maxNoise) {
-                    this.maxNoise = NOISE
-                }
-                else if (NOISE < this.minNoise) {
-                    this.minNoise = NOISE
-                }
-                this.noiseAcc += Math.abs(NOISE)
-                this.noiseCount += 1
-                this.grid.setValueAt(x, y, NOISE)
-            }
-        }
+        this.drawPattern();
 
         this.average = this.noiseAcc / this.noiseCount;
 
+    }
+
+    public drawPattern(): void {
+
+        for (let x = 0; x < this.widthInTiles; x++) {
+            for (let y = 0; y < this.heightInTiles; y++) {
+                let value = this.computeValueAt(this.startX + x, this.startY + y);
+                this.noiseAcc += Math.abs(value);
+                this.noiseCount += 1;
+                this.grid.setValueAt(x, y, value);
+            }
+        }
+
+    }
+
+    private computeValueAt(x: number, y: number): number {
+        let _x = x % this.chunkSize;
+        let _y = y % this.chunkSize;
+        let chunkX = Math.floor(x / this.chunkSize) + _x / this.chunkSize;
+        let chunkY = Math.floor(y / this.chunkSize) + _y / this.chunkSize;
+        let value = this.compute(chunkX, chunkY);
+        if (value > this.maxNoise) {
+            this.maxNoise = value
+        }
+        else if (value < this.minNoise) {
+            this.minNoise = value
+        }
+        return value;
     }
 
     public abstract compute(x: number, y: number): number;
