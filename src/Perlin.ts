@@ -1,12 +1,13 @@
 import Pattern from "./Pattern.js";
 import { limit } from "./functions.js";
+import { mkAlea } from "./lib/alea.js";
 import { Vector2 } from "./types.js";
 
 class Perlin extends Pattern {
 
-    constructor(startX: number, startY: number, width: number, height: number, chunkSize: number, AAA: number, BBB: number, CCC: number) {
+    constructor(startX: number, startY: number, width: number, height: number, chunkSize: number, seed: number) {
 
-        super(startX, startY, width, height, chunkSize, AAA, BBB, CCC);
+        super(startX, startY, width, height, chunkSize, seed);
 
     }
 
@@ -37,21 +38,14 @@ class Perlin extends Pattern {
     }
 
     public randomGradient(ix: number, iy: number): Vector2 {
-        let w = 8;
-        let s = Math.floor(w / 2);
-        let a = ix;
-        let b = iy;
 
-        a *= this.AAA
-        b ^= a << s | a >> w-s
-        b *= this.BBB
-        a ^= b << s | b >> w-s
-        a *= this.CCC
-        let r = a * (3.14159265 / (~(~0 >> 1) | 1));
+        let prng = mkAlea(`${ix}-${iy}-${this.seed}`);
         
-        let v = { x: Math.cos(r), y: Math.sin(r) };
+        return {
+            x: Math.cos(prng.random() * Math.PI),
+            y: Math.sin(prng.random() * Math.PI)
+        };
 
-        return v;
     }
 
     public dotGridGradient(ix: number, iy: number, x: number, y: number): number {

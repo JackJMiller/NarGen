@@ -10,29 +10,25 @@ abstract class Pattern {
     public heightInTiles: number;
     public endX: number;
     public endY: number;
-    public AAA: number;
-    public BBB: number;
-    public CCC: number;
     public minNoise: number;
     public maxNoise: number;
     public noiseAcc: number;
     public noiseCount: number;
     public grid: Grid<number>;
     public average: number;
+    public seed: number;
 
-    constructor(startX: number, startY: number, width: number, height: number, chunkSize: number, AAA: number, BBB: number, CCC: number) {
+    constructor(startX: number, startY: number, width: number, height: number, chunkSize: number, seed: number) {
 
         this.startX = startX;
         this.startY = startY;
         this.chunkSize = chunkSize;
+        this.seed = seed;
         this.widthInTiles = width;
         this.heightInTiles = height;
         this.endX = this.startX + this.widthInTiles;
         this.endY = this.startY + this.heightInTiles;
 
-        this.AAA = AAA;
-        this.BBB = BBB;
-        this.CCC = CCC;
         this.minNoise = 1;
         this.maxNoise = 0;
         this.noiseAcc = 0;

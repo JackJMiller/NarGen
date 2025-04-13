@@ -20,6 +20,7 @@ class Chunk {
     public q: number;
     public r: number;
     public prng: AleaPRNG;
+    public seed: number;
     public biomesRangerray: Rangerray<Biome>;
     public cornerX: number;
     public cornerY: number;
@@ -30,9 +31,6 @@ class Chunk {
     public biomeGridImage: Grid<number[]>;
     public subBiomeGridImage: Grid<number[]>;
     public perlinImage: Grid<number[]>;
-    public AAA: number = 0;
-    public BBB: number = 0;
-    public CCC: number = 0;
     public biomeGrid: Grid<BiomeBalance>;
     public groundGrid: Grid<number>;
     public surfaceGrid: Grid<string>;
@@ -47,11 +45,12 @@ class Chunk {
         this.q = q;
         this.r = r;
         this.prng = mkAlea(`${this.q}x${this.r}`);
+        this.seed = Number.parseInt(this.parentWorld.seed);
         this.biomesRangerray = this.parentWorld.biomesRangerray;
         this.cornerX = this.q * CHUNK_SIZE;
         this.cornerY = this.r * CHUNK_SIZE;
 
-        this.abcGen(this.parentWorld.seed);
+        this.seedGen(this.parentWorld.seed);
 
         let initialNoiseTileSize = 10 * CHUNK_SIZE;
         this.octaveCount = OCTAVE_COUNT;
@@ -59,7 +58,7 @@ class Chunk {
         this.widthInTiles = CHUNK_SIZE;
         this.heightInTiles = CHUNK_SIZE;
 
-        this.abcGen(this.parentWorld.seed);
+        this.seedGen(this.parentWorld.seed);
 
         let octaves = this.produceOctaves(this.octaveCount, initialNoiseTileSize, "biomeGrid", [], 0.5);
         this.overlayed = this.overlayOctaves(octaves, 0.5);
@@ -80,11 +79,11 @@ class Chunk {
         this.perlinImage = Pattern.createGridImage(this.biomeSuperGrid);
 
         // create the ground map
-        this.abcGen(this.parentWorld.seed);
+        this.seedGen(this.parentWorld.seed);
         this.groundGrid = this.createGroundGrid(octaves);
 
         // create the surface map
-        this.abcGen(this.parentWorld.seed);
+        this.seedGen(this.parentWorld.seed);
         this.surfaceGrid = Grid.createGrid<string>(this.widthInTiles, this.heightInTiles, this.determineSurface.bind(this), "");
         this.surfaceGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, this.determineSurfaceColour.bind(this), [0, 0, 0]);
 
@@ -143,14 +142,13 @@ class Chunk {
     }
 
     public produceOctave(noiseTileSize: number): Grid<number> {
-        this.abcGen(this.AAA.toString());
         let perlin = new Perlin(
             this.cornerX,
             this.cornerY,
             this.widthInTiles,
             this.heightInTiles,
             noiseTileSize,
-            this.AAA, this.BBB, this.CCC
+            this.seed
         );
         return perlin.getGrid();
     }
@@ -300,11 +298,9 @@ class Chunk {
         }
     }
 
-    public abcGen(seed: string): void {
+    public seedGen(seed: string): void {
         let prng = mkAlea(seed);
-        this.AAA = randint(1111111111, 9999999999, prng);
-        this.BBB = randint(1111111111, 9999999999, prng);
-        this.CCC = randint(1111111111, 9999999999, prng);
+        this.seed = randint(1111111111, 9999999999, prng);
     }
 
     public getSurfaceColour(surfaceName: string, height: number, heightDisplacement: number): number[] {
