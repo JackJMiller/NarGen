@@ -120,6 +120,8 @@ class World {
             this.biomeSize = 1;
         }
 
+        let biomeSizeSum = this.config.biomes.reduce((acc: number, x: any) => acc + x[0], 0);
+
         Rangerray.fracrrayToRangerray(this.config["biomes"]);
 
         for (let biomeEntry of this.config["biomes"]) {
@@ -132,7 +134,7 @@ class World {
 
         this.biomesRangerray.print();
 
-        this.biomeSuperGridTileSize = this.config["biomes"].length * BASE_BIOME_SIZE * this.biomeSize;
+        this.biomeSuperGridTileSize = biomeSizeSum * BASE_BIOME_SIZE * this.biomeSize;
 
         console.log(`Biome super grid tile size: ${this.biomeSuperGridTileSize}`);
 

@@ -50,6 +50,14 @@ abstract class Pattern {
 
     }
 
+    protected getTileBounds(x: number, y: number): { x0: number, x1: number, y0: number, y1: number } {
+        let x0 = Math.floor(x);
+        let x1 = x0 + 1;
+        let y0 = Math.floor(y);
+        let y1 = y0 + 1;
+        return { x0, x1, y0, y1 };
+    }
+
     private computeValueAt(x: number, y: number): number {
         let _x = x % this.chunkSize;
         let _y = y % this.chunkSize;
@@ -127,7 +135,7 @@ abstract class Pattern {
         let tileSize = noiseTileSize;
         for (let i = 0; i < octaveCount; i++) {
             tileSizes.push(tileSize);
-            tileSize = Math.ceil(tileSize * lacunarity!);
+            tileSize = Math.ceil(tileSize * lacunarity);
         }
     }
 

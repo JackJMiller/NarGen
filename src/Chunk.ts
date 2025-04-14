@@ -129,7 +129,7 @@ class Chunk {
         return biome.colour;
     }
 
-    public produceOctaves(octaveCount: number, noiseTileSize: number, octaveIdentifier: string, tileSizes: number[] = [], lacunarity?: number): Grid<number>[] {
+    public produceOctaves(octaveCount: number, noiseTileSize: number, patternName: string, tileSizes: number[] = [], lacunarity?: number): Grid<number>[] {
 
         // configure the noise tile sizes
         if (tileSizes.length === 0) {
@@ -137,11 +137,12 @@ class Chunk {
         }
 
         // produce and return the octaves
-        return tileSizes.map((tileSize: number) => this.produceOctave(tileSize));
+        return tileSizes.map((tileSize: number) => this.produceOctave(tileSize, patternName));
 
     }
 
-    public produceOctave(noiseTileSize: number): Grid<number> {
+    public produceOctave(noiseTileSize: number, patternName: string): Grid<number> {
+        this.seedGen(this.seed.toString() + patternName);
         let perlin = new Perlin(
             this.cornerX,
             this.cornerY,

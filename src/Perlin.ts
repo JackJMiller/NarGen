@@ -13,10 +13,7 @@ class Perlin extends Pattern {
 
     public compute(x: number, y: number): number {
 
-        let x0 = Math.floor(x);
-        let x1 = x0 + 1;
-        let y0 = Math.floor(y);
-        let y1 = y0 + 1;
+        let { x0, x1, y0, y1 } = this.getTileBounds(x, y);
 
         let sx = x - x0;
         let sy = y - y0;
@@ -54,16 +51,16 @@ class Perlin extends Pattern {
         let dx = x - ix;
         let dy = y - iy;
 
-        return (dx*gradient["x"] + dy*gradient["y"]);
+        return (dx * gradient["x"] + dy * gradient["y"]);
     }
 
     public static flatten(noiseValue: number): number {
         let r = -0.25;
         let sine = (noiseValue < 0.5) ? -1 : 1;
         noiseValue = Math.abs(noiseValue - 0.5);
-        noiseValue = 1 - Math.exp(noiseValue * r)
-        noiseValue = 0.5 + sine * noiseValue
-        noiseValue = limit(noiseValue, 0, 1)
+        noiseValue = 1 - Math.exp(noiseValue * r);
+        noiseValue = 0.5 + sine * noiseValue;
+        noiseValue = limit(noiseValue, 0, 1);
         return noiseValue;
     }
 
