@@ -140,6 +140,7 @@ class World {
 
     }
 
+    // TODO: move code Biome class
     public createBiome(biomeName: string): Biome {
         let biome = new Biome(biomeName);
         let biomeConfigPath = [this.filepath, "biomes", biomeName + ".json"].join("/");
@@ -155,7 +156,7 @@ class World {
 
         this.biomeColours[biomeName] = biomeConfig["colour"].join(",");
 
-        Rangerray.fracrrayToRangerray(biomeConfig["ranges"])
+        //Rangerray.fracrrayToRangerray(biomeConfig["ranges"])
 
         for (let subBiome of biomeConfig["ranges"]) {
             noiseUpper = subBiome[0];

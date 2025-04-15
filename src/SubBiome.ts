@@ -70,15 +70,9 @@ class SubBiome {
         this.ornamentOccurrenceRate = 0;
         let keys = Object.keys(this.config);
         if (keys.includes("ornaments")) {
-            validateOrnaments(this.config["ornaments"], this.fullName);
-            for (let value of this.config["ornaments"]) {
-                if (value[0] !== "OCCURRENCE") {
-                    this.ornaments.push(value);
-                }
-                else {
-                    this.ornamentOccurrenceRate = value[1];
-                }
-            }
+            validateOrnaments(this.config.ornaments, this.fullName);
+            this.ornamentOccurrenceRate = this.config.ornaments.OCCURRENCE;
+            this.ornaments = this.config.ornaments.candidates;
         }
     }
 

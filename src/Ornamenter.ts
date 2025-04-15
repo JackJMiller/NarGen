@@ -36,13 +36,12 @@ class Ornamenter {
         let acc = 0;
         let rangerray = new Rangerray<string>();
         for (let ornament of biome.ornaments) {
-            let ornamentName = ornament[0];
-            let minAltitude = ornament[1];
-            let maxAltitude = ornament[2];
-            let ornamentOccurrenceChance = ornament[3];
-            if (minAltitude <= altitude && altitude <= maxAltitude && ORNAMENTATION_ROOT_BLOCKS[ornamentName as string].includes(groundTileName)) {
+            let minAltitude = ornament.minZ;
+            let maxAltitude = ornament.maxZ;
+            let ornamentOccurrenceChance = ornament.frequency;
+            if (minAltitude <= altitude && altitude <= maxAltitude && ORNAMENTATION_ROOT_BLOCKS[ornament.name].includes(groundTileName)) {
                 acc += ornamentOccurrenceChance;
-                rangerray.insert(acc, ornamentName);
+                rangerray.insert(acc, ornament.name);
             }
         }
         return rangerray;

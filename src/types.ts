@@ -2,7 +2,6 @@ export type Colour = [number, number, number];
 export type Config = WorldConfig | BiomeConfig;
 export type TileSaveObject = [string, number, string, string];
 export type GridImageName = "surfaceGridImage" | "biomeGridImage" | "subBiomeGridImage" | "perlinImage";
-export type OrnamentDefinition = [string, number, number, number];
 
 export interface PRNG {
     random: () => number
@@ -14,6 +13,18 @@ export interface ChunkSaveObject {
     tileGrid: TileSaveObject[][] 
 }
 
+export interface OrnamentDefinition {
+    name: string,
+    minZ: number,
+    maxZ: number,
+    frequency: number
+}
+
+export interface OrnamentsDefinition {
+    OCCURRENCE: number,
+    candidates: OrnamentDefinition[]
+}
+
 export interface BiomeConfig {
     colour: Colour,
     ranges: [number, string][],
@@ -23,7 +34,7 @@ export interface BiomeConfig {
 export interface SubBiomeConfig {
     colour: Colour,
     altitudeSurfaces: [number, string][],
-    ornaments: OrnamentDefinition[],
+    ornaments: OrnamentsDefinition,
     amplitudes: number[],
     persistence: number,
     heightMultiplier: number

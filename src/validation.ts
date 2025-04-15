@@ -1,8 +1,8 @@
 import { exitWithError } from "./functions.js";
-import { OrnamentDefinition } from "./types.js";
+import { OrnamentsDefinition } from "./types.js";
 
-export function validateOrnaments(value: OrnamentDefinition[], subBiomeName: string): void {
-    let keys = value.map((entry: OrnamentDefinition) => entry[0]);
+export function validateOrnaments(def: OrnamentsDefinition, subBiomeName: string): void {
+    let keys = Object.keys(def);
     if (!keys.includes("OCCURRENCE")) {
         exitWithError("Invalid configuration", `The OCCURRENCE attribute is missing from the ornaments list inside the configuration for ${subBiomeName}.`);
     }
