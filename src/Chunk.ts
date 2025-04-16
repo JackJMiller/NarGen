@@ -7,7 +7,8 @@ import Rangerray from "./Rangerray.js";
 import SubBiome from "./SubBiome.js";
 import World from "./World.js";
 import { CHUNK_SIZE, OCTAVE_COUNT, ORNAMENTER, SURFACES } from "./constants.js";
-import { clamp, getBrightnessAtHeight, portionAtPointBetween, raiseWarning, randint } from "./functions.js";
+import { getBrightnessAtHeight, portionAtPointBetween, randint } from "./functions.js";
+import { checkMaxHeight } from "./issue_checking.js";
 import { AleaPRNG, mkAlea } from "./lib/alea.js";
 import { ChunkSaveObject, GridImageName, TileSaveObject, WorldConfig } from "./types.js";
 
@@ -164,6 +165,15 @@ class Chunk {
 
         this.groundGrid = new Grid<number>(this.widthInTiles, this.heightInTiles, 0);
 
+        this.multiplyGroundOctaves(octaves);
+
+        this.displaceGround(octaves);
+
+        return this.groundGrid;
+
+    }
+
+    private multiplyGroundOctaves(octaves: Grid<number>[]) {
         for (let octaveNo = 0; octaveNo < octaves.length; octaveNo++) {
             let octave = octaves[octaveNo];
             for (let x = 0; x < this.widthInTiles; x++) {
@@ -174,7 +184,9 @@ class Chunk {
                 }
             }
         }
+    }
 
+    private displaceGround(octaves: Grid<number>[]) {
         for (let x = 0; x < this.widthInTiles; x++) {
             for (let y = 0; y < this.heightInTiles; y++) {
                 let displacement = 0;
@@ -189,26 +201,15 @@ class Chunk {
                 if (newValue > this.parentWorld.worldInfo.maxHeightReached) {
                     this.parentWorld.worldInfo.maxHeightReached = newValue;
                 }
-                if (newValue > this.parentWorld.maxHeight && !this.parentWorld.warningRecord.maxHeight.includes(biome.fullName)) {
-                    newValue = clamp(newValue, this.parentWorld.maxHeight);
-                    raiseWarning("Extreme terrain", "Ground map value inside " + biome.fullName + " has exceeded the maximum world height. Value has been capped at " + this.parentWorld.maxHeight.toString() + ".");
-                    this.parentWorld.warningRecord.maxHeight.push(biome.fullName);
-                }
+                checkMaxHeight(newValue, biome, this.parentWorld);
                 this.groundGrid.setValueAt(x, y, newValue);
             }
         }
-
-        return this.groundGrid;
-
     }
 
     public getGroundOctaveValue(x: number, y: number, octave: Grid<number>, octaveNo: number): number {
         let biomeBalance = this.biomeGrid.valueAt(x, y);
         let V = 0;
-        let biomeInfluenceSum = 0;
-        for (let balance of biomeBalance) {
-            biomeInfluenceSum += balance.influence;
-        }
         for (let balance of biomeBalance) {
             let underlyingNoise = this.overlayed.valueAt(x, y);
             let biome = balance.biome;
