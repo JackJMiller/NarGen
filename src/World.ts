@@ -5,11 +5,10 @@ import Chunk from "./Chunk.js";
 import Grid from "./Grid.js";
 import Perlin from "./Perlin.js";
 import Rangerray from "./Rangerray.js";
-import SubBiome from "./SubBiome.js";
 import { BASE_BIOME_SIZE, CHUNK_SIZE, GRID_IMAGE_FILENAMES, RENDERER } from "./constants.js";
-import { exitWithError, leftJustify, objectFromEntries, raiseWarning } from "./functions.js";
+import { leftJustify, objectFromEntries } from "./functions.js";
 import { loadJSON } from "./system_script.js";
-import { BiomeConfig, GridImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
+import { GridImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
 
 class World {
 
@@ -128,7 +127,7 @@ class World {
             let upperPoint = biomeEntry[0];
             let biomeName = biomeEntry[1];
             upperPoint = Perlin.flatten(upperPoint);
-            let biome = this.createBiome(biomeName);
+            let biome = new Biome(biomeName, this);
             this.biomesRangerray.insert(upperPoint, biome);
         }
 
@@ -139,41 +138,6 @@ class World {
         console.log(`Biome super grid tile size: ${this.biomeSuperGridTileSize}`);
 
     }
-
-    // TODO: move code Biome class
-    public createBiome(biomeName: string): Biome {
-        let biome = new Biome(biomeName);
-        let biomeConfigPath = [this.filepath, "biomes", biomeName + ".json"].join("/");
-        if (!fs.existsSync(biomeConfigPath)) exitWithError("Undefined biome", `An undefined biome named '${biomeName}' is referenced in your CONFIG.json file.`);
-        let biomeConfig = loadJSON<BiomeConfig>(biomeConfigPath);
-        let noiseLower = 0;
-        let noiseUpper = 0;
-
-        if (Object.values(this.biomeColours).includes(biomeConfig["colour"].join(","))) {
-            raiseWarning("Matching biome colours", `The biome '${biomeName}' is using a colour already in use.`);
-            this.warningRecord.matchingBiomeColours.push(biomeName);
-        }
-
-        this.biomeColours[biomeName] = biomeConfig["colour"].join(",");
-
-        //Rangerray.fracrrayToRangerray(biomeConfig["ranges"])
-
-        for (let subBiome of biomeConfig["ranges"]) {
-            noiseUpper = subBiome[0];
-            let subBiomeName = subBiome[1];
-            if (!Object.keys(biomeConfig).includes(subBiomeName)) {
-                exitWithError("Undefined sub-biome", `An undefined sub-biome named '${subBiomeName}' is referenced inside ranges attribute of biome '${biomeName}'.`);
-            }
-            noiseUpper = Perlin.flatten(noiseUpper);
-            let obj = new SubBiome(this, biomeName, subBiomeName, biomeConfig, noiseLower, noiseUpper);
-            biome.insert(noiseUpper, obj);
-            noiseLower = noiseUpper;
-        }
-
-        return biome;
-
-    }
-
 
     public generateChunks() {
 
