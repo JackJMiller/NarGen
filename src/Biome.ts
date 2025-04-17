@@ -3,50 +3,53 @@ import Perlin from "./Perlin.js";
 import Rangerray from "./Rangerray.js";
 import SubBiome from "./SubBiome.js";
 import World from "./World.js";
-import { exitWithError, raiseWarning } from "./functions.js";
+import { exitWithError } from "./functions.js";
+import { checkBiomeConfig } from "./issue_checking.js";
 import { loadJSON } from "./system_script.js";
 import { BiomeConfig } from "./types.js";
 
 class Biome {
 
     public name: string;
-    public rangerray;
+    public rangerray: Rangerray<SubBiome>;
+    public config: BiomeConfig;
 
-    constructor(biomeName: string, world: World) {
-        this.name = biomeName;
-        this.rangerray = new Rangerray<SubBiome>(this.name);
-        let biomeConfigPath = [world.filepath, "biomes", biomeName + ".json"].join("/");
-        if (!fs.existsSync(biomeConfigPath)) exitWithError("Undefined biome", `An undefined biome named '${biomeName}' is referenced in your CONFIG.json file.`);
-        let biomeConfig = loadJSON<BiomeConfig>(biomeConfigPath);
-        let noiseLower = 0;
-        let noiseUpper = 0;
+    // TODO: clean this up
+    constructor(name: string, world: World) {
+        this.name = name;
 
-        if (Object.values(world.biomeColours).includes(biomeConfig["colour"].join(","))) {
-            raiseWarning("Matching biome colours", `The biome '${biomeName}' is using a colour already in use.`);
-            world.warningRecord.matchingBiomeColours.push(biomeName);
-        }
+        let biomeConfigPath = [world.filepath, "biomes", this.name + ".json"].join("/");
+        if (!fs.existsSync(biomeConfigPath)) exitWithError("Undefined biome", `An undefined biome named '${this.name}' is referenced in your CONFIG.json file.`);
+        this.config = loadJSON<BiomeConfig>(biomeConfigPath);
 
-        world.biomeColours[biomeName] = biomeConfig["colour"].join(",");
+        checkBiomeConfig(this.name, this.config, world);
 
-        //Rangerray.fracrrayToRangerray(biomeConfig["ranges"])
+        world.biomeColours[this.name] = this.config["colour"].join(",");
 
-        for (let subBiome of biomeConfig["ranges"]) {
-            noiseUpper = subBiome[0];
-            let subBiomeName = subBiome[1];
-            if (!Object.keys(biomeConfig).includes(subBiomeName)) {
-                exitWithError("Undefined sub-biome", `An undefined sub-biome named '${subBiomeName}' is referenced inside ranges attribute of biome '${biomeName}'.`);
-            }
-            noiseUpper = Perlin.flatten(noiseUpper);
-            let obj = new SubBiome(world, biomeName, subBiomeName, biomeConfig, noiseLower, noiseUpper);
-            this.insert(noiseUpper, obj);
-            noiseLower = noiseUpper;
-        }
-
+        this.rangerray = this.createRangerray(this.config.ranges, world);
+        
     }
 
+    private createRangerray(ranges: [number, string][], world: World): Rangerray<SubBiome> {
 
-    public insert(noiseUpper: number, subBiome: SubBiome) {
-        this.rangerray.insert(noiseUpper, subBiome);
+        let noiseLower = 0;
+
+        let output: [number, SubBiome][] = ranges.map((item: [number, string]) => {
+            let noiseUpper = item[0];
+            let subBiomeName = item[1];
+            if (!Object.keys(this.config).includes(subBiomeName)) {
+                exitWithError("Undefined sub-biome", `An undefined sub-biome named '${subBiomeName}' is referenced inside ranges attribute of biome '${this.name}'.`);
+            }
+            noiseUpper = Perlin.flatten(noiseUpper);
+            let obj = new SubBiome(world, this.name, subBiomeName, this.config, noiseLower, noiseUpper);
+            noiseLower = noiseUpper;
+            return [noiseUpper, obj];
+        });
+
+        let rangerray = new Rangerray<SubBiome>(this.name, output);
+
+        return rangerray;
+
     }
 
     public selectValue(height: number): SubBiome {
