@@ -10,7 +10,7 @@ import { CHUNK_SIZE, OCTAVE_COUNT, ORNAMENTER, SURFACES } from "./constants.js";
 import { getBrightnessAtHeight, portionAtPointBetween, randint } from "./functions.js";
 import { checkMaxHeight } from "./issue_checking.js";
 import { AleaPRNG, mkAlea } from "./lib/alea.js";
-import { ChunkSaveObject, GridImageName, TileSaveObject, WorldConfig } from "./types.js";
+import { ChunkSaveObject, TileSaveObject, WorldConfig } from "./types.js";
 
 type BiomeBalance = { biome: SubBiome, influence: number }[];
 
@@ -353,23 +353,6 @@ class Chunk {
         if (v < minimum) return minimum;
         else if (v > maximum) return maximum;
         else return v;
-    }
-
-    public getGridImage(imageName: GridImageName): Grid<number[]> {
-
-        switch (imageName) {
-            case "surfaceGridImage":
-                return this.surfaceGridImage;
-            case "biomeGridImage":
-                return this.biomeGridImage;
-            case "subBiomeGridImage":
-                return this.subBiomeGridImage;
-            case "perlinImage":
-                return this.perlinImage;
-            default:
-                return this.perlinImage;
-        }
-
     }
 
 }

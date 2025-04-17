@@ -14,7 +14,6 @@ class Biome {
     public rangerray: Rangerray<SubBiome>;
     public config: BiomeConfig;
 
-    // TODO: clean this up
     constructor(name: string, world: World) {
         this.name = name;
 

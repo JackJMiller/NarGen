@@ -154,7 +154,7 @@ class World {
                 let cornerX = _q * CHUNK_SIZE;
                 let cornerY = _r * CHUNK_SIZE;
                 for (let gridImageName of gridImageNames) {
-                    gridImages[gridImageName].overlay(chunk.getGridImage(gridImageName), cornerX, cornerY);
+                    gridImages[gridImageName].overlay(chunk[gridImageName], cornerX, cornerY);
                 }
             }
         }
