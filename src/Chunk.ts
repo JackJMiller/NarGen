@@ -71,8 +71,8 @@ class Chunk {
 
         // create the biome map
         this.biomeGrid = Grid.createGrid<BiomeBalance>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineBiome(x, y, this), []);
-        this.biomeGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, this.determineBiomeColour.bind(this), [0, 0, 0]);
-        this.subBiomeGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, this.determineSubBiomeColour.bind(this), [0, 0, 0]);
+        this.biomeGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineBiomeColour(x, y, this), [0, 0, 0]);
+        this.subBiomeGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineSubBiomeColour(x, y, this), [0, 0, 0]);
 
         this.perlinImage = Pattern.createGridImage(this.biomeSuperGrid);
 
@@ -106,18 +106,6 @@ class Chunk {
         let v = this.surfaceGrid.valueAt(x, y);
         let colour = this.getSurfaceColour(v, height, biome.heightDisplacement);
         return colour;
-    }
-
-    public determineBiomeColour(x: number, y: number): number[] {
-        let biomeBalance = this.biomeGrid.valueAt(x, y);
-        let biome = biomeBalance[0].biome;
-        return biome.parentColour;
-    }
-
-    public determineSubBiomeColour(x: number, y: number): number[] {
-        let biomeBalance = this.biomeGrid.valueAt(x, y);
-        let biome = biomeBalance[0].biome;
-        return biome.colour;
     }
 
     public produceOctaves(octaveCount: number, noiseTileSize: number, patternName: string, tileSizes: number[] = [], lacunarity?: number): Grid<number>[] {

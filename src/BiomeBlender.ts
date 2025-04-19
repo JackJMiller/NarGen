@@ -54,6 +54,18 @@ class BiomeBlender {
         }
     }
 
+    public determineBiomeColour(x: number, y: number, chunk: Chunk): number[] {
+        let biomeBalance = chunk.biomeGrid.valueAt(x, y);
+        let biome = biomeBalance[0].biome;
+        return biome.parentColour;
+    }
+
+    public determineSubBiomeColour(x: number, y: number, chunk: Chunk): number[] {
+        let biomeBalance = chunk.biomeGrid.valueAt(x, y);
+        let biome = biomeBalance[0].biome;
+        return biome.colour;
+    }
+
 }
 
 export default BiomeBlender;
