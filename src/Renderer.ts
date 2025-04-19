@@ -5,7 +5,7 @@ import Chunk from "./Chunk.js";
 import Grid from "./Grid.js";
 import { CHUNK_SIZE, TILE_HEIGHT, TILE_WIDTH } from "./constants.js";
 import { loadJSON, SPRITE_IMAGES } from "./system_script.js";
-import { ChunkSaveObject, WorldInfo } from "./types.js";
+import { ChunkSaveObject, Colour, WorldInfo } from "./types.js";
 
 abstract class Renderer {
 
@@ -13,7 +13,7 @@ abstract class Renderer {
 
     }
 
-    public renderColourGrid(grid: Grid<number[]>, filename: string): void {
+    public renderColourGrid(grid: Grid<Colour>, filename: string): void {
 
         let canvas = createCanvas(grid.width, grid.height);
         let ctx = canvas.getContext("2d")
@@ -35,7 +35,7 @@ abstract class Renderer {
 
     }
 
-    private renderColourGridPixel(x: number, y: number, grid: Grid<number[]>, ctx: CanvasRenderingContext2D): void {
+    private renderColourGridPixel(x: number, y: number, grid: Grid<Colour>, ctx: CanvasRenderingContext2D): void {
 
         let pixel = grid.valueAt(x, y);
         ctx.fillStyle = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;

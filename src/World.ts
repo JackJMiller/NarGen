@@ -8,7 +8,7 @@ import Rangerray from "./Rangerray.js";
 import { BASE_BIOME_SIZE, CHUNK_SIZE, GRID_IMAGE_FILENAMES, RENDERER } from "./constants.js";
 import { leftJustify, objectFromEntries } from "./functions.js";
 import { loadJSON } from "./system_script.js";
-import { GridImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
+import { Colour, GridImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
 
 class World {
 
@@ -142,9 +142,9 @@ class World {
 
         let gridImageNames: GridImageName[] = (this.renderWorld) ? ["surfaceGridImage", "biomeGridImage", "subBiomeGridImage", "perlinImage"] : [];
 
-        let gridImages: { [index: string]: Grid<number[]> } = {};
+        let gridImages: { [index: string]: Grid<Colour> } = {};
         for (let gridImageName of gridImageNames) {
-            gridImages[gridImageName] = new Grid<number[]>(this.widthInTiles, this.heightInTiles, [0, 0, 0]);
+            gridImages[gridImageName] = new Grid<Colour>(this.widthInTiles, this.heightInTiles, [0, 0, 0]);
         }
 
         for (let _q = 0; _q < this.widthInChunks; _q++) {

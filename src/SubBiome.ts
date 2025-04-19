@@ -4,7 +4,7 @@ import World from "./World.js";
 import { OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES } from "./constants.js";
 import { colourAverage, exitWithError, pointAtPortionBetween, portionAtPointBetween, raiseWarning } from "./functions.js";
 import { sanitiseMaxHeight } from "./sanitisation.js";
-import { BiomeConfig, OrnamentDefinition, SubBiomeConfig } from "./types.js";
+import { BiomeConfig, Colour, OrnamentDefinition, SubBiomeConfig } from "./types.js";
 import { validateOrnaments } from "./validation.js";
 
 class SubBiome {
@@ -25,8 +25,8 @@ class SubBiome {
     public ornamentOccurrenceRate: number = 0;
     public config: SubBiomeConfig;
     public configKeys: string[];
-    public parentColour: number[];
-    public colour: number[];
+    public parentColour: Colour;
+    public colour: Colour;
 
     constructor(parentWorld: World, parentBiomeName: string, name: string, config: BiomeConfig, noiseLower: number, noiseUpper: number) {
         this.parentWorld = parentWorld;

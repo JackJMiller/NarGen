@@ -1,3 +1,5 @@
+import { Colour } from "./types.js";
+
 class Grid<T> {
 
     public width: number;
@@ -49,7 +51,7 @@ class Grid<T> {
         }
     }
 
-    public static getHeightColour(height: number): number[] {
+    public static getHeightColour(height: number): Colour {
         let v = Math.floor((1 - height) * 255);
         return [v, v, v];
     }

@@ -9,7 +9,7 @@ import World from "./World.js";
 import { BIOME_BLENDER, CHUNK_SIZE, OCTAVE_COUNT, ORNAMENTER, SURFACES } from "./constants.js";
 import { getBrightnessAtHeight, randint } from "./functions.js";
 import { AleaPRNG, mkAlea } from "./lib/alea.js";
-import { BiomeBalance, ChunkSaveObject, TileSaveObject, WorldConfig } from "./types.js";
+import { BiomeBalance, ChunkSaveObject, Colour, TileSaveObject, WorldConfig } from "./types.js";
 
 class Chunk {
 
@@ -25,10 +25,10 @@ class Chunk {
     public octaveCount: number;
     public widthInTiles: number;
     public heightInTiles: number;
-    public surfaceGridImage: Grid<number[]>;
-    public biomeGridImage: Grid<number[]>;
-    public subBiomeGridImage: Grid<number[]>;
-    public perlinImage: Grid<number[]>;
+    public surfaceGridImage: Grid<Colour>;
+    public biomeGridImage: Grid<Colour>;
+    public subBiomeGridImage: Grid<Colour>;
+    public perlinImage: Grid<Colour>;
     public biomeGrid: Grid<BiomeBalance>;
     public heightGrid: Grid<number>;
     public surfaceGrid: Grid<string>;
@@ -71,8 +71,8 @@ class Chunk {
 
         // create the biome map
         this.biomeGrid = Grid.createGrid<BiomeBalance>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineBiome(x, y, this), []);
-        this.biomeGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineBiomeColour(x, y, this), [0, 0, 0]);
-        this.subBiomeGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineSubBiomeColour(x, y, this), [0, 0, 0]);
+        this.biomeGridImage = Grid.createGrid<Colour>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineBiomeColour(x, y, this), [0, 0, 0]);
+        this.subBiomeGridImage = Grid.createGrid<Colour>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineSubBiomeColour(x, y, this), [0, 0, 0]);
 
         this.perlinImage = Pattern.createGridImage(this.biomeSuperGrid);
 
@@ -83,7 +83,7 @@ class Chunk {
         // create the surface map
         this.seedGen(this.parentWorld.seed);
         this.surfaceGrid = Grid.createGrid<string>(this.widthInTiles, this.heightInTiles, this.determineSurface.bind(this), "");
-        this.surfaceGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, this.determineSurfaceColour.bind(this), [0, 0, 0]);
+        this.surfaceGridImage = Grid.createGrid<Colour>(this.widthInTiles, this.heightInTiles, this.determineSurfaceColour.bind(this), [0, 0, 0]);
 
         // create the area map to include ornamentation
         // TODO: create ornamenter for each sub-biome
@@ -100,7 +100,7 @@ class Chunk {
         else return biome.altitudeSurfaces.selectValue(height);
     }
 
-    public determineSurfaceColour(x: number, y: number): number[] {
+    public determineSurfaceColour(x: number, y: number): Colour {
         let height = this.heightGrid.valueAt(x, y);
         let biome = this.getBiomeAt(x, y);
         let v = this.surfaceGrid.valueAt(x, y);
@@ -204,7 +204,7 @@ class Chunk {
         this.seed = randint(1111111111, 9999999999, prng);
     }
 
-    public getSurfaceColour(surfaceName: string, height: number, heightDisplacement: number): number[] {
+    public getSurfaceColour(surfaceName: string, height: number, heightDisplacement: number): Colour {
         if (height < 0) height *= -1;
 
         let brightness = getBrightnessAtHeight(height, this.parentWorld.maxHeight);

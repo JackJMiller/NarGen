@@ -111,8 +111,8 @@ abstract class Pattern {
         return [v, v, v];
     }
 
-    public static createGridImage(grid: Grid<number>, verbose: boolean = false): Grid<number[]> {
-        let image = new Grid<number[]>(grid.width, grid.height, [0, 0, 0]);
+    public static createGridImage(grid: Grid<number>, verbose: boolean = false): Grid<Colour> {
+        let image = new Grid<Colour>(grid.width, grid.height, [0, 0, 0]);
 
         for (let x = 0; x < grid.width; x++) {
             for (let y = 0; y < grid.height; y++) {

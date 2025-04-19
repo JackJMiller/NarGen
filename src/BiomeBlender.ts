@@ -1,6 +1,6 @@
 import Chunk from "./Chunk.js";
 import { portionAtPointBetween } from "./functions.js";
-import { BiomeBalance } from "./types.js";
+import { BiomeBalance, Colour } from "./types.js";
 
 class BiomeBlender {
 
@@ -54,13 +54,13 @@ class BiomeBlender {
         }
     }
 
-    public determineBiomeColour(x: number, y: number, chunk: Chunk): number[] {
+    public determineBiomeColour(x: number, y: number, chunk: Chunk): Colour {
         let biomeBalance = chunk.biomeGrid.valueAt(x, y);
         let biome = biomeBalance[0].biome;
         return biome.parentColour;
     }
 
-    public determineSubBiomeColour(x: number, y: number, chunk: Chunk): number[] {
+    public determineSubBiomeColour(x: number, y: number, chunk: Chunk): Colour {
         let biomeBalance = chunk.biomeGrid.valueAt(x, y);
         let biome = biomeBalance[0].biome;
         return biome.colour;

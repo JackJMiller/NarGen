@@ -1,4 +1,5 @@
 import { AleaPRNG } from "./lib/alea.js";
+import { Colour } from "./types.js";
 import { COLOUR_RED, COLOUR_RED_BOLD, COLOUR_MAGENTA, COLOUR_MAGENTA_BOLD, COLOUR_NONE } from "./constants.js";
 
 export function clamp(value: number, maximum: number): number {
@@ -55,7 +56,7 @@ export function randomElement<T>(array: T[], prng: AleaPRNG): T {
     return array[index];
 }
 
-export function colourAverage(c1: number[], c2: number[]): number[] {
+export function colourAverage(c1: Colour, c2: Colour): Colour {
     return [
         mean(c1[0], c2[0]),
         mean(c1[1], c2[1]),
