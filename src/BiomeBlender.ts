@@ -1,4 +1,5 @@
 import Chunk from "./Chunk.js";
+import SubBiome from "./SubBiome.js";
 import { deinterpolate } from "./functions.js";
 import { BiomeBlend, Colour } from "./types.js";
 
@@ -15,43 +16,48 @@ class BiomeBlender {
         return biomeBalance;
     }
 
-    // TODO: tidy
     public determineBiomeByHeight(height1: number, height2: number, chunk: Chunk): BiomeBlend {
-        // get main biome
-        let mainBiome = chunk.biomesRangerray.select(height1);
-        let biomeObj = mainBiome["value"];
+        let { value: biomeObj, lowerPoint, upperPoint, index } = chunk.biomesRangerray.select(height1);
         chunk.parentWorld.biomeSizes[biomeObj.name] += 1;
         let subBiome = biomeObj.selectValue(height2);
 
-        let portionPoint = deinterpolate(mainBiome["lowerPoint"], mainBiome["upperPoint"], height1);
+        let portionPoint = deinterpolate(lowerPoint, upperPoint, height1);
         let blendRegion = 0.05;
-        let blendedBiomeIndex = -1;
-        let influence = 0;
-        if (portionPoint <= blendRegion) {
-            blendedBiomeIndex = mainBiome["index"] - 1
-            influence = 1 - deinterpolate(0, blendRegion, portionPoint)
-            influence /= 2
-        }
-        else if (portionPoint >= 1 - blendRegion) {
-            blendedBiomeIndex = mainBiome["index"] + 1
-            influence = deinterpolate(1 - blendRegion, 1, portionPoint)
-            influence /= 2
+        let { partnerIndex, influence } = this.determineBlendPartner(portionPoint, index, blendRegion);
+
+        if (0 <= partnerIndex && partnerIndex < chunk.biomesRangerray.length()) {
+            return this.createBlendObject(subBiome, partnerIndex, influence, height2, chunk);
         }
         else {
-            blendedBiomeIndex = -1
+            return [{ biome: subBiome, influence: 1 }];
         }
 
-        if (0 <= blendedBiomeIndex && blendedBiomeIndex < chunk.biomesRangerray.length()) {
-            let balance = [{ biome: subBiome, influence: 1 - influence }];
-            let blendedBiome = chunk.biomesRangerray.selectByIndex(blendedBiomeIndex);
-            let blendedBiomeObj = blendedBiome["value"];
-            subBiome = blendedBiomeObj.selectValue(height2);
-            balance.push({ biome: subBiome, influence: influence });
-            return balance;
+    }
+
+    private createBlendObject(subBiome: SubBiome, partnerIndex: number, influence: number, height2: number, chunk: Chunk): BiomeBlend {
+        let balance = [{ biome: subBiome, influence: 1 - influence }];
+        let blendedBiome = chunk.biomesRangerray.selectByIndex(partnerIndex);
+        let blendedBiomeObj = blendedBiome["value"];
+        subBiome = blendedBiomeObj.selectValue(height2);
+        balance.push({ biome: subBiome, influence: influence });
+        return balance;
+    }
+
+    private determineBlendPartner(portionPoint: number, index: number, blendRegion: number): { partnerIndex: number, influence: number } {
+        if (portionPoint <= blendRegion) {
+            return {
+                partnerIndex: index - 1,
+                influence: (1 - deinterpolate(0, blendRegion, portionPoint)) / 2
+            };
+        }
+        else if (portionPoint >= 1 - blendRegion) {
+            return {
+                partnerIndex: index + 1,
+                influence: deinterpolate(1 - blendRegion, 1, portionPoint) / 2
+            };
         }
         else {
-            let balance = [{ biome: subBiome, influence: 1 }];
-            return balance;
+            return { partnerIndex: -1, influence: 0 };
         }
     }
 
