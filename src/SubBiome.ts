@@ -2,7 +2,7 @@ import Grid from "./Grid.js";
 import Rangerray from "./Rangerray.js";
 import World from "./World.js";
 import { OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES } from "./constants.js";
-import { colourAverage, exitWithError, pointAtPortionBetween, portionAtPointBetween, raiseWarning } from "./functions.js";
+import { colourAverage, exitWithError, deinterpolate, interpolate, raiseWarning } from "./functions.js";
 import { sanitiseMaxHeight } from "./sanitisation.js";
 import { BiomeConfig, Colour, OrnamentDefinition, SubBiomeConfig } from "./types.js";
 import { validateOrnaments } from "./validation.js";
@@ -128,8 +128,8 @@ class SubBiome {
 
 
     public getHeightMultiplier(noiseValue: number) {
-        let portion = portionAtPointBetween(this.noiseLower, this.noiseUpper, noiseValue);
-        let multiplier = pointAtPortionBetween(this.lowerHeightMultiplier, this.upperHeightMultiplier, portion);
+        let portion = deinterpolate(this.noiseLower, this.noiseUpper, noiseValue);
+        let multiplier = interpolate(this.lowerHeightMultiplier, this.upperHeightMultiplier, portion);
         return multiplier;
     }
 

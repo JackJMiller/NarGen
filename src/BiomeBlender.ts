@@ -1,13 +1,14 @@
 import Chunk from "./Chunk.js";
-import { portionAtPointBetween } from "./functions.js";
-import { BiomeBalance, Colour } from "./types.js";
+import { deinterpolate } from "./functions.js";
+import { BiomeBlend, Colour } from "./types.js";
 
 class BiomeBlender {
 
     constructor() {
+
     }
 
-    public determineBiome(x: number, y: number, chunk: Chunk): BiomeBalance {
+    public determineBiomeBlend(x: number, y: number, chunk: Chunk): BiomeBlend {
         let height1 = chunk.biomeSuperGrid.valueAt(x, y);
         let height2 = chunk.overlayed.valueAt(x, y);
         let biomeBalance = this.determineBiomeByHeight(height1, height2, chunk);
@@ -15,25 +16,25 @@ class BiomeBlender {
     }
 
     // TODO: tidy
-    public determineBiomeByHeight(height1: number, height2: number, chunk: Chunk): BiomeBalance {
+    public determineBiomeByHeight(height1: number, height2: number, chunk: Chunk): BiomeBlend {
         // get main biome
         let mainBiome = chunk.biomesRangerray.select(height1);
         let biomeObj = mainBiome["value"];
         chunk.parentWorld.biomeSizes[biomeObj.name] += 1;
         let subBiome = biomeObj.selectValue(height2);
 
-        let portionPoint = portionAtPointBetween(mainBiome["lowerPoint"], mainBiome["upperPoint"], height1);
+        let portionPoint = deinterpolate(mainBiome["lowerPoint"], mainBiome["upperPoint"], height1);
         let blendRegion = 0.05;
         let blendedBiomeIndex = -1;
         let influence = 0;
         if (portionPoint <= blendRegion) {
             blendedBiomeIndex = mainBiome["index"] - 1
-            influence = 1 - portionAtPointBetween(0, blendRegion, portionPoint)
+            influence = 1 - deinterpolate(0, blendRegion, portionPoint)
             influence /= 2
         }
         else if (portionPoint >= 1 - blendRegion) {
             blendedBiomeIndex = mainBiome["index"] + 1
-            influence = portionAtPointBetween(1 - blendRegion, 1, portionPoint)
+            influence = deinterpolate(1 - blendRegion, 1, portionPoint)
             influence /= 2
         }
         else {

@@ -23,15 +23,13 @@ export function objectFromEntries<T>(keys: string[], values: T[]) {
     return Object.fromEntries(keys.map((key: string, index: number) => [key, values[index]]));
 }
 
-export function pointAtPortionBetween(a: number, b: number, portion: number): number {
+export function interpolate(a: number, b: number, portion: number): number {
     let r = b - a;
     return a + portion * r;
 }
 
-export function portionAtPointBetween(a: number, b: number, point: number): number {
-    b = b - a;
-    point = point - a;
-    return point / b;
+export function deinterpolate(a: number, b: number, point: number): number {
+    return (point - a) / (b - a);
 }
 
 export function getBrightnessAtHeight(height: number, maxHeight: number): number {

@@ -1,6 +1,6 @@
 import SubBiome from "./SubBiome.js";
 
-export type BiomeBalance = { biome: SubBiome, influence: number }[];
+export type BiomeBlend = { biome: SubBiome, influence: number }[];
 export type Colour = [number, number, number];
 export type Config = WorldConfig | BiomeConfig;
 export type TileSaveObject = [string, number, string, string];

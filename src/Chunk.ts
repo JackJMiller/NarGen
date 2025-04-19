@@ -9,7 +9,7 @@ import World from "./World.js";
 import { BIOME_BLENDER, CHUNK_SIZE, OCTAVE_COUNT, ORNAMENTER, SURFACES } from "./constants.js";
 import { getBrightnessAtHeight, randint } from "./functions.js";
 import { AleaPRNG, mkAlea } from "./lib/alea.js";
-import { BiomeBalance, ChunkSaveObject, Colour, TileSaveObject, WorldConfig } from "./types.js";
+import { BiomeBlend, ChunkSaveObject, Colour, TileSaveObject, WorldConfig } from "./types.js";
 
 class Chunk {
 
@@ -29,7 +29,7 @@ class Chunk {
     public biomeGridImage: Grid<Colour>;
     public subBiomeGridImage: Grid<Colour>;
     public perlinImage: Grid<Colour>;
-    public biomeGrid: Grid<BiomeBalance>;
+    public biomeGrid: Grid<BiomeBlend>;
     public heightGrid: Grid<number>;
     public surfaceGrid: Grid<string>;
     public areaGrid: Grid<string>;
@@ -70,7 +70,7 @@ class Chunk {
         this.parentWorld.tempCount += 1;
 
         // create the biome map
-        this.biomeGrid = Grid.createGrid<BiomeBalance>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineBiome(x, y, this), []);
+        this.biomeGrid = Grid.createGrid<BiomeBlend>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineBiomeBlend(x, y, this), []);
         this.biomeGridImage = Grid.createGrid<Colour>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineBiomeColour(x, y, this), [0, 0, 0]);
         this.subBiomeGridImage = Grid.createGrid<Colour>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineSubBiomeColour(x, y, this), [0, 0, 0]);
 
