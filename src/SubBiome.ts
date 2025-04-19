@@ -1,7 +1,9 @@
+import Grid from "./Grid.js";
 import Rangerray from "./Rangerray.js";
 import World from "./World.js";
 import { OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES } from "./constants.js";
 import { colourAverage, exitWithError, pointAtPortionBetween, portionAtPointBetween, raiseWarning } from "./functions.js";
+import { sanitiseMaxHeight } from "./sanitisation.js";
 import { BiomeConfig, OrnamentDefinition, SubBiomeConfig } from "./types.js";
 import { validateOrnaments } from "./validation.js";
 
@@ -63,6 +65,25 @@ class SubBiome {
         this.altitudeSurfaces = new Rangerray<string>(this.fullName, this.config["altitudeSurfaces"]);
 
         this.configureOrnaments();
+    }
+
+    public getHeightAt(x: number, y: number, octaves: Grid<number>[], overlayed: Grid<number>): number {
+        let height = this.heightDisplacement;
+        for (let octaveNo = 0; octaveNo < octaves.length; octaveNo++) {
+            height += this.getGroundOctaveValue(x, y, octaves[octaveNo], octaveNo, overlayed);
+        }
+        height = sanitiseMaxHeight(height, this.fullName, this.parentWorld);
+        return height;
+    }
+
+    
+    private getGroundOctaveValue(x: number, y: number, octave: Grid<number>, octaveNo: number, overlayed: Grid<number>): number {
+        let underlyingNoise = overlayed.valueAt(x, y);
+        let amplitude = this.getAmplitude(octaveNo);
+        let v = octave.valueAt(x, y);
+        v *= amplitude * this.getHeightMultiplier(underlyingNoise);
+        v /= this.noiseScale;
+        return v;
     }
     
     public configureOrnaments() {

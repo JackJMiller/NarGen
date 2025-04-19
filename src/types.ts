@@ -66,7 +66,6 @@ export interface WorldInfo {
     q: number,
     r: number,
     maxHeight: number,
-    maxHeightReached: number,
     totalHeight: number
 }
 

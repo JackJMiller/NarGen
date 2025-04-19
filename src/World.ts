@@ -81,7 +81,6 @@ class World {
             q: this.config.q,
             r: this.config.r,
             maxHeight: this.maxHeight,
-            maxHeightReached: 0,
             totalHeight: this.totalHeight
         };
 

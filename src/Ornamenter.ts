@@ -11,7 +11,7 @@ class Ornamenter {
 
     public determineArea(x: number, y: number, chunk: Chunk): string {
 
-        let altitude = chunk.groundGrid.valueAt(x, y)
+        let altitude = chunk.heightGrid.valueAt(x, y)
 
         if (altitude <= 0) return "";
 
