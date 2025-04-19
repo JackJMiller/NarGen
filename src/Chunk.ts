@@ -6,12 +6,10 @@ import Perlin from "./Perlin.js";
 import Rangerray from "./Rangerray.js";
 import SubBiome from "./SubBiome.js";
 import World from "./World.js";
-import { CHUNK_SIZE, OCTAVE_COUNT, ORNAMENTER, SURFACES } from "./constants.js";
-import { getBrightnessAtHeight, portionAtPointBetween, randint } from "./functions.js";
+import { BIOME_BLENDER, CHUNK_SIZE, OCTAVE_COUNT, ORNAMENTER, SURFACES } from "./constants.js";
+import { getBrightnessAtHeight, randint } from "./functions.js";
 import { AleaPRNG, mkAlea } from "./lib/alea.js";
-import { ChunkSaveObject, TileSaveObject, WorldConfig } from "./types.js";
-
-type BiomeBalance = { biome: SubBiome, influence: number }[];
+import { BiomeBalance, ChunkSaveObject, TileSaveObject, WorldConfig } from "./types.js";
 
 class Chunk {
 
@@ -72,7 +70,7 @@ class Chunk {
         this.parentWorld.tempCount += 1;
 
         // create the biome map
-        this.biomeGrid = Grid.createGrid<BiomeBalance>(this.widthInTiles, this.heightInTiles, this.determineBiome.bind(this), []);
+        this.biomeGrid = Grid.createGrid<BiomeBalance>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineBiome(x, y, this), []);
         this.biomeGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, this.determineBiomeColour.bind(this), [0, 0, 0]);
         this.subBiomeGridImage = Grid.createGrid<number[]>(this.widthInTiles, this.heightInTiles, this.determineSubBiomeColour.bind(this), [0, 0, 0]);
 
@@ -108,13 +106,6 @@ class Chunk {
         let v = this.surfaceGrid.valueAt(x, y);
         let colour = this.getSurfaceColour(v, height, biome.heightDisplacement);
         return colour;
-    }
-
-    public determineBiome(x: number, y: number): BiomeBalance {
-        let height1 = this.biomeSuperGrid.valueAt(x, y);
-        let height2 = this.overlayed.valueAt(x, y);
-        let biomeBalance = this.determineBiomeByHeight(height1, height2);
-        return biomeBalance;
     }
 
     public determineBiomeColour(x: number, y: number): number[] {
@@ -218,46 +209,6 @@ class Chunk {
 
     public getBiomeAt(x: number, y: number): SubBiome {
         return this.biomeGrid.valueAt(x, y)[0].biome as SubBiome;
-    }
-
-    // TODO: tidy
-    public determineBiomeByHeight(height1: number, height2: number): BiomeBalance {
-        // get main biome
-        let mainBiome = this.biomesRangerray.select(height1);
-        let biomeObj = mainBiome["value"];
-        this.parentWorld.biomeSizes[biomeObj.name] += 1;
-        let subBiome = biomeObj.selectValue(height2);
-
-        let portionPoint = portionAtPointBetween(mainBiome["lowerPoint"], mainBiome["upperPoint"], height1);
-        let blendRegion = 0.05;
-        let blendedBiomeIndex = -1;
-        let influence = 0;
-        if (portionPoint <= blendRegion) {
-            blendedBiomeIndex = mainBiome["index"] - 1
-            influence = 1 - portionAtPointBetween(0, blendRegion, portionPoint)
-            influence /= 2
-        }
-        else if (portionPoint >= 1 - blendRegion) {
-            blendedBiomeIndex = mainBiome["index"] + 1
-            influence = portionAtPointBetween(1 - blendRegion, 1, portionPoint)
-            influence /= 2
-        }
-        else {
-            blendedBiomeIndex = -1
-        }
-
-        if (0 <= blendedBiomeIndex && blendedBiomeIndex < this.biomesRangerray.length()) {
-            let balance = [{ biome: subBiome, influence: 1 - influence }];
-            let blendedBiome = this.biomesRangerray.selectByIndex(blendedBiomeIndex);
-            let blendedBiomeObj = blendedBiome["value"];
-            subBiome = blendedBiomeObj.selectValue(height2);
-            balance.push({ biome: subBiome, influence: influence });
-            return balance;
-        }
-        else {
-            let balance = [{ biome: subBiome, influence: 1 }];
-            return balance;
-        }
     }
 
     public seedGen(seed: string): void {

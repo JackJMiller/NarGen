@@ -1,3 +1,4 @@
+import BiomeBlender from "./BiomeBlender.js";
 import Ornamenter from "./Ornamenter.js";
 import SystemRenderer from "./SystemRenderer.js";
 import { Colour } from "./types.js";
@@ -82,3 +83,4 @@ export const GRID_IMAGE_FILENAMES = {
 
 export const ORNAMENTER = new Ornamenter();
 export const RENDERER = new SystemRenderer();
+export const BIOME_BLENDER = new BiomeBlender();
