@@ -48,7 +48,7 @@ class World {
 
         this.fillConfig();
 
-        this.seed = this.config.seed;
+        this.seed = this.config.seed.toString();
         this.widthInChunks = this.config.width;
         this.heightInChunks = this.config.height;
         this.widthInTiles = this.widthInChunks * CHUNK_SIZE;

@@ -33,7 +33,7 @@ class Chunk {
     public heightGrid: Grid<number>;
     public surfaceGrid: Grid<string>;
     public areaGrid: Grid<string>;
-    public overlayed: Grid<number>;
+    public perlinOverlayed: Grid<number>;
     public biomeSuperGrid: Grid<number>;
 
     constructor(parentWorld: World, q: number, r: number) {
@@ -59,7 +59,7 @@ class Chunk {
         this.seedGen(this.parentWorld.seed);
 
         let octaves = this.produceOctaves(this.octaveCount, initialNoiseTileSize, "biomeGrid", [], 0.5);
-        this.overlayed = this.overlayOctaves(octaves, 0.5);
+        this.perlinOverlayed = this.overlayOctaves(octaves, 0.5);
 
         let biomeSuperGridOctaves = this.produceOctaves(1, this.parentWorld.biomeSuperGridTileSize, "biomeSuperGrid", [this.parentWorld.biomeSuperGridTileSize]);
         this.biomeSuperGrid = this.overlayOctaves(biomeSuperGridOctaves, 0.1);
@@ -156,7 +156,7 @@ class Chunk {
     public generateGroundAt(x: number, y: number, octaves: Grid<number>[]): void {
         let height = 0;
         for (let balance of this.biomeGrid.valueAt(x, y)) {
-            height += balance.biome.getHeightAt(x, y, octaves, this.overlayed) * balance.influence;
+            height += balance.biome.getHeightAt(x, y, octaves, this.perlinOverlayed) * balance.influence;
         }
         this.heightGrid.setValueAt(x, y, height);
     }

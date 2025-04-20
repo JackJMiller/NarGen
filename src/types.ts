@@ -52,7 +52,7 @@ export interface WarningRecord {
 }
 
 export interface WorldConfig {
-    seed: string,
+    seed: number,
     maxHeight: number,
     width: number,
     height: number,

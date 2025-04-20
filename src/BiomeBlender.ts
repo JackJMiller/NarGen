@@ -11,7 +11,7 @@ class BiomeBlender {
 
     public determineBiomeBlend(x: number, y: number, chunk: Chunk): BiomeBlend {
         let height1 = chunk.biomeSuperGrid.valueAt(x, y);
-        let height2 = chunk.overlayed.valueAt(x, y);
+        let height2 = chunk.perlinOverlayed.valueAt(x, y);
         let biomeBalance = this.determineBiomeByHeight(height1, height2, chunk);
         return biomeBalance;
     }
