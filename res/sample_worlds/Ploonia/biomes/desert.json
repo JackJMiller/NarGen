@@ -1,0 +1,77 @@
+{
+    "colour": [255, 255, 0],
+    "ranges": [
+        [0.45, "desert"],
+        [0.48, "river_bank"],
+        [0.52, "river"],
+        [0.55, "river_bank"],
+        [0.94, "desert"],
+        [0.98, "oasis"],
+        [1, "oasis_pond"]
+    ],
+    "desert": {
+        "colour": [255, 255, 255],
+        "altitudeSurfaces": [
+            [5, "sand"]
+        ],
+        "amplitudes": [0, 0, 0, 1, 1],
+        "heightDisplacement": 0,
+        "heightMultiplier": 4
+    },
+    "river_bank": {
+        "colour": [0, 255, 0],
+        "altitudeSurfaces": [
+            [5, "medium_grass"]
+        ],
+        "amplitudes": [0, 0, 0, 0, 1],
+        "heightDisplacement": 0,
+        "heightMultiplier": 4
+    },
+    "river": {
+        "colour": [0, 0, 255],
+        "altitudeSurfaces": [
+            [5, "medium_grass"]
+        ],
+        "amplitudes": [0, 0, 0, 0, 1],
+        "heightDisplacement": 0,
+        "heightMultiplier": -2
+    },
+    "oasis": {
+        "colour": [0, 0, 0],
+        "altitudeSurfaces": [
+            [5, "medium_grass"]
+        ],
+        "ornaments": {
+            "OCCURRENCE": 0.25,
+            "candidates": [
+                { "name": "archers_tree", "minZ": 3, "maxZ": 100, "frequency": 3 },
+                { "name": "baby_archers_tree", "minZ": 3, "maxZ": 100, "frequency": 2 },
+                { "name": "plank_tree", "minZ": 3, "maxZ": 100, "frequency": 2 },
+                { "name": "moonflower", "minZ": 3, "maxZ": 100, "frequency": 1 }
+            ]
+        },
+        "amplitudes": [0, 0, 0, 0, 1],
+        "heightDisplacement": 1,
+        "lowerHeightMultiplier": 4,
+        "upperHeightMultiplier": 8
+    },
+    "oasis_pond": {
+        "colour": [0, 0, 255],
+        "altitudeSurfaces": [
+            [5, "medium_grass"]
+        ],
+        "ornaments": {
+            "OCCURRENCE": 0.5,
+            "candidates": [
+                { "name": "archers_tree", "minZ": 3, "maxZ": 100, "frequency": 3 },
+                { "name": "baby_archers_tree", "minZ": 3, "maxZ": 100, "frequency": 2 },
+                { "name": "plank_tree", "minZ": 3, "maxZ": 100, "frequency": 2 },
+                { "name": "moonflower", "minZ": 3, "maxZ": 100, "frequency": 1 }
+            ]
+        },
+        "amplitudes": [0, 0, 0, 0, 1],
+        "heightDisplacement": 1,
+        "lowerHeightMultiplier": 8,
+        "upperHeightMultiplier": -2
+    }
+}
