@@ -12,71 +12,79 @@
     "clusters": {
         "colour": [255, 255, 255],
         "altitudeSurfaces": [
-            [4, "sand"],
+            [1, "sand"],
             [5, "medium_grass"]
         ],
-        "ornaments": [
-            ["OCCURRENCE", 0.6],
-            ["ploon_tree", 3, 100, 2],
-            ["niamh_tree", 3, 100, 2],
-            ["bruce_tree", 3, 100, 1],
-            ["poppy_bed_1", 0, 100, 2],
-            ["poppy_bed_2", 0, 100, 2],
-            ["daisy_poppy_bed", 0, 100, 5]
-        ],
+        "ornaments": {
+            "OCCURRENCE": 0.4,
+            "candidates": [
+                { "name": "daisy_poppy_bed", "minZ": 0, "maxZ": 100, "frequency": 1 },
+                { "name": "ploon_tree", "minZ": 2, "maxZ": 100, "frequency": 1 },
+                { "name": "plank_tree", "minZ": 3, "maxZ": 100, "frequency": 1 }
+            ]
+        },
         "amplitudes": [0, 0, 0, 0, 1],
-        "heightDisplacement": -20,
-        "heightMultiplier": 50
+        "heightDisplacement": -14,
+        "heightMultiplier": 30
     },
     "bottom_shelf": {
         "colour": [160, 160, 160],
         "altitudeSurfaces": [
             [20, "medium_grass"]
         ],
-        "ornaments": [
-            ["OCCURRENCE", 0.4],
-            ["bruce_tree", 0, 100, 2],
-            ["fat_bruce_tree", 0, 100, 2],
-            ["niamh_tree", 0, 100, 3],
-            ["moonflower", 0, 100, 1],
-            ["medium_moonflower", 0, 100, 1]
-        ],
+        "ornaments": {
+            "OCCURRENCE": 0.7,
+            "candidates": [
+                { "name": "ploon_tree", "minZ": 3, "maxZ": 100, "frequency": 2 },
+                { "name": "niamh_tree", "minZ": 3, "maxZ": 100, "frequency": 4 },
+                { "name": "bruce_tree", "minZ": 3, "maxZ": 100, "frequency": 6 },
+                { "name": "fat_bruce_tree", "minZ": 0, "maxZ": 100, "frequency": 2 },
+                { "name": "moonflower", "minZ": 0, "maxZ": 100, "frequency": 1 },
+                { "name": "medium_moonflower", "minZ": 0, "maxZ": 100, "frequency": 1 }
+            ]
+        },
         "amplitudes": [1, 0, 0, 0, 1],
-        "heightDisplacement": 10,
-        "lowerHeightMultiplier": 20,
-        "upperHeightMultiplier": 40
+        "heightDisplacement": -8,
+        "heightMultiplier": 30
     },
     "middle_shelf": {
         "colour": [80, 80, 80],
         "altitudeSurfaces": [
             [20, "medium_grass"]
         ],
-        "ornaments": [
-            ["OCCURRENCE", 0.4],
-            ["bruce_tree", 0, 100, 3],
-            ["niamh_tree", 0, 100, 4],
-            ["moonflower", 0, 100, 1],
-            ["medium_moonflower", 0, 100, 1]
-        ],
+        "ornaments": {
+            "OCCURRENCE": 0.7,
+            "candidates": [
+                { "name": "ploon_tree", "minZ": 3, "maxZ": 100, "frequency": 2 },
+                { "name": "niamh_tree", "minZ": 3, "maxZ": 100, "frequency": 4 },
+                { "name": "bruce_tree", "minZ": 3, "maxZ": 100, "frequency": 6 },
+                { "name": "fat_bruce_tree", "minZ": 0, "maxZ": 100, "frequency": 2 },
+                { "name": "moonflower", "minZ": 0, "maxZ": 100, "frequency": 1 },
+                { "name": "medium_moonflower", "minZ": 0, "maxZ": 100, "frequency": 1 }
+            ]
+        },
         "amplitudes": [1, 0, 0, 0, 1],
-        "heightDisplacement": 14,
-        "heightMultiplier": 40
+        "heightDisplacement": -2,
+        "heightMultiplier": 30
     },
     "top_shelf": {
         "colour": [0, 0, 0],
         "altitudeSurfaces": [
             [100, "medium_grass"]
         ],
-        "ornaments": [
-            ["OCCURRENCE", 0.45],
-            ["bruce_tree", 0, 100, 1],
-            ["niamh_tree", 0, 100, 2],
-            ["moonflower", 0, 100, 1],
-            ["medium_moonflower", 0, 100, 1],
-            ["daisy_poppy_bed", 0, 100, 1]
-        ],
+        "ornaments": {
+            "OCCURRENCE": 0.7,
+            "candidates": [
+                { "name": "ploon_tree", "minZ": 3, "maxZ": 100, "frequency": 2 },
+                { "name": "niamh_tree", "minZ": 3, "maxZ": 100, "frequency": 4 },
+                { "name": "bruce_tree", "minZ": 3, "maxZ": 100, "frequency": 6 },
+                { "name": "fat_bruce_tree", "minZ": 0, "maxZ": 100, "frequency": 2 },
+                { "name": "moonflower", "minZ": 0, "maxZ": 100, "frequency": 1 },
+                { "name": "medium_moonflower", "minZ": 0, "maxZ": 100, "frequency": 1 }
+            ]
+        },
         "amplitudes": [0, 0, 0.2, 0.4, 0.6],
-        "heightDisplacement": 20,
-        "heightMultiplier": 60
+        "heightDisplacement": 0,
+        "heightMultiplier": 30
     }
 }
