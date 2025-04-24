@@ -55,6 +55,9 @@ class Rangerray<T> {
         };
     }
 
+    public selectValueByIndex(index: number): T {
+        return this.selectByIndex(index).value;
+    }
 
     public length() {
         return this.items.length;
