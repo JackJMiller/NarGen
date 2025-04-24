@@ -1,5 +1,6 @@
 import World from "./World.js";
 import { clamp, raiseWarning } from "./functions.js";
+import { OrnamentDefinition } from "./types.js";
 
 export function sanitiseMaxHeight(height: number, biomeName: string, world: World): number {
     if (height > world.maxHeight && !world.warningRecord.maxHeight.includes(biomeName)) {
@@ -9,4 +10,9 @@ export function sanitiseMaxHeight(height: number, biomeName: string, world: Worl
         return world.maxHeight;
     }
     return height;
+}
+
+export function sanitiseOrnament(ornament: OrnamentDefinition) {
+    if (ornament.minZ === undefined) ornament.minZ = 0;
+    if (ornament.maxZ === undefined) ornament.maxZ = 1000; // TEMP
 }

@@ -15,9 +15,9 @@
         "ornaments": {
             "OCCURRENCE": 0.25,
             "candidates": [
-                { "name": "ploon_tree", "minZ": 3, "maxZ": 100, "frequency": 2 },
-                { "name": "poppy_bed_1", "minZ": 0, "maxZ": 100, "frequency": 3 },
-                { "name": "poppy_bed_2", "minZ": 0, "maxZ": 100, "frequency": 3 }
+                { "name": "ploon_tree", "frequency": 2 },
+                { "name": "poppy_bed_1", "frequency": 3 },
+                { "name": "poppy_bed_2", "frequency": 3 }
             ]
         },
         "amplitudes": [0, 0, 0, 1, 1],

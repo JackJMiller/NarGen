@@ -1,11 +1,15 @@
 import { OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES } from "./constants.js";
 import { exitWithError, raiseWarning } from "./functions.js";
+import { sanitiseOrnament } from "./sanitisation.js";
 import { OrnamentsDefinition } from "./types.js";
 
 export function validateOrnaments(def: OrnamentsDefinition, subBiomeName: string): void {
     let keys = Object.keys(def);
     if (!keys.includes("OCCURRENCE")) {
         exitWithError("Invalid configuration", `The OCCURRENCE attribute is missing from the ornaments list inside the configuration for ${subBiomeName}.`);
+    }
+    for (let ornament of def.candidates) {
+        sanitiseOrnament(ornament);
     }
 }
 

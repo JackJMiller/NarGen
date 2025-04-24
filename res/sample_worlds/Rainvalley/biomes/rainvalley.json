@@ -18,7 +18,7 @@
         "ornaments": {
             "OCCURRENCE": 0.4,
             "candidates": [
-                { "name": "daisy_poppy_bed", "minZ": 0, "maxZ": 100, "frequency": 1 },
+                { "name": "daisy_poppy_bed", "frequency": 1 },
                 { "name": "ploon_tree", "minZ": 2, "maxZ": 100, "frequency": 1 },
                 { "name": "plank_tree", "minZ": 3, "maxZ": 100, "frequency": 1 }
             ]
@@ -35,12 +35,12 @@
         "ornaments": {
             "OCCURRENCE": 0.7,
             "candidates": [
-                { "name": "ploon_tree", "minZ": 3, "maxZ": 100, "frequency": 2 },
-                { "name": "niamh_tree", "minZ": 3, "maxZ": 100, "frequency": 4 },
-                { "name": "bruce_tree", "minZ": 3, "maxZ": 100, "frequency": 6 },
-                { "name": "fat_bruce_tree", "minZ": 0, "maxZ": 100, "frequency": 2 },
-                { "name": "moonflower", "minZ": 0, "maxZ": 100, "frequency": 1 },
-                { "name": "medium_moonflower", "minZ": 0, "maxZ": 100, "frequency": 1 }
+                { "name": "ploon_tree", "frequency": 2 },
+                { "name": "niamh_tree", "frequency": 4 },
+                { "name": "bruce_tree", "frequency": 6 },
+                { "name": "fat_bruce_tree", "frequency": 2 },
+                { "name": "moonflower", "frequency": 1 },
+                { "name": "medium_moonflower", "frequency": 1 }
             ]
         },
         "amplitudes": [1, 0, 0, 0, 1],
@@ -55,12 +55,12 @@
         "ornaments": {
             "OCCURRENCE": 0.7,
             "candidates": [
-                { "name": "ploon_tree", "minZ": 3, "maxZ": 100, "frequency": 2 },
-                { "name": "niamh_tree", "minZ": 3, "maxZ": 100, "frequency": 4 },
-                { "name": "bruce_tree", "minZ": 3, "maxZ": 100, "frequency": 6 },
-                { "name": "fat_bruce_tree", "minZ": 0, "maxZ": 100, "frequency": 2 },
-                { "name": "moonflower", "minZ": 0, "maxZ": 100, "frequency": 1 },
-                { "name": "medium_moonflower", "minZ": 0, "maxZ": 100, "frequency": 1 }
+                { "name": "ploon_tree", "frequency": 2 },
+                { "name": "niamh_tree", "frequency": 4 },
+                { "name": "bruce_tree", "frequency": 6 },
+                { "name": "fat_bruce_tree", "frequency": 2 },
+                { "name": "moonflower", "frequency": 1 },
+                { "name": "medium_moonflower", "frequency": 1 }
             ]
         },
         "amplitudes": [1, 0, 0, 0, 1],
@@ -75,12 +75,12 @@
         "ornaments": {
             "OCCURRENCE": 0.7,
             "candidates": [
-                { "name": "ploon_tree", "minZ": 3, "maxZ": 100, "frequency": 2 },
-                { "name": "niamh_tree", "minZ": 3, "maxZ": 100, "frequency": 4 },
-                { "name": "bruce_tree", "minZ": 3, "maxZ": 100, "frequency": 6 },
-                { "name": "fat_bruce_tree", "minZ": 0, "maxZ": 100, "frequency": 2 },
-                { "name": "moonflower", "minZ": 0, "maxZ": 100, "frequency": 1 },
-                { "name": "medium_moonflower", "minZ": 0, "maxZ": 100, "frequency": 1 }
+                { "name": "ploon_tree", "frequency": 2 },
+                { "name": "niamh_tree", "frequency": 4 },
+                { "name": "bruce_tree", "frequency": 6 },
+                { "name": "fat_bruce_tree", "frequency": 2 },
+                { "name": "moonflower", "frequency": 1 },
+                { "name": "medium_moonflower", "frequency": 1 }
             ]
         },
         "amplitudes": [0, 0, 0.2, 0.4, 0.6],
