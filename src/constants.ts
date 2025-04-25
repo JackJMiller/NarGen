@@ -62,9 +62,11 @@ export const COLOUR_MAGENTA = "\x1b[0;35m";
 export const COLOUR_MAGENTA_BOLD = "\x1b[1;35m";
 export const COLOUR_CYAN = "\x1b[0;36m";
 
+// TODO: replace with detailed object
 export const RECOGNISED_SUB_BIOME_ATTRIBUTES = [
     "altitudeSurfaces",
     "amplitudes",
+    "blend",
     "colour",
     "heightDisplacement",
     "heightMultiplier",

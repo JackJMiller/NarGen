@@ -34,15 +34,18 @@ class BiomeBlender {
 
     }
 
+    // TODO: merge this function with weighBiomes to the most reasonable extent
     private createSubBiomeBlend(biome: Biome, height2: number, biomeInfluence: number): BiomeBlend {
 
-        let { value: sb0, lowerPoint, upperPoint, index } = biome.rangerray.select(height2);
+        let { value: masterSubBiome, lowerPoint, upperPoint, index } = biome.rangerray.select(height2);
 
-        let portionPoint = deinterpolate(lowerPoint, upperPoint, height2);
-        let blendRegion = 0.25;
-        let { partnerIndex, partnerInfluence } = this.determineBlendPartner(portionPoint, index, blendRegion, biome.rangerray.length());
+        let blendRegion = masterSubBiome.config.blend;
 
-        let biomeBlend = [{ biome: sb0, influence: (1 - partnerInfluence) * biomeInfluence }];
+        if (blendRegion === 0) return [{ biome: masterSubBiome, influence: 1 }];
+
+        let { partnerIndex, partnerInfluence } = this.determineBlendPartner(lowerPoint, upperPoint, height2, index, blendRegion, biome.rangerray.length());
+
+        let biomeBlend = [{ biome: masterSubBiome, influence: (1 - partnerInfluence) * biomeInfluence }];
 
         if (0 <= partnerIndex && partnerIndex < biome.rangerray.length()) {
             let partnerBiome = biome.rangerray.selectValueByIndex(partnerIndex);
@@ -59,14 +62,13 @@ class BiomeBlender {
     private weighBiomes(height1: number, chunk: Chunk): { mainBiome: Biome, partnerBiome: Biome | null, partnerInfluence: number } {
         let {
             value: mainBiome,
-            lowerPoint: biomeLowerPoint,
-            upperPoint: biomeUpperPoint,
+            lowerPoint: lowerPoint,
+            upperPoint: upperPoint,
             index
         } = chunk.biomesRangerray.select(height1);
 
-        let portionPoint = deinterpolate(biomeLowerPoint, biomeUpperPoint, height1);
         let blendRegion = 0.05;
-        let { partnerIndex, partnerInfluence } = this.determineBlendPartner(portionPoint, index, blendRegion, chunk.biomesRangerray.length());
+        let { partnerIndex, partnerInfluence } = this.determineBlendPartner(lowerPoint, upperPoint, height1, index, blendRegion, chunk.biomesRangerray.length());
 
         let partnerBiome = null;
 
@@ -78,7 +80,8 @@ class BiomeBlender {
 
     }
 
-    private determineBlendPartner(portionPoint: number, index: number, blendRegion: number, excIndex: number): { partnerIndex: number, partnerInfluence: number } {
+    private determineBlendPartner(lowerPoint: number, upperPoint: number, value: number, index: number, blendRegion: number, excIndex: number): { partnerIndex: number, partnerInfluence: number } {
+        let portionPoint = deinterpolate(lowerPoint, upperPoint, value);
         let partnerIndex = -1;
         let partnerInfluence = 0;
         if (portionPoint <= blendRegion) {

@@ -3,7 +3,7 @@ import Rangerray from "./Rangerray.js";
 import World from "./World.js";
 import { OCTAVE_COUNT } from "./constants.js";
 import { colourAverage, deinterpolate, interpolate } from "./functions.js";
-import { sanitiseMaxHeight } from "./sanitisation.js";
+import { sanitiseMaxHeight, sanitiseSubBiomeConfig } from "./sanitisation.js";
 import { BiomeConfig, Colour, OrnamentDefinition, SubBiomeConfig } from "./types.js";
 import { validateOrnaments, validateSubBiomeAmplitudes, validateSubBiomeConfigKeys } from "./validation.js";
 
@@ -39,6 +39,7 @@ class SubBiome {
         this.config = config[this.name as string] as SubBiomeConfig;
         this.configKeys = Object.keys(this.config);
         validateSubBiomeConfigKeys(this.fullName, this.configKeys);
+        sanitiseSubBiomeConfig(this.config, this.configKeys);
 
         this.parentColour = config.colour;
         this.colour = colourAverage(this.config.colour, config.colour);

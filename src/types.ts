@@ -39,6 +39,7 @@ export interface SubBiomeConfig {
     altitudeSurfaces: [number, string][],
     ornaments: OrnamentsDefinition,
     amplitudes: number[],
+    blend: number,
     persistence: number,
     heightMultiplier: number
     heightDisplacement: number,

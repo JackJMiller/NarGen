@@ -22,6 +22,7 @@ export function validateSubBiomeAmplitudes(subBiomeName: string, amplitudes: num
     }
 }
 
+// TODO: move much of this to sanitisation
 export function validateSubBiomeConfigKeys(subBiomeName: string, configKeys: string[]): void {
 
     // check that all keys are recognised
