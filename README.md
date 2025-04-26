@@ -2,7 +2,7 @@
 
 ## About
 
-NarGen is a procedural terrain generator that produces terrain for use in a computer game. Unique biomes can be generated and blended together. A demo/tutorial can be found [here](https://jackjmiller.net/articles/generating-terrain-with-nargen.html).
+NarGen is a procedural terrain generator that produces terrain for use in a computer game. The program is in constant development and therefore no complete documentation is yet available. This will be released in time.
 
 ## Installation
 
