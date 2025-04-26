@@ -14,7 +14,7 @@ export interface PRNG {
 export interface AttributeSanitisationObject {
     mandatory: boolean,
     defaultValue?: any,
-    defaultTo?: string,
+    fallback?: string,
     redundants?: string[]
 }
 

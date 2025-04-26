@@ -1,3 +1,4 @@
+import Biome from "./Biome.js";
 import Grid from "./Grid.js";
 import Rangerray from "./Rangerray.js";
 import World from "./World.js";
@@ -11,7 +12,7 @@ class SubBiome {
 
     public parentWorld: World;
     public amplitudes: number[] = [];
-    public parentBiomeName: string;
+    public parentBiome: Biome;
     public name: string;
     public fullName: string;
     public noiseLower: number;
@@ -19,8 +20,6 @@ class SubBiome {
     public noiseScale: number = 1;
     public altitudeSurfaces: Rangerray<string>;
     public heightDisplacement: number;
-    public lowerHeightMultiplier: number;
-    public upperHeightMultiplier: number;
     public ornaments: OrnamentDefinition[] = [];
     public ornamentOccurrenceRate: number = 0;
     public config: SubBiomeConfig;
@@ -28,17 +27,17 @@ class SubBiome {
     public parentColour: Colour;
     public colour: Colour;
 
-    constructor(parentWorld: World, parentBiomeName: string, name: string, config: BiomeConfig, noiseLower: number, noiseUpper: number) {
+    constructor(parentWorld: World, parentBiome: Biome, name: string, config: BiomeConfig, noiseLower: number, noiseUpper: number) {
         this.parentWorld = parentWorld;
-        this.parentBiomeName = parentBiomeName;
+        this.parentBiome = parentBiome;
         this.name = name;
-        this.fullName = `${this.parentBiomeName}.${this.name}`;
+        this.fullName = `${this.parentBiome.name}.${this.name}`;
         this.noiseLower = noiseLower;
         this.noiseUpper = noiseUpper;
 
-        this.config = config[this.name as string] as SubBiomeConfig;
+        this.config = structuredClone(config[this.name as string]) as SubBiomeConfig;
         this.configKeys = Object.keys(this.config);
-        sanitiseConfig(this.fullName, this.config, this.configKeys, SUB_BIOME_SAN_OBJ);
+        sanitiseConfig(this.parentBiome.shortPath, this.config, SUB_BIOME_SAN_OBJ, this.name);
 
         this.parentColour = config.colour;
         this.colour = colourAverage(this.config.colour, config.colour);
@@ -46,14 +45,6 @@ class SubBiome {
         this.configureValues();
 
         this.heightDisplacement = Math.floor(this.config.heightDisplacement);
-
-        if (this.configKeys.includes("heightMultiplier")) {
-            this.lowerHeightMultiplier = this.upperHeightMultiplier = this.config.heightMultiplier;
-        }
-        else {
-            this.lowerHeightMultiplier = this.config.lowerHeightMultiplier;
-            this.upperHeightMultiplier = this.config.upperHeightMultiplier;
-        }
 
         this.altitudeSurfaces = new Rangerray<string>(this.fullName, this.config.altitudeSurfaces);
 
@@ -65,7 +56,7 @@ class SubBiome {
         for (let octaveNo = 0; octaveNo < octaves.length; octaveNo++) {
             height += this.getGroundOctaveValue(x, y, octaves[octaveNo], octaveNo, perlinOverlayed);
         }
-        height = sanitiseMaxHeight(height, this.fullName, this.parentWorld);
+        height = sanitiseMaxHeight(height, this.parentBiome.shortPath, this.parentWorld);
         return height;
     }
 
@@ -83,7 +74,7 @@ class SubBiome {
         this.ornamentOccurrenceRate = 0;
         let keys = Object.keys(this.config);
         if (keys.includes("ornaments")) {
-            validateOrnaments(this.config.ornaments, this.fullName);
+            validateOrnaments(this.config.ornaments, this.parentBiome.shortPath, this.name);
             this.ornamentOccurrenceRate = this.config.ornaments.OCCURRENCE;
             this.ornaments = this.config.ornaments.candidates;
         }
@@ -92,7 +83,7 @@ class SubBiome {
     private configureValues() {
 
         if (this.configKeys.includes("amplitudes")) {
-            validateSubBiomeAmplitudes(this.fullName, this.config.amplitudes, this.configKeys);
+            validateSubBiomeAmplitudes(this.parentBiome.shortPath, this.name, this.config.amplitudes, this.configKeys);
             this.amplitudes = this.config.amplitudes;
         }
         else {
@@ -109,12 +100,12 @@ class SubBiome {
 
     private getHeightMultiplier(noiseValue: number) {
         let portion = deinterpolate(this.noiseLower, this.noiseUpper, noiseValue);
-        let multiplier = interpolate(this.lowerHeightMultiplier, this.upperHeightMultiplier, portion);
+        let multiplier = interpolate(this.config.lowerHeightMultiplier, this.config.upperHeightMultiplier, portion);
         return multiplier;
     }
 
     public toString() {
-        return this.parentBiomeName + "." + this.name;
+        return this.parentBiome.name + "." + this.name;
     }
 
 }

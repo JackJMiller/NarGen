@@ -11,15 +11,18 @@ import { BiomeConfig } from "./types.js";
 class Biome {
 
     public name: string;
+    public shortPath: string;
+    public filepath: string;
     public rangerray: Rangerray<SubBiome>;
     public config: BiomeConfig;
 
     constructor(name: string, world: World) {
         this.name = name;
+        this.shortPath = ["biomes", this.name + ".json"].join("/");
+        this.filepath = [world.filepath, this.shortPath].join("/");
 
-        let biomeConfigPath = [world.filepath, "biomes", this.name + ".json"].join("/");
-        if (!fs.existsSync(biomeConfigPath)) exitWithError("Undefined biome", `An undefined biome named '${this.name}' is referenced in your CONFIG.json file.`);
-        this.config = loadJSON<BiomeConfig>(biomeConfigPath);
+        if (!fs.existsSync(this.filepath)) exitWithError("Undefined biome", `An undefined biome named '${this.name}' is referenced.`, "CONFIG.json", "biomes");
+        this.config = loadJSON<BiomeConfig>(this.filepath);
 
         checkBiomeConfig(this.name, this.config, world);
 
@@ -33,14 +36,15 @@ class Biome {
 
         let noiseLower = 0;
 
+        // TODO: clean up
         let output: [number, SubBiome][] = ranges.map((item: [number, string]) => {
             let noiseUpper = item[0];
             let subBiomeName = item[1];
             if (!Object.keys(this.config).includes(subBiomeName)) {
-                exitWithError("Undefined sub-biome", `An undefined sub-biome named '${subBiomeName}' is referenced inside ranges attribute of biome '${this.name}'.`);
+                exitWithError("Undefined sub-biome", `An undefined sub-biome named '${subBiomeName}' is referenced.`, this.shortPath, "ranges");
             }
             noiseUpper = Perlin.flatten(noiseUpper);
-            let obj = new SubBiome(world, this.name, subBiomeName, this.config, noiseLower, noiseUpper);
+            let obj = new SubBiome(world, this, subBiomeName, this.config, noiseLower, noiseUpper);
             noiseLower = noiseUpper;
             return [noiseUpper, obj];
         });

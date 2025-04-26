@@ -56,11 +56,12 @@ export const COLOUR_NONE = "\x1b[0m";
 export const COLOUR_RED = "\x1b[0;31m";
 export const COLOUR_RED_BOLD = "\x1b[1;31m";
 export const COLOUR_GREEN = "\x1b[0;32m";
-export const COLOUR_YELLOW = "\x1b[2;33m";
+export const COLOUR_YELLOW = "\x1b[0;33m";
 export const COLOUR_BLUE = "\x1b[0;34m";
 export const COLOUR_MAGENTA = "\x1b[0;35m";
 export const COLOUR_MAGENTA_BOLD = "\x1b[1;35m";
 export const COLOUR_CYAN = "\x1b[0;36m";
+export const COLOUR_CYAN_BOLD = "\x1b[1;36m";
 
 export const SUB_BIOME_SAN_OBJ: ConfigSanitisationObject = {
     "altitudeSurfaces": { mandatory: false },
@@ -69,9 +70,9 @@ export const SUB_BIOME_SAN_OBJ: ConfigSanitisationObject = {
     "colour": { mandatory: false },
     "heightDisplacement": { mandatory: true },
     "heightMultiplier": { mandatory: false, redundants: ["lowerHeightMultiplier", "upperHeightMultiplier"] },
-    "lowerHeightMultiplier": { mandatory: false, defaultTo: "heightMultiplier" },
+    "lowerHeightMultiplier": { mandatory: false, fallback: "heightMultiplier" },
     "persistence": { mandatory: false },
-    "upperHeightMultiplier": { mandatory: false, defaultTo: "heightMultiplier" },
+    "upperHeightMultiplier": { mandatory: false, fallback: "heightMultiplier" },
     "ornaments": { mandatory: false }
 };
 

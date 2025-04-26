@@ -1,6 +1,6 @@
 import { AleaPRNG } from "./lib/alea.js";
 import { Colour } from "./types.js";
-import { COLOUR_CYAN, COLOUR_RED, COLOUR_RED_BOLD, COLOUR_MAGENTA, COLOUR_MAGENTA_BOLD, COLOUR_NONE } from "./constants.js";
+import { COLOUR_CYAN_BOLD, COLOUR_RED, COLOUR_RED_BOLD, COLOUR_MAGENTA, COLOUR_MAGENTA_BOLD, COLOUR_NONE, COLOUR_YELLOW } from "./constants.js";
 
 export function clamp(value: number, maximum: number): number {
     if (value < 0) return 0;
@@ -36,13 +36,14 @@ export function getBrightnessAtHeight(height: number, maxHeight: number): number
     return 1 - clamp(height, maxHeight) / maxHeight;
 }
 
-export function exitWithError(errorType: string, message: string, filepath: string = ""): void {
-    console.log(`${COLOUR_CYAN}${filepath}: ${COLOUR_RED_BOLD}ERROR: ${COLOUR_RED}${errorType}: ${message}${COLOUR_NONE}`);
+export function exitWithError(errorType: string, message: string, filepath: string, locationInfo: string): void {
+    let locationString = (locationInfo === "") ? "" : `${COLOUR_YELLOW}${locationInfo}: `
+    console.log(`${COLOUR_CYAN_BOLD}${filepath}: ${locationString}${COLOUR_RED_BOLD}ERROR: ${COLOUR_RED}${errorType}: ${message}${COLOUR_NONE}`);
     process.exit(1);
 }
 
 export function raiseWarning(warningType: string, message: string, filepath: string = ""): void {
-    console.log(`${COLOUR_CYAN}${filepath}: ${COLOUR_MAGENTA_BOLD}WARNING: ${COLOUR_MAGENTA}${warningType}: ${message}${COLOUR_NONE}`);
+    console.log(`${COLOUR_CYAN_BOLD}${filepath}: ${COLOUR_MAGENTA_BOLD}WARNING: ${COLOUR_MAGENTA}${warningType}: ${message}${COLOUR_NONE}`);
 }
 
 export function randint(min: number, max: number, prng: AleaPRNG): number {
