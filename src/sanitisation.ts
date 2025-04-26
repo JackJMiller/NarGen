@@ -1,6 +1,6 @@
 import World from "./World.js";
 import { clamp, exitWithError, raiseWarning } from "./functions.js";
-import { OrnamentDefinition } from "./types.js";
+import { ConfigSanitisationObject, OrnamentDefinition } from "./types.js";
 
 export function sanitiseMaxHeight(height: number, biomeName: string, world: World): number {
     if (height > world.maxHeight && !world.warningRecord.maxHeight.includes(biomeName)) {
@@ -17,7 +17,7 @@ export function sanitiseOrnament(ornament: OrnamentDefinition): void {
     if (ornament.maxZ === undefined) ornament.maxZ = 1000; // TEMP
 }
 
-export function sanitiseConfig(filename: string, config: any, included: string[], sanObj: any): void {
+export function sanitiseConfig(filename: string, config: any, included: string[], sanObj: ConfigSanitisationObject): void {
 
     let recognised = Object.keys(sanObj);
 
@@ -35,9 +35,26 @@ export function sanitiseConfig(filename: string, config: any, included: string[]
             if (attrSanObj.mandatory) {
                 exitWithError("Missing attribute", `No ${attr} attribute is specified.`, filename);
             }
+            else if (attrSanObj.defaultTo !== undefined) {
+                if (included.includes(attrSanObj.defaultTo)) {
+                    config[attr] = config[attrSanObj.defaultTo];
+                }
+                else {
+                    exitWithError("Missing fallback", `Neither the ${attr} or ${attrSanObj.defaultTo} attributes are specified.`, filename);
+                }
+            }
             else if (attrSanObj.defaultValue !== undefined) {
                 // TODO: deal with arrays and other types copied by reference!
                 config[attr] = attrSanObj.defaultValue;
+            }
+        }
+        else {
+            if (attrSanObj.redundants !== undefined) {
+                for (let redundant of attrSanObj.redundants) {
+                    if (included.includes(redundant)) {
+                        exitWithError("Redundant attribute", `The ${redundant} attribute is specified despite the ${attr} attribute already being specified.`, filename);
+                    }
+                }
             }
         }
     }

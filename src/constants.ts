@@ -1,7 +1,7 @@
 import BiomeBlender from "./BiomeBlender.js";
 import Ornamenter from "./Ornamenter.js";
 import SystemRenderer from "./SystemRenderer.js";
-import { Colour } from "./types.js";
+import { Colour, ConfigSanitisationObject } from "./types.js";
 
 // TODO: remove this duplicate
 const SPRITE_NAMES = ["archers_tree", "baby_archers_tree", "bruce_tree", "daisy_poppy_bed", "fat_bruce_tree", "glim_rock", "long_grass_block", "medium_grass_block", "medium_moonflower", "moonflower", "niamh_tree", "plank_tree", "ploon_tree", "poppy_bed_1", "poppy_bed_2", "sand_block", "short_grass_block", "snow_block", "stone_block", "water_block"];
@@ -62,16 +62,16 @@ export const COLOUR_MAGENTA = "\x1b[0;35m";
 export const COLOUR_MAGENTA_BOLD = "\x1b[1;35m";
 export const COLOUR_CYAN = "\x1b[0;36m";
 
-export const SUB_BIOME_SAN_OBJ = {
+export const SUB_BIOME_SAN_OBJ: ConfigSanitisationObject = {
     "altitudeSurfaces": { mandatory: false },
-    "amplitudes": { mandatory: false },
+    "amplitudes": { mandatory: false, redundants: ["persistence"] },
     "blend": { mandatory: false, defaultValue: 0 },
     "colour": { mandatory: false },
-    "heightDisplacement": { mandatory: false },
-    "heightMultiplier": { mandatory: false },
-    "lowerHeightMultiplier": { mandatory: false },
+    "heightDisplacement": { mandatory: true },
+    "heightMultiplier": { mandatory: false, redundants: ["lowerHeightMultiplier", "upperHeightMultiplier"] },
+    "lowerHeightMultiplier": { mandatory: false, defaultTo: "heightMultiplier" },
     "persistence": { mandatory: false },
-    "upperHeightMultiplier": { mandatory: false },
+    "upperHeightMultiplier": { mandatory: false, defaultTo: "heightMultiplier" },
     "ornaments": { mandatory: false }
 };
 

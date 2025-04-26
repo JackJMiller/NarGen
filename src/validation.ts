@@ -1,5 +1,5 @@
 import { OCTAVE_COUNT } from "./constants.js";
-import { exitWithError, raiseWarning } from "./functions.js";
+import { exitWithError } from "./functions.js";
 import { sanitiseOrnament } from "./sanitisation.js";
 import { OrnamentsDefinition } from "./types.js";
 
@@ -17,28 +17,4 @@ export function validateSubBiomeAmplitudes(subBiomeName: string, amplitudes: num
     if (amplitudes.length !== OCTAVE_COUNT) {
         exitWithError("Invalid config value", `Length of amplitudes in configuration for ${subBiomeName} is equal to ${amplitudes.length}. Length should be ${OCTAVE_COUNT}.`);
     }
-    if (configKeys.includes("persistence")) {
-        raiseWarning("Redundant attribute", `Both persistence and amplitudes are attributes specified in configuration for ${subBiomeName}. Program is defaulting to amplitudes attribute.`);
-    }
-}
-
-// TODO: generalise and move much of this to sanitisation
-export function validateSubBiomeConfig(subBiomeName: string, configKeys: string[]): void {
-
-    // check for redundant height multipliers
-    if (configKeys.includes("heightMultiplier")) {
-        let redundantKeys = ["lowerHeightMultiplier", "upperHeightMultiplier"].filter((key: string) => configKeys.includes(key));
-        if (configKeys.includes("lowerHeightMultiplier") || configKeys.includes("upperHeightMultiplier")) {
-            exitWithError("Missing attribute", `The heightMultiplier attribute is already specified in the configuration for ${subBiomeName}. Your configuration also specifies ${redundantKeys.join(" and ")}. Program is defaulting to heightMultiplier attribute.`);
-        }
-    }
-    else if (!configKeys.includes("lowerHeightMultiplier") || !configKeys.includes("upperHeightMultiplier")) {
-        exitWithError("Missing attribute", `Please specify heightMultiplier configuration value for ${subBiomeName}.`);
-    }
-  
-    // check that amplitudes are defined
-    if (!configKeys.includes("amplitudes") && !configKeys.includes("persistence")) {
-        exitWithError("Missing attribute", `Please specify persistence or amplitudes configuration value for ${subBiomeName}.`);
-    }
-
 }

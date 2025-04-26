@@ -5,9 +5,17 @@ export type Colour = [number, number, number];
 export type Config = WorldConfig | BiomeConfig;
 export type TileSaveObject = [string, number, string, string];
 export type GridImageName = "surfaceGridImage" | "biomeGridImage" | "subBiomeGridImage" | "perlinImage";
+export type ConfigSanitisationObject = { [index: string]: AttributeSanitisationObject };
 
 export interface PRNG {
     random: () => number
+}
+
+export interface AttributeSanitisationObject {
+    mandatory: boolean,
+    defaultValue?: any,
+    defaultTo?: string,
+    redundants?: string[]
 }
 
 export interface ChunkSaveObject {

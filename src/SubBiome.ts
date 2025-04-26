@@ -5,7 +5,7 @@ import { OCTAVE_COUNT, SUB_BIOME_SAN_OBJ } from "./constants.js";
 import { colourAverage, deinterpolate, interpolate } from "./functions.js";
 import { sanitiseConfig, sanitiseMaxHeight } from "./sanitisation.js";
 import { BiomeConfig, Colour, OrnamentDefinition, SubBiomeConfig } from "./types.js";
-import { validateOrnaments, validateSubBiomeAmplitudes, validateSubBiomeConfig } from "./validation.js";
+import { validateOrnaments, validateSubBiomeAmplitudes } from "./validation.js";
 
 class SubBiome {
 
@@ -38,7 +38,6 @@ class SubBiome {
 
         this.config = config[this.name as string] as SubBiomeConfig;
         this.configKeys = Object.keys(this.config);
-        validateSubBiomeConfig(this.fullName, this.configKeys);
         sanitiseConfig(this.fullName, this.config, this.configKeys, SUB_BIOME_SAN_OBJ);
 
         this.parentColour = config.colour;
