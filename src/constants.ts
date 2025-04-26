@@ -62,19 +62,18 @@ export const COLOUR_MAGENTA = "\x1b[0;35m";
 export const COLOUR_MAGENTA_BOLD = "\x1b[1;35m";
 export const COLOUR_CYAN = "\x1b[0;36m";
 
-// TODO: replace with detailed object
-export const RECOGNISED_SUB_BIOME_ATTRIBUTES = [
-    "altitudeSurfaces",
-    "amplitudes",
-    "blend",
-    "colour",
-    "heightDisplacement",
-    "heightMultiplier",
-    "lowerHeightMultiplier",
-    "persistence",
-    "upperHeightMultiplier",
-    "ornaments"
-];
+export const SUB_BIOME_SAN_OBJ = {
+    "altitudeSurfaces": { mandatory: false },
+    "amplitudes": { mandatory: false },
+    "blend": { mandatory: false, defaultValue: 0 },
+    "colour": { mandatory: false },
+    "heightDisplacement": { mandatory: false },
+    "heightMultiplier": { mandatory: false },
+    "lowerHeightMultiplier": { mandatory: false },
+    "persistence": { mandatory: false },
+    "upperHeightMultiplier": { mandatory: false },
+    "ornaments": { mandatory: false }
+};
 
 export const GRID_IMAGE_FILENAMES = {
     "biomeGridImage": "biome.png",

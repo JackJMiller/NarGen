@@ -64,8 +64,6 @@ class Chunk {
         let biomeSuperGridOctaves = this.produceOctaves(1, this.parentWorld.biomeSuperGridTileSize, "biomeSuperGrid", [this.parentWorld.biomeSuperGridTileSize]);
         this.biomeSuperGrid = this.overlayOctaves(biomeSuperGridOctaves, 0.1);
 
-        //this.biomeSuperGrid.printAllValues();
-
         this.parentWorld.tempAcc += Grid.calculateAverage(this.biomeSuperGrid);
         this.parentWorld.tempCount += 1;
 

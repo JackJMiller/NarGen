@@ -1,4 +1,4 @@
-import { OCTAVE_COUNT, RECOGNISED_SUB_BIOME_ATTRIBUTES } from "./constants.js";
+import { OCTAVE_COUNT } from "./constants.js";
 import { exitWithError, raiseWarning } from "./functions.js";
 import { sanitiseOrnament } from "./sanitisation.js";
 import { OrnamentsDefinition } from "./types.js";
@@ -22,15 +22,8 @@ export function validateSubBiomeAmplitudes(subBiomeName: string, amplitudes: num
     }
 }
 
-// TODO: move much of this to sanitisation
-export function validateSubBiomeConfigKeys(subBiomeName: string, configKeys: string[]): void {
-
-    // check that all keys are recognised
-    for (let key of configKeys) {
-        if (!RECOGNISED_SUB_BIOME_ATTRIBUTES.includes(key)) {
-            exitWithError("Unrecognised attribute", `Cannot recognise attribute ${key} in configuration for ${subBiomeName}.`);
-        }
-    }
+// TODO: generalise and move much of this to sanitisation
+export function validateSubBiomeConfig(subBiomeName: string, configKeys: string[]): void {
 
     // check for redundant height multipliers
     if (configKeys.includes("heightMultiplier")) {

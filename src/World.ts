@@ -130,8 +130,6 @@ class World {
             this.biomesRangerray.insert(upperPoint, biome);
         }
 
-        this.biomesRangerray.print();
-
         this.biomeSuperGridTileSize = biomeSizeSum * BASE_BIOME_SIZE * this.biomeSize;
 
         console.log(`Biome super grid tile size: ${this.biomeSuperGridTileSize}`);

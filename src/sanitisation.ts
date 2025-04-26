@@ -1,6 +1,6 @@
 import World from "./World.js";
-import { clamp, raiseWarning } from "./functions.js";
-import { OrnamentDefinition, SubBiomeConfig } from "./types.js";
+import { clamp, exitWithError, raiseWarning } from "./functions.js";
+import { OrnamentDefinition } from "./types.js";
 
 export function sanitiseMaxHeight(height: number, biomeName: string, world: World): number {
     if (height > world.maxHeight && !world.warningRecord.maxHeight.includes(biomeName)) {
@@ -17,7 +17,29 @@ export function sanitiseOrnament(ornament: OrnamentDefinition): void {
     if (ornament.maxZ === undefined) ornament.maxZ = 1000; // TEMP
 }
 
-// TODO
-export function sanitiseSubBiomeConfig(config: SubBiomeConfig, keys: string[]): void {
-    if (!keys.includes("blend")) config.blend = 0.25;
+export function sanitiseConfig(filename: string, config: any, included: string[], sanObj: any): void {
+
+    let recognised = Object.keys(sanObj);
+
+    // check that all attributes are recognised
+    for (let attr of included) {
+        if (!recognised.includes(attr)) {
+            exitWithError("Unrecognised attribute", `Attribute ${attr} is not recognised.`, filename);
+        }
+    }
+
+    // check that there are no missing attributes
+    for (let attr of recognised) {
+        let attrSanObj = sanObj[attr];
+        if (!included.includes(attr)) {
+            if (attrSanObj.mandatory) {
+                exitWithError("Missing attribute", `No ${attr} attribute is specified.`, filename);
+            }
+            else if (attrSanObj.defaultValue !== undefined) {
+                // TODO: deal with arrays and other types copied by reference!
+                config[attr] = attrSanObj.defaultValue;
+            }
+        }
+    }
+
 }
