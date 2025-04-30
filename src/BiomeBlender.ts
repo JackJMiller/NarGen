@@ -41,7 +41,7 @@ class BiomeBlender {
 
         let blendRegion = masterSubBiome.config.blend;
 
-        if (blendRegion === 0) return [{ biome: masterSubBiome, influence: 1 }];
+        if (blendRegion === 0) return [{ biome: masterSubBiome, influence: biomeInfluence }];
 
         let { partnerIndex, partnerInfluence } = this.determineBlendPartner(lowerPoint, upperPoint, height2, index, blendRegion, biome.rangerray.length());
 
@@ -62,12 +62,12 @@ class BiomeBlender {
     private weighBiomes(height1: number, chunk: Chunk): { mainBiome: Biome, partnerBiome: Biome | null, partnerInfluence: number } {
         let {
             value: mainBiome,
-            lowerPoint: lowerPoint,
-            upperPoint: upperPoint,
+            lowerPoint,
+            upperPoint,
             index
         } = chunk.biomesRangerray.select(height1);
 
-        let blendRegion = 0.05;
+        let blendRegion = 0.25;
         let { partnerIndex, partnerInfluence } = this.determineBlendPartner(lowerPoint, upperPoint, height1, index, blendRegion, chunk.biomesRangerray.length());
 
         let partnerBiome = null;
