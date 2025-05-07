@@ -7,7 +7,7 @@ import Perlin from "./Perlin.js";
 import Rangerray from "./Rangerray.js";
 import { BASE_BIOME_SIZE, CHUNK_SIZE, GRID_IMAGE_FILENAMES, RENDERER } from "./constants.js";
 import { leftJustify, objectFromEntries } from "./functions.js";
-import { loadJSON } from "./system_script.js";
+import { loadJSON } from "./env_script.js";
 import { Colour, GridImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
 
 class World {

@@ -5,7 +5,7 @@ import SubBiome from "./SubBiome.js";
 import World from "./World.js";
 import { exitWithError } from "./functions.js";
 import { checkBiomeConfig } from "./issue_checking.js";
-import { loadJSON } from "./system_script.js";
+import { loadJSON } from "./env_script.js";
 import { BiomeConfig } from "./types.js";
 
 class Biome {
