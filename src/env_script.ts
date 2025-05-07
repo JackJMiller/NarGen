@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import canvas from "canvas";
 import { Image, loadImage } from "canvas";
 
@@ -11,6 +12,9 @@ export const createCanvas = canvas.createCanvas;
 export const existsSync = fs.existsSync;
 export const mkdirSync = fs.mkdirSync;
 export const writeFileSync = fs.writeFileSync;
+
+// module: path
+export const join = path.join;
 
 export function loadJSON<T>(filepath: string): T {
     let object = fs.readFileSync(filepath).toString();
