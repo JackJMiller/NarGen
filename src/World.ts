@@ -3,9 +3,9 @@ import Chunk from "./Chunk.js";
 import Grid from "./Grid.js";
 import Perlin from "./Perlin.js";
 import Rangerray from "./Rangerray.js";
-import { BASE_BIOME_SIZE, CHUNK_SIZE, GRID_IMAGE_FILENAMES, RENDERER } from "./constants.js";
+import { BASE_BIOME_SIZE, CHUNK_SIZE, GRID_IMAGE_FILENAMES } from "./constants.js";
 import { leftJustify, objectFromEntries } from "./functions.js";
-import { existsSync, join, loadJSON, mkdirSync, writeFileSync } from "./env_script.js";
+import { existsSync, join, loadJSON, mkdirSync, RENDERER, writeFileSync } from "./env_script.js";
 import { Colour, GridImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
 
 class World {

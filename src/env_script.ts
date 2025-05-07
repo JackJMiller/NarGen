@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import canvas from "canvas";
+import SystemRenderer from "./SystemRenderer.js";
 import { Image, loadImage } from "canvas";
 
 // module: canvas
@@ -30,3 +31,5 @@ for (let spriteName of SPRITE_NAMES){
     IMAGES[spriteName] = image;
 }
 export const SPRITE_IMAGES: { [index: string]: Image } = IMAGES;
+
+export const RENDERER = new SystemRenderer();

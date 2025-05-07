@@ -1,6 +1,5 @@
 import path from "path";
-import { RENDERER } from "./src/constants.js";
-import { loadJSON } from "./src/env_script.js";
+import { loadJSON, RENDERER } from "./src/env_script.js";
 import World from "./src/World.js";
 import { WorldInfo } from "./src/types.js";
 
