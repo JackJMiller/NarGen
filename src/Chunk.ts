@@ -1,4 +1,3 @@
-import fs from "fs";
 import Biome from "./Biome.js";
 import Grid from "./Grid.js";
 import Pattern from "./Pattern.js";
@@ -7,6 +6,7 @@ import Rangerray from "./Rangerray.js";
 import SubBiome from "./SubBiome.js";
 import World from "./World.js";
 import { BIOME_BLENDER, CHUNK_SIZE, OCTAVE_COUNT, ORNAMENTER, SURFACES } from "./constants.js";
+import { writeFileSync } from "./env_script.js";
 import { getBrightnessAtHeight, randint } from "./functions.js";
 import { AleaPRNG, mkAlea } from "./lib/alea.js";
 import { BiomeBlend, ChunkSaveObject, Colour, TileSaveObject, WorldConfig } from "./types.js";
@@ -166,7 +166,7 @@ class Chunk {
     public exportSaveFile(): void {
         let saveFileObject = this.createSaveObject();
         let filepath = Chunk.getFilepath(this.parentWorld.filepath, this.q, this.r);
-        fs.writeFileSync(filepath, JSON.stringify(saveFileObject));
+        writeFileSync(filepath, JSON.stringify(saveFileObject));
     }
 
     private createSaveObject(): ChunkSaveObject {

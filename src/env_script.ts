@@ -1,13 +1,16 @@
 import fs from "fs";
-import { Canvas, CanvasRenderingContext2D, createCanvas } from "canvas";
+import canvas from "canvas";
 import { Image, loadImage } from "canvas";
 
-// TEMP
-export type CanvasType = Canvas;
-export type CanvasContext = CanvasRenderingContext2D;
-export function createCanvasObject(width: number, height: number): Canvas {
-    return createCanvas(width, height);
-}
+// module: canvas
+export type CanvasType = canvas.Canvas;
+export type CanvasContext = canvas.CanvasRenderingContext2D;
+export const createCanvas = canvas.createCanvas;
+
+// module: fs
+export const existsSync = fs.existsSync;
+export const mkdirSync = fs.mkdirSync;
+export const writeFileSync = fs.writeFileSync;
 
 export function loadJSON<T>(filepath: string): T {
     let object = fs.readFileSync(filepath).toString();

@@ -1,11 +1,10 @@
-import fs from "fs";
 import Perlin from "./Perlin.js";
 import Rangerray from "./Rangerray.js";
 import SubBiome from "./SubBiome.js";
 import World from "./World.js";
 import { exitWithError } from "./functions.js";
 import { checkBiomeConfig } from "./issue_checking.js";
-import { loadJSON } from "./env_script.js";
+import { existsSync, loadJSON } from "./env_script.js";
 import { BiomeConfig } from "./types.js";
 
 class Biome {
@@ -21,7 +20,7 @@ class Biome {
         this.shortPath = ["biomes", this.name + ".json"].join("/");
         this.filepath = [world.filepath, this.shortPath].join("/");
 
-        if (!fs.existsSync(this.filepath)) exitWithError("Undefined biome", `An undefined biome named '${this.name}' is referenced.`, "CONFIG.json", "biomes");
+        if (!existsSync(this.filepath)) exitWithError("Undefined biome", `An undefined biome named '${this.name}' is referenced.`, "CONFIG.json", "biomes");
         this.config = loadJSON<BiomeConfig>(this.filepath);
 
         checkBiomeConfig(this.name, this.config, world);

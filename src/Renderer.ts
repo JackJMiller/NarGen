@@ -1,9 +1,8 @@
-import fs from "fs";
 import path from "path";
 import Chunk from "./Chunk.js";
 import Grid from "./Grid.js";
 import { CHUNK_SIZE, TILE_HEIGHT, TILE_WIDTH } from "./constants.js";
-import {  CanvasContext, CanvasType, createCanvasObject, loadJSON, SPRITE_IMAGES } from "./env_script.js";
+import { CanvasContext, CanvasType, createCanvas, loadJSON, SPRITE_IMAGES, writeFileSync } from "./env_script.js";
 import { ChunkSaveObject, Colour, WorldInfo } from "./types.js";
 
 abstract class Renderer {
@@ -14,7 +13,7 @@ abstract class Renderer {
 
     public renderColourGrid(grid: Grid<Colour>, filename: string): void {
 
-        let canvas = createCanvasObject(grid.width, grid.height);
+        let canvas = createCanvas(grid.width, grid.height);
         let ctx = canvas.getContext("2d")
 
         for (let x = 0; x < grid.width; x++) {
@@ -30,7 +29,7 @@ abstract class Renderer {
     private saveImage(canvas: CanvasType, filename: string): void {
 
         let buffer = canvas.toBuffer("image/png");
-        fs.writeFileSync(`${filename}`, buffer);
+        writeFileSync(`${filename}`, buffer);
 
     }
 
@@ -59,7 +58,7 @@ abstract class Renderer {
     public renderChunk(chunk: ChunkSaveObject, worldInfo: WorldInfo, worldPath: string): void {
         let imageWidth = CHUNK_SIZE * TILE_WIDTH;
         let imageHeight = CHUNK_SIZE * TILE_WIDTH + worldInfo.maxHeight * TILE_HEIGHT + TILE_WIDTH;
-        let canvas = createCanvasObject(imageWidth, imageHeight);
+        let canvas = createCanvas(imageWidth, imageHeight);
         let ctx = canvas.getContext("2d")
         for (let x = 0; x < CHUNK_SIZE; x++) {
             for (let y = 0; y < CHUNK_SIZE; y++) {

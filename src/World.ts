@@ -1,4 +1,3 @@
-import fs from "fs";
 import path from "path";
 import Biome from "./Biome.js";
 import Chunk from "./Chunk.js";
@@ -7,7 +6,7 @@ import Perlin from "./Perlin.js";
 import Rangerray from "./Rangerray.js";
 import { BASE_BIOME_SIZE, CHUNK_SIZE, GRID_IMAGE_FILENAMES, RENDERER } from "./constants.js";
 import { leftJustify, objectFromEntries } from "./functions.js";
-import { loadJSON } from "./env_script.js";
+import { existsSync, loadJSON, mkdirSync, writeFileSync } from "./env_script.js";
 import { Colour, GridImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
 
 class World {
@@ -86,7 +85,7 @@ class World {
 
         this.generateChunks();
 
-        fs.writeFileSync([this.filepath, "GENERATED", "WORLD_INFO.json"].join("/"), JSON.stringify(this.worldInfo));
+        writeFileSync([this.filepath, "GENERATED", "WORLD_INFO.json"].join("/"), JSON.stringify(this.worldInfo));
 
     }
 
@@ -97,10 +96,10 @@ class World {
 
 
     public createSaveFiles() {
-        if (!fs.existsSync(this.filepath)) {
-            fs.mkdirSync(this.filepath);
-            fs.mkdirSync([this.filepath, "GENERATED", "images"].join("/"));
-            fs.mkdirSync([this.filepath, "GENERATED", "chunks"].join("/"));
+        if (!existsSync(this.filepath)) {
+            mkdirSync(this.filepath);
+            mkdirSync([this.filepath, "GENERATED", "images"].join("/"));
+            mkdirSync([this.filepath, "GENERATED", "chunks"].join("/"));
         }
     }
 
