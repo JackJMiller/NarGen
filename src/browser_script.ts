@@ -1,6 +1,8 @@
+const FILESYSTEM: { [index: string]: string } = {};
+
 // TODO
 export function writeFileSync(filepath: string, data: string): void {
-    return;
+    FILESYSTEM[filepath] = data;
 }
 
 // TODO
@@ -15,7 +17,7 @@ export function mkdirSync(filepath: string): void {
 
 // TODO
 export function loadJSON(filepath: string): any {
-    return {};
+    return JSON.parse(FILESYSTEM[filepath]);
 }
 
 export const SPRITE_IMAGES = [];
