@@ -2,29 +2,32 @@
 
 # This script bundles NarGen into a script for use in a browser
 
-> nargen_web.ts
+WEB_VERSION_FILEPATH=/home/jack/Web-Dev/nargen-web
 
-cat src/types.ts >> nargen_web.ts
+rm -rf $WEB_VERSION_FILEPATH/src/scripts/*
 
-cat src/lib/alea.ts >> nargen_web.ts
+mkdir $WEB_VERSION_FILEPATH/src/scripts/lib/
 
-cat src/Chunk.ts >> nargen_web.ts
-cat src/Grid.ts >> nargen_web.ts
-cat src/Pattern.ts >> nargen_web.ts
-cat src/Rangerray.ts >> nargen_web.ts
-cat src/Renderer.ts >> nargen_web.ts
-cat src/SubBiome.ts >> nargen_web.ts
-cat src/World.ts >> nargen_web.ts
+cp src/lib/alea.js $WEB_VERSION_FILEPATH/src/scripts/lib/alea.js
+cp src/BiomeBlender.js $WEB_VERSION_FILEPATH/src/scripts/BiomeBlender.js
+cp src/Biome.js $WEB_VERSION_FILEPATH/src/scripts/Biome.js
+cp src/Chunk.js $WEB_VERSION_FILEPATH/src/scripts/Chunk.js
+cp src/Grid.js $WEB_VERSION_FILEPATH/src/scripts/Grid.js
+cp src/Ornamenter.js $WEB_VERSION_FILEPATH/src/scripts/Ornamenter.js
+cp src/Pattern.js $WEB_VERSION_FILEPATH/src/scripts/Pattern.js
+cp src/Perlin.js $WEB_VERSION_FILEPATH/src/scripts/Perlin.js
+cp src/Rangerray.js $WEB_VERSION_FILEPATH/src/scripts/Rangerray.js
+cp src/Renderer.js $WEB_VERSION_FILEPATH/src/scripts/Renderer.js
+cp src/SubBiome.js $WEB_VERSION_FILEPATH/src/scripts/SubBiome.js
+cp src/World.js $WEB_VERSION_FILEPATH/src/scripts/World.js
+cp src/SystemRenderer.js $WEB_VERSION_FILEPATH/src/scripts/SystemRenderer.js
 
-cat src/constants.ts >> nargen_web.ts
-cat src/browser_script.ts >> nargen_web.ts
-cat src/functions.ts >> nargen_web.ts
-cat src/validation.ts >> nargen_web.ts
+cp src/types.js $WEB_VERSION_FILEPATH/src/scripts/types.js
+cp src/functions.js $WEB_VERSION_FILEPATH/src/scripts/functions.js
+cp src/constants.js $WEB_VERSION_FILEPATH/src/scripts/constants.js
+cp src/browser_script.js $WEB_VERSION_FILEPATH/src/scripts/env_script.js
+cp src/issue_checking.js $WEB_VERSION_FILEPATH/src/scripts/issue_checking.js
+cp src/sanitisation.js $WEB_VERSION_FILEPATH/src/scripts/sanitisation.js
+cp src/validation.js $WEB_VERSION_FILEPATH/src/scripts/validation.js
 
-sed -i '/^import .* from .*;/d' nargen_web.ts
-sed -i '/^export default .*;/d' nargen_web.ts
-sed -i 's/^export //' nargen_web.ts
-
-tsc nargen_web.ts
-
-# rm nargen_web.ts
+echo Copied NarGen source to $WEB_VERSION_FILEPATH
