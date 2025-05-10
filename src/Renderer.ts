@@ -1,7 +1,7 @@
 import Chunk from "./Chunk.js";
 import Grid from "./Grid.js";
 import { CHUNK_SIZE, TILE_HEIGHT, TILE_WIDTH } from "./constants.js";
-import { CanvasContext, CanvasType, createCanvas, loadJSON, join, SPRITE_IMAGES, writeFileSync } from "./env_script.js";
+import { CanvasContext, CanvasType, createCanvas, loadJSON, SPRITE_IMAGES } from "./env_script.js";
 import { ChunkSaveObject, Colour, WorldInfo } from "./types.js";
 
 abstract class Renderer {
@@ -25,13 +25,6 @@ abstract class Renderer {
 
     }
 
-    private saveImage(canvas: CanvasType, filename: string): void {
-
-        let buffer = canvas.toBuffer("image/png");
-        writeFileSync(`${filename}`, buffer);
-
-    }
-
     private renderColourGridPixel(x: number, y: number, grid: Grid<Colour>, ctx: CanvasContext): void {
 
         let pixel = grid.valueAt(x, y);
@@ -42,7 +35,7 @@ abstract class Renderer {
 
     public renderChunks(worldName: string, worldPath: string): void {
 
-        let worldInfo = loadJSON<WorldInfo>(join(worldPath, "GENERATED", "WORLD_INFO.json"));
+        let worldInfo = loadJSON<WorldInfo>([worldPath, "GENERATED", "WORLD_INFO.json"].join("/"));
 
         for (let r = worldInfo.r; r < worldInfo.r + worldInfo.height; r++) {
             for (let q = worldInfo.q; q < worldInfo.q + worldInfo.width; q++) {
@@ -64,8 +57,10 @@ abstract class Renderer {
                 this.drawBlocksAt(chunk, worldInfo, x, y, ctx);
             }
         }
-        this.saveImage(canvas, join(worldPath, "GENERATED", "images", "chunks", `${chunk.q}_${chunk.r}.png`));
+        this.saveImage(canvas, [worldPath, "GENERATED", "images", "chunks", `${chunk.q}_${chunk.r}.png`].join("/"));
     }
+
+    public abstract saveImage(canvas: CanvasType, filename: string): void;
 
     // TODO: add brightness to communicate height
     public drawBlocksAt(chunk: ChunkSaveObject, worldInfo: WorldInfo, x: number, y: number, ctx: CanvasContext): void {

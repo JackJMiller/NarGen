@@ -1,5 +1,6 @@
 import { execSync } from "child_process";
 import { CHUNK_SIZE, TILE_WIDTH } from "./constants.js";
+import { CanvasType, writeFileSync } from "./env_script.js";
 import Renderer from "./Renderer.js";
 import { WorldInfo } from "./types.js";
 
@@ -25,6 +26,14 @@ class SystemRenderer extends Renderer {
         let command = `magick ${chunks.join(" ")} -background none -layers merge +repage ${filepath}/GENERATED/images/world.png`;
         execSync(command);
     }
+
+    public saveImage(canvas: CanvasType, filename: string): void {
+
+        let buffer = canvas.toBuffer("image/png");
+        writeFileSync(`${filename}`, buffer);
+
+    }
+
 
 }
 

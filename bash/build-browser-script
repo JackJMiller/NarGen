@@ -11,6 +11,7 @@ mkdir $WEB_VERSION_FILEPATH/src/scripts/lib/
 cp src/lib/alea.js $WEB_VERSION_FILEPATH/src/scripts/lib/alea.js
 cp src/BiomeBlender.js $WEB_VERSION_FILEPATH/src/scripts/BiomeBlender.js
 cp src/Biome.js $WEB_VERSION_FILEPATH/src/scripts/Biome.js
+cp src/BrowserRenderer.js $WEB_VERSION_FILEPATH/src/scripts/BrowserRenderer.js
 cp src/Chunk.js $WEB_VERSION_FILEPATH/src/scripts/Chunk.js
 cp src/Grid.js $WEB_VERSION_FILEPATH/src/scripts/Grid.js
 cp src/Ornamenter.js $WEB_VERSION_FILEPATH/src/scripts/Ornamenter.js
@@ -20,7 +21,6 @@ cp src/Rangerray.js $WEB_VERSION_FILEPATH/src/scripts/Rangerray.js
 cp src/Renderer.js $WEB_VERSION_FILEPATH/src/scripts/Renderer.js
 cp src/SubBiome.js $WEB_VERSION_FILEPATH/src/scripts/SubBiome.js
 cp src/World.js $WEB_VERSION_FILEPATH/src/scripts/World.js
-cp src/SystemRenderer.js $WEB_VERSION_FILEPATH/src/scripts/SystemRenderer.js
 
 cp src/types.js $WEB_VERSION_FILEPATH/src/scripts/types.js
 cp src/functions.js $WEB_VERSION_FILEPATH/src/scripts/functions.js
