@@ -17,7 +17,7 @@ if (ARGS[1] == "generate") {
     world.summarise();
 
 }
-if (ARGS[1] == "render") {
+else if (ARGS[1] == "render") {
 
     // locate world configuration
     let filepath = ARGS[2];
