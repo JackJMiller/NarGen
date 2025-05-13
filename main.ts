@@ -29,6 +29,10 @@ else if (ARGS[1] == "render") {
     let worldInfoFilePath = [filepath, "GENERATED", "WORLD_INFO.json"].join("/");
     let worldInfo = loadJSON<WorldInfo>(worldInfoFilePath);
 
-    RENDERER.renderWorld(filepath, worldInfo);
+    RENDERER.renderWorld(filepath, "biome", worldInfo);
+    RENDERER.renderWorld(filepath, "game", worldInfo);
+    RENDERER.renderWorld(filepath, "perlin", worldInfo);
+    RENDERER.renderWorld(filepath, "sub_biome", worldInfo);
+    RENDERER.renderWorld(filepath, "surface", worldInfo);
 
 }

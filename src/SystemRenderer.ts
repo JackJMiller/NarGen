@@ -12,22 +12,19 @@ class SystemRenderer extends Renderer {
 
     }
 
-    public renderWorld(filepath: string, worldInfo: WorldInfo): void {
-        this.renderGameWorld(filepath, worldInfo);
-    }
-
     // TODO: split world into smaller megachunks to allow larger worlds to be rendered
-    public renderGameWorld(filepath: string, worldInfo: WorldInfo): void {
+    public renderWorld(filepath: string, renderType: string, worldInfo: WorldInfo): void {
         const chunks = [];
-        let imageWidth = CHUNK_SIZE * TILE_WIDTH;
+        let tileWidth = (renderType === "game") ? TILE_WIDTH : 1;
+        let imageWidth = CHUNK_SIZE * tileWidth;
         for (let r = worldInfo.r; r < worldInfo.r + worldInfo.height; r++) {
             let canvasY = imageWidth * (r - worldInfo.r);
             for (let q = worldInfo.q; q < worldInfo.q + worldInfo.width; q++) {
                 let canvasX = imageWidth * (q - worldInfo.q);
-                chunks.push(`\\( -page +${canvasX}+${canvasY} ${filepath}/GENERATED/images/game/game_${q}_${r}.png \\)`);
+                chunks.push(`\\( -page +${canvasX}+${canvasY} ${filepath}/GENERATED/images/${renderType}/${renderType}_${q}_${r}.png \\)`);
             }
         }
-        let command = `magick ${chunks.join(" ")} -background none -layers merge +repage ${filepath}/GENERATED/images/world.png`;
+        let command = `magick ${chunks.join(" ")} -background none -layers merge +repage ${filepath}/GENERATED/images/${renderType}.png`;
         execSync(command);
     }
 
