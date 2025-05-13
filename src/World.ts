@@ -1,19 +1,17 @@
 import Biome from "./Biome.js";
 import Chunk from "./Chunk.js";
-import Grid from "./Grid.js";
 import Perlin from "./Perlin.js";
 import Rangerray from "./Rangerray.js";
-import { BASE_BIOME_SIZE, CHUNK_SIZE, GRID_IMAGE_FILENAMES } from "./constants.js";
+import { BASE_BIOME_SIZE, CHUNK_SIZE } from "./constants.js";
 import { leftJustify, objectFromEntries } from "./functions.js";
-import { existsSync, IN_BROWSER, loadJSON, mkdirSync, RENDERER, writeFileSync } from "./env_script.js";
-import { Colour, GridImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
+import { existsSync, IN_BROWSER, loadJSON, mkdirSync, writeFileSync } from "./env_script.js";
+import { GridImageName, WarningRecord, WorldConfig, WorldInfo } from "./types.js";
 
 class World {
 
     public filepath: string;
     public name: string;
     public config: WorldConfig;
-    public renderWorld: boolean = true;
     public widthInTiles: number;
     public heightInTiles: number;
     public widthInChunks: number;
@@ -36,6 +34,8 @@ class World {
     public biomeNames: string[] = [];
     public biomeColours: { [index: string]: string };
     public worldInfo: WorldInfo;
+    public gridImageNames: GridImageName[];
+
 
     public constructor(name: string, filepath: string) {
 
@@ -53,6 +53,7 @@ class World {
         this.heightInTiles = this.heightInChunks * CHUNK_SIZE;
         this.totalAreaInTiles = this.widthInTiles * this.heightInTiles;
         this.createSaveFiles();
+        this.gridImageNames = (IN_BROWSER) ? [] : ["surfaceGridImage", "biomeGridImage", "subBiomeGridImage", "perlinImage"];
 
         this.warningRecord = { maxHeight: [], matchingBiomeColours: [] };
         this.biomeColours = {};
@@ -136,35 +137,15 @@ class World {
 
     public generateChunks() {
 
-        let gridImageNames: GridImageName[] = (this.renderWorld) ? ["surfaceGridImage", "biomeGridImage", "subBiomeGridImage", "perlinImage"] : [];
-
-        let gridImages: { [index: string]: Grid<Colour> } = {};
-        for (let gridImageName of gridImageNames) {
-            gridImages[gridImageName] = new Grid<Colour>(this.widthInTiles, this.heightInTiles, [0, 0, 0]);
-        }
-
         for (let _q = 0; _q < this.widthInChunks; _q++) {
             for (let _r = 0; _r < this.heightInChunks; _r++) {
-                let chunk = new Chunk(this, this.config.q + _q, this.config.r + _r);
-                let cornerX = _q * CHUNK_SIZE;
-                let cornerY = _r * CHUNK_SIZE;
-                for (let gridImageName of gridImageNames) {
-                    gridImages[gridImageName].overlay(chunk[gridImageName], cornerX, cornerY);
-                }
+                new Chunk(this, this.config.q + _q, this.config.r + _r);
             }
-        }
-
-        if (IN_BROWSER) return;
-
-        for (let gridImageName of gridImageNames) {
-            let filename = GRID_IMAGE_FILENAMES[gridImageName];
-            RENDERER.renderColourGrid(gridImages[gridImageName], [this.filepath, "GENERATED", "images", filename].join("/"));
         }
 
     }
 
     public summarise() {
-        console.log(`Biome average: ${this.tempAcc / this.tempCount}`);
         for (let biomeName of Object.keys(this.biomeSizes)) {
             let biomeSize = this.biomeSizes[biomeName];
             let percentage = 100 * biomeSize / this.totalAreaInTiles;

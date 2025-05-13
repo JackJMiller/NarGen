@@ -18,7 +18,13 @@ AssureWorldExists() {
 Stash() {
     WORLD_PATH=$1
     rm -rf $WORLD_PATH/GENERATED/*
-    mkdir -p $WORLD_PATH/GENERATED/chunks/ $WORLD_PATH/GENERATED/images/chunks/
+    mkdir -p \
+        $WORLD_PATH/GENERATED/chunks/ \
+        $WORLD_PATH/GENERATED/images/biome/ \
+        $WORLD_PATH/GENERATED/images/game/ \
+        $WORLD_PATH/GENERATED/images/perlin/ \
+        $WORLD_PATH/GENERATED/images/sub_biome/ \
+        $WORLD_PATH/GENERATED/images/surface/ 
 }
 
 Generate() {

@@ -6,7 +6,7 @@ import Rangerray from "./Rangerray.js";
 import SubBiome from "./SubBiome.js";
 import World from "./World.js";
 import { BIOME_BLENDER, CHUNK_SIZE, OCTAVE_COUNT, ORNAMENTER, SURFACES } from "./constants.js";
-import { writeFileSync } from "./env_script.js";
+import { RENDERER, writeFileSync } from "./env_script.js";
 import { getBrightnessAtHeight, randint } from "./functions.js";
 import { AleaPRNG, mkAlea } from "./lib/alea.js";
 import { BiomeBlend, ChunkSaveObject, Colour, TileSaveObject, WorldConfig } from "./types.js";
@@ -42,7 +42,8 @@ class Chunk {
         this.config = this.parentWorld.config;
         this.q = q;
         this.r = r;
-        this.prng = mkAlea(`${this.q}x${this.r}`);
+        let indexString = `${this.q}_${this.r}`;
+        this.prng = mkAlea(indexString);
         this.seed = Number.parseInt(this.parentWorld.seed);
         this.biomesRangerray = this.parentWorld.biomesRangerray;
         this.cornerX = this.q * CHUNK_SIZE;
@@ -70,9 +71,15 @@ class Chunk {
         // create the biome map
         this.biomeGrid = Grid.createGrid<BiomeBlend>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineBiomeBlend(x, y, this), []);
         this.biomeGridImage = Grid.createGrid<Colour>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineBiomeColour(x, y, this), [0, 0, 0]);
-        this.subBiomeGridImage = Grid.createGrid<Colour>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineSubBiomeColour(x, y, this), [0, 0, 0]);
+        RENDERER.renderColourGrid(this.biomeGridImage, [this.parentWorld.filepath, "GENERATED", "images", "biome", `biome_${indexString}.png`].join("/"));
 
+        // create the sub-biome map
+        this.subBiomeGridImage = Grid.createGrid<Colour>(this.widthInTiles, this.heightInTiles, (x: number, y: number) => BIOME_BLENDER.determineSubBiomeColour(x, y, this), [0, 0, 0]);
+        RENDERER.renderColourGrid(this.subBiomeGridImage, [this.parentWorld.filepath, "GENERATED", "images", "sub_biome", `sub_biome_${indexString}.png`].join("/"));
+
+        // create the perlin image
         this.perlinImage = Pattern.createGridImage(this.biomeSuperGrid);
+        RENDERER.renderColourGrid(this.perlinImage, [this.parentWorld.filepath, "GENERATED", "images", "perlin", `perlin_${indexString}.png`].join("/"));
 
         // create the ground map
         this.seedGen(this.parentWorld.seed);
@@ -82,6 +89,7 @@ class Chunk {
         this.seedGen(this.parentWorld.seed);
         this.surfaceGrid = Grid.createGrid<string>(this.widthInTiles, this.heightInTiles, this.determineSurface.bind(this), "");
         this.surfaceGridImage = Grid.createGrid<Colour>(this.widthInTiles, this.heightInTiles, this.determineSurfaceColour.bind(this), [0, 0, 0]);
+        RENDERER.renderColourGrid(this.surfaceGridImage, [this.parentWorld.filepath, "GENERATED", "images", "surface", `surface_${indexString}.png`].join("/"));
 
         // create the area map to include ornamentation
         // TODO: create ornamenter for each sub-biome

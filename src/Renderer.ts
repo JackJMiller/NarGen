@@ -41,13 +41,13 @@ abstract class Renderer {
             for (let q = worldInfo.q; q < worldInfo.q + worldInfo.width; q++) {
                 let filepath = Chunk.getFilepath(worldPath, q, r)
                 let chunk = loadJSON<ChunkSaveObject>(filepath);
-                this.renderChunk(chunk, worldInfo, worldPath);
+                this.gameRenderChunk(chunk, worldInfo, worldPath);
             }
         }
         
     }
 
-    public renderChunk(chunk: ChunkSaveObject, worldInfo: WorldInfo, worldPath: string): void {
+    public gameRenderChunk(chunk: ChunkSaveObject, worldInfo: WorldInfo, worldPath: string): void {
         let imageWidth = CHUNK_SIZE * TILE_WIDTH;
         let imageHeight = CHUNK_SIZE * TILE_WIDTH + worldInfo.maxHeight * TILE_HEIGHT + TILE_WIDTH;
         let canvas = createCanvas(imageWidth, imageHeight);
@@ -57,7 +57,7 @@ abstract class Renderer {
                 this.drawBlocksAt(chunk, worldInfo, x, y, ctx);
             }
         }
-        this.saveImage(canvas, [worldPath, "GENERATED", "images", "chunks", `${chunk.q}_${chunk.r}.png`].join("/"));
+        this.saveImage(canvas, [worldPath, "GENERATED", "images", "game", `game_${chunk.q}_${chunk.r}.png`].join("/"));
     }
 
     public abstract saveImage(canvas: CanvasType, filename: string): void;
