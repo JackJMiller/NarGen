@@ -39,7 +39,6 @@ export function createCanvas(width: number, height: number): HTMLCanvasElement {
     return canvas;
 }
 
-// TODO
 export function writeFileSync(filepath: string, data: string): void {
     FILESYSTEM[filepath] = data;
 }
@@ -49,13 +48,12 @@ export function existsSync(filepath: string): boolean {
     return Object.keys(FILESYSTEM).includes(filepath);
 }
 
-// TODO
 export function mkdirSync(filepath: string): void {
     return;
 }
 
 // TODO
-export function loadJSON(filepath: string): any {
+export function loadJSON(filepath: string): object {
     return FILESYSTEM[filepath];
 }
 

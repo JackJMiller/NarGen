@@ -4,7 +4,7 @@ import SystemRenderer from "./SystemRenderer.js";
 import { Image, loadImage } from "canvas";
 
 // module: canvas
-export type CanvasType = canvas.Canvas;
+export type Canvas = canvas.Canvas;
 export type CanvasContext = canvas.CanvasRenderingContext2D;
 export const createCanvas = canvas.createCanvas;
 

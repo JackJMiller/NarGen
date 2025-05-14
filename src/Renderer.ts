@@ -1,7 +1,7 @@
 import Chunk from "./Chunk.js";
 import Grid from "./Grid.js";
 import { CHUNK_SIZE, TILE_HEIGHT, TILE_WIDTH } from "./constants.js";
-import { CanvasContext, CanvasType, createCanvas, loadJSON, SPRITE_IMAGES } from "./env_script.js";
+import { CanvasContext, Canvas, createCanvas, loadJSON, SPRITE_IMAGES } from "./env_script.js";
 import { ChunkSaveObject, Colour, WorldInfo } from "./types.js";
 
 abstract class Renderer {
@@ -60,7 +60,7 @@ abstract class Renderer {
         this.saveImage(canvas, [worldPath, "GENERATED", "images", "game", `game_${chunk.q}_${chunk.r}.png`].join("/"));
     }
 
-    public abstract saveImage(canvas: CanvasType, filename: string): void;
+    public abstract saveImage(canvas: Canvas, filename: string): void;
 
     // TODO: add brightness to communicate height
     public drawBlocksAt(chunk: ChunkSaveObject, worldInfo: WorldInfo, x: number, y: number, ctx: CanvasContext): void {

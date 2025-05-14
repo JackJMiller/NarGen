@@ -1,6 +1,6 @@
 import { execSync } from "child_process";
 import { CHUNK_SIZE, TILE_WIDTH } from "./constants.js";
-import { CanvasType, writeFileSync } from "./env_script.js";
+import { Canvas, writeFileSync } from "./env_script.js";
 import Renderer from "./Renderer.js";
 import { WorldInfo } from "./types.js";
 
@@ -28,7 +28,7 @@ class SystemRenderer extends Renderer {
         execSync(command);
     }
 
-    public saveImage(canvas: CanvasType, filename: string): void {
+    public saveImage(canvas: Canvas, filename: string): void {
 
         let buffer = canvas.toBuffer("image/png");
         writeFileSync(`${filename}`, buffer);

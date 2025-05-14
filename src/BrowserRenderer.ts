@@ -1,5 +1,5 @@
 import Renderer from "./Renderer.js";
-import { CanvasType } from "./env_script.js";
+import { Canvas } from "./env_script.js";
 import { WorldInfo } from "./types.js";
 
 class BrowserRenderer extends Renderer {
@@ -14,7 +14,7 @@ class BrowserRenderer extends Renderer {
         // TODO
     }
 
-    public saveImage(canvas: CanvasType, filename: string): void {
+    public saveImage(canvas: Canvas, filename: string): void {
         // images aren't saved in browser version
     }
 
