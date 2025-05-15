@@ -36,7 +36,6 @@ class World {
     public worldInfo: WorldInfo;
     public gridImageNames: GridImageName[];
 
-
     public constructor(name: string, filepath: string) {
 
         this.filepath = filepath;
@@ -53,7 +52,7 @@ class World {
         this.heightInTiles = this.heightInChunks * CHUNK_SIZE;
         this.totalAreaInTiles = this.widthInTiles * this.heightInTiles;
         this.createSaveFiles();
-        this.gridImageNames = (IN_BROWSER) ? [] : ["surfaceGridImage", "biomeGridImage", "subBiomeGridImage", "perlinImage"];
+        this.gridImageNames = (IN_BROWSER) ? ["surfaceGridImage"] : ["surfaceGridImage", "biomeGridImage", "subBiomeGridImage", "perlinImage"];
 
         this.warningRecord = { maxHeight: [], matchingBiomeColours: [] };
         this.biomeColours = {};
@@ -137,8 +136,8 @@ class World {
 
     public generateChunks() {
 
-        for (let _q = 0; _q < this.widthInChunks; _q++) {
-            for (let _r = 0; _r < this.heightInChunks; _r++) {
+        for (let _r = 0; _r < this.heightInChunks; _r++) {
+            for (let _q = 0; _q < this.widthInChunks; _q++) {
                 new Chunk(this, this.config.q + _q, this.config.r + _r);
             }
         }

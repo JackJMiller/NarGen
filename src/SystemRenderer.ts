@@ -28,7 +28,7 @@ class SystemRenderer extends Renderer {
         execSync(command);
     }
 
-    public saveImage(canvas: Canvas, filename: string): void {
+    public saveChunkImage(canvas: Canvas, filename: string): void {
 
         let buffer = canvas.toBuffer("image/png");
         writeFileSync(`${filename}`, buffer);

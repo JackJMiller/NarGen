@@ -66,3 +66,7 @@ export function colourAverage(c1: Colour, c2: Colour): Colour {
 export function mean(v1: number, v2: number) {
     return Math.floor((v1 + v2) / 2);
 }
+
+export function element(id: string) {
+    return document.getElementById(id);
+}

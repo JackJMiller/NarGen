@@ -6,8 +6,8 @@ const FILESYSTEM: { [index: string]: any } = {
     "Empty_Hills/CONFIG.json": {
         "seed": 12345,
         "maxHeight": 50,
-        "width": 1,
-        "height": 1,
+        "width": 20,
+        "height": 20,
         "q": 0,
         "r": 0,
         "biomeSize": 1,
@@ -33,9 +33,11 @@ const FILESYSTEM: { [index: string]: any } = {
 };
 
 export function createCanvas(width: number, height: number): HTMLCanvasElement {
+    console.log("Creating canvas");
     let canvas: HTMLCanvasElement = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
+    document.getElementById("surface-layer")!.appendChild(canvas);
     return canvas;
 }
 

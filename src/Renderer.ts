@@ -21,7 +21,7 @@ abstract class Renderer {
             }
         }
 
-        this.saveImage(canvas, filename);
+        this.saveChunkImage(canvas, filename);
 
     }
 
@@ -57,10 +57,10 @@ abstract class Renderer {
                 this.drawBlocksAt(chunk, worldInfo, x, y, ctx);
             }
         }
-        this.saveImage(canvas, [worldPath, "GENERATED", "images", "game", `game_${chunk.q}_${chunk.r}.png`].join("/"));
+        this.saveChunkImage(canvas, [worldPath, "GENERATED", "images", "game", `game_${chunk.q}_${chunk.r}.png`].join("/"));
     }
 
-    public abstract saveImage(canvas: Canvas, filename: string): void;
+    public abstract saveChunkImage(canvas: Canvas, filename: string): void;
 
     // TODO: add brightness to communicate height
     public drawBlocksAt(chunk: ChunkSaveObject, worldInfo: WorldInfo, x: number, y: number, ctx: CanvasContext): void {

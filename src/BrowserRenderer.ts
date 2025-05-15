@@ -14,8 +14,8 @@ class BrowserRenderer extends Renderer {
         // TODO
     }
 
-    public saveImage(canvas: Canvas, filename: string): void {
-        // images aren't saved in browser version
+    public saveChunkImage(canvas: Canvas, filename: string): void {
+        // TODO
     }
 
 }
